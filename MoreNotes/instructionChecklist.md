@@ -22,8 +22,8 @@
 - [x] ☑ Discord
 - [x] ☑ The Console
 - [x] Editors
-- [ ] History of the web
-- [ ] Demonstration
+- [x] History of the web
+- [x] Demonstration
 ### - [ ] Web server setup <--- Get to here before Jan 6th
 - [ ] Technology stack
 - [ ] The internet
