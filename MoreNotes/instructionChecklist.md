@@ -1,5 +1,8 @@
 # Instruction Checklist
 
+*You might want to use this list to get the links to the modules*vvvv
+[Module Links](https://github.com/webprogramming260/webprogramming/blob/main/instruction/modules.md)
+
 ## - [x] Course info
 - [x] 📅 Schedule
 - [x] Syllabus
