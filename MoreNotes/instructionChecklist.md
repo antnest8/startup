@@ -17,8 +17,8 @@
 - [x] ☑ GitHub
 - [ ] 🚀 Startup Specification
 - [x] ☑ Discord
-- [ ] ☑ The Console
-- [ ] Editors
+- [x] ☑ The Console
+- [x] Editors
 - [ ] History of the web
 - [ ] Demonstration
 ### - [ ] Web server setup <--- Get to here before Jan 6th
@@ -139,3 +139,7 @@
 - [ ] Progressive web applications
 - [ ] Simon PWA
 - [ ] ☑ Wrap up
+
+
+## Personal Checklist
+- [ ] [Vim Tutorials](https://github.com/webprogramming260/webprogramming/blob/main/instruction/essentials/editors/editors.md#vi)
