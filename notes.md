@@ -7,6 +7,7 @@
 
 [Intro Notes](/MoreNotes/introNotes.md)  
 [Git and Github](/MoreNotes/gitAndGitHub.md)  
+[Server&Tech Notes](/MoreNotes/serverNotes.md)  
 
 ## Cheat Sheets and Command lists
 
