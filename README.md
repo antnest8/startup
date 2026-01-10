@@ -38,9 +38,14 @@ The main application screen. This is where the voice chat function exists.
 
 ```mermaid
 sequenceDiagram
-    actor You
-    actor Website
-    You->>Website: Replace this with your design
+    actor User
+    User->>Login: User finds website;
+    Login->>App: User Logs in or creates account;
+    App->>App: Chats with buddies;
+    App->>Settings: User wants to change their name;
+    Settings->>Settings: User makes changes;
+    Settings->>App: Back to talking;
+    App-->User: Exits app;
 ```
 
 ### Key features
