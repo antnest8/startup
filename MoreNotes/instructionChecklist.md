@@ -32,7 +32,7 @@
 - [x] ☑ Amazon Web Services - Route 53
 - [x] Caddy
 - [x] ☑ HTTPS, TLS, and certificates
-- [ ] 🚀 Startup AWS
+- [x] 🚀 Startup AWS
 ### - [ ] HTML
 - [ ] ☑ CodePen
 - [ ] HTML introduction
