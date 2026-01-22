@@ -18,20 +18,20 @@
 - [x] Let's play Simon
 - [x] Git
 - [x] ☑ GitHub
-- [ ] 🚀 Startup Specification
+- [x] 🚀 Startup Specification
 - [x] ☑ Discord
 - [x] ☑ The Console
 - [x] Editors
 - [x] History of the web
 - [x] Demonstration
 ### - [ ] Web server setup <--- Get to here before Jan 6th
-- [ ] Technology stack
-- [ ] The internet
-- [ ] ☑ Amazon Web Services - EC2
-- [ ] Domain names
-- [ ] ☑ Amazon Web Services - Route 53
-- [ ] Caddy
-- [ ] ☑ HTTPS, TLS, and certificates
+- [x] Technology stack
+- [x] The internet
+- [x] ☑ Amazon Web Services - EC2
+- [x] Domain names
+- [x] ☑ Amazon Web Services - Route 53
+- [x] Caddy
+- [x] ☑ HTTPS, TLS, and certificates
 - [ ] 🚀 Startup AWS
 ### - [ ] HTML
 - [ ] ☑ CodePen
