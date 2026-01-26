@@ -24,7 +24,7 @@
 - [x] Editors
 - [x] History of the web
 - [x] Demonstration
-### - [ ] Web server setup <--- Get to here before Jan 6th
+### - [x] Web server setup <--- Get to here before Jan 6th
 - [x] Technology stack
 - [x] The internet
 - [x] ☑ Amazon Web Services - EC2
@@ -34,8 +34,8 @@
 - [x] ☑ HTTPS, TLS, and certificates
 - [x] 🚀 Startup AWS
 ### - [ ] HTML
-- [ ] ☑ CodePen
-- [ ] HTML introduction
+- [x] ☑ CodePen
+- [x] HTML introduction
 - [ ] ☑ Structure
 - [ ] ☑ Input
 - [ ] ☑ Media
