@@ -69,21 +69,21 @@ I am going to use the required technologies in the following ways.
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Server deployed and accessible with custom domain name** - [My server link](https://yourdomainnamehere.click).
+- [x] **Server deployed and accessible with custom domain name** - [My server link](https://officetalk.click).
 
 ## 🚀 HTML deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **HTML pages** - I did not complete this part of the deliverable.
-- [ ] **Proper HTML element usage** - I did not complete this part of the deliverable.
-- [ ] **Links** - I did not complete this part of the deliverable.
-- [ ] **Text** - I did not complete this part of the deliverable.
-- [ ] **3rd party API placeholder** - I did not complete this part of the deliverable.
-- [ ] **Images** - I did not complete this part of the deliverable.
-- [ ] **Login placeholder** - I did not complete this part of the deliverable.
-- [ ] **DB data placeholder** - I did not complete this part of the deliverable.
-- [ ] **WebSocket placeholder** - I did not complete this part of the deliverable.
+- [x] **HTML pages** - I added the 3 html pages that make up my application.
+- [x] **Proper HTML element usage** Most pages use headers and footers. All pages use main.
+- [x] **Links** All pages are accessable from each other by using hyperlinks (they appear as buttons)
+- [x] **Text** There is some text describing features in my current application.
+- [x] **3rd party API placeholder** - The structure for this feature exists with a HTML comment denoting it.
+- [x] **Images** - I used SVG markup to creake simple token icons.
+- [x] **Login placeholder** - There is a login form structure.
+- [x] **DB data placeholder** - There is structure for displaying database info.
+- [x] **WebSocket placeholder** - There is structure for this and it is denoted with an HTML comment.
 
 ## 🚀 CSS deliverable
 

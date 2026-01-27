@@ -23,24 +23,26 @@
             <aside class="sidebar">
                 <h3>Active Users</h3>
                 <ul>
-                    <li>User 1</li>
-                    <li>User 1</li>
-                    <li>User 1</li>
+                    <!--This represents live data coming from websocket-->
+                    <li>You</li>
+                    <li>User 2</li>
+                    <li>User 3</li>
                 </ul>
             </aside>
             <div class="application-window">
                 <figure class="user-token" id="user-1">
                     <svg class="token-visual" width="75" hight="75">
                         <circle stroke="#009200" stroke-width="3" cx="37" cy="37" r="30" fill="#00BF00" />
-                        <text x="37" y="45" font-size="20" text-anchor="middle" fill="white">U1</text>
+                        <text x="37" y="45" font-size="20" text-anchor="middle" fill="white">You</text>
                     </svg>
-                    <audio controls src="https://radioteca.net/media/uploads/audios/%25Y_%25m/never gonna give you up - astley rick top 20.mp3">Other Users Talking</audio>
                 </figure>
                 <figure class="user-token" id="user-2">
                     <svg class="token-visual" width="75" hight="75">
                         <circle stroke="#920000" stroke-width="3" cx="37" cy="37" r="30" fill="#BF0000" />
                         <text x="37" y="45" font-size="20" text-anchor="middle" fill="white">U2</text>
                     </svg>
+                    <!--This audio represents live data coming from the WebRTC service-->
+                    <audio controls src="https://radioteca.net/media/uploads/audios/%25Y_%25m/never gonna give you up - astley rick top 20.mp3"></audio>
                 </figure>
                 <figure class="user-token" id="user-3">
                     <svg class="token-visual" width="75" hight="75">
