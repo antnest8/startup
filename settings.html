@@ -1,1 +1,43 @@
-Hello World
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>OfficeTalk Settings</title>
+    </head>
+    <body>
+        <header>
+            <!--These forms are just for navigating the HTML version of the app-->
+            <div>
+                <form>
+                    <button type="submit" formaction="index.html" formmethod="get">Exit App</button>
+                </form>
+            </div>
+            <div>
+                <form>
+                    <button type="submit" formaction="app.html" formmethod="get">OfficeTalk</button>
+                </form>
+            </div>
+        </header>
+        <main>
+            <div class="user-profile">
+                <h1>&ltInsert Your Username Here&gt</h1>
+                <div class="profile-field">
+                    <p id="user-email">Email: <span id="user-email-output">youremail@example.com<span></p>
+                    <button id="change-email-button" type="button">Change account email</button>
+                    </div>
+                <div class="profile-field">
+                    <p id="user-email">Display name: <span id="user-name-output">youremail@example.com<span></p>
+                    <button id="change-name-button" type="button">Change display name</button>
+                    </div>
+                <div class="profile-field">
+                    <label for="user-password">Password: </label>
+                    <input class="password-display" type="password" disabled="true" id="user-password" value="password123"> <button id="password-visibility-toggle">🙈/🙉</button>
+                    <div>
+                        <button id="change-password-button" type="button">Change display name</button>
+                    </div>
+                </div>
+            </div>
+            
+        </main>
+    </body>
+</html>
