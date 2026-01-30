@@ -42,9 +42,9 @@
 - [x] Simon HTML
 - [x] 🚀 Startup HTML
 ### - [ ] CSS
-- [ ] CSS introduction
-- [ ] Selectors
-- [ ] Declarations
+- [x] CSS introduction
+- [x] Selectors
+- [x] Declarations
 - [ ] Fonts
 - [ ] Animation
 - [ ] Debugging CSS
