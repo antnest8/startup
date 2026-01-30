@@ -33,14 +33,14 @@
 - [x] Caddy
 - [x] ☑ HTTPS, TLS, and certificates
 - [x] 🚀 Startup AWS
-### - [ ] HTML
+### - [x] HTML
 - [x] ☑ CodePen
 - [x] HTML introduction
-- [ ] ☑ Structure
-- [ ] ☑ Input
-- [ ] ☑ Media
-- [ ] Simon HTML
-- [ ] 🚀 Startup HTML
+- [x] ☑ Structure
+- [x] ☑ Input
+- [x] ☑ Media
+- [x] Simon HTML
+- [x] 🚀 Startup HTML
 ### - [ ] CSS
 - [ ] CSS introduction
 - [ ] Selectors
