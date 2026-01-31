@@ -45,13 +45,13 @@
 - [x] CSS introduction
 - [x] Selectors
 - [x] Declarations
-- [ ] Fonts
-- [ ] Animation
-- [ ] Debugging CSS
-- [ ] ☑ CSS practice
-- [ ] Responsive design
-- [ ] Grid
-- [ ] ☑ Flex
+- [x] Fonts
+- [x] Animation
+- [x] Debugging CSS
+- [x] ☑ CSS practice
+- [x] Responsive design
+- [x] Grid
+- [x] ☑ Flex
 - [ ] ☑ CSS frameworks
 - [ ] Tailwind
 - [ ] Simon CSS
