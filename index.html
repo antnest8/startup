@@ -4,59 +4,63 @@
     <title>OfficeTalk Login</title>
     <!--<link rel="stylesheet" type="text/css" href="./main.css">-->
     <link rel="stylesheet" href="./index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 
 <body class="flex flex-col min-h-screen bg-stone-950 text-white">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <main class="grow flex flex-col justify-evenly">
-        <h1 class="flex justify-center text-5xl">OfficeTalk</h1>
-        <div id="input-center-box" class="flex justify-center min-h-80">
-            <section class="flex bg-stone-800 rounded-md justify-evenly w-8/10 max-w-[700px]" id="input-form-section">
-                <form action="app.html" method="get" id="signup-form" class="flex flex-col justify-evenly">
-                    <h2 class="text-2xl flex justify-center">Signup</h2>
-                    <div class="flex flex-col">
+        <div class="flex justify-center">
+            <h1 class="font-semibold font-[rubik] border-b-2 text-teal-400 text-5xl">OfficeTalk</h1>
+        </div>
+            <div id="input-center-box" class="flex justify-center min-h-80">
+            <section class="flex bg-stone-800 rounded-md justify-evenly w-[700px] max-w-[700px]" id="input-form-section">
+                <form class="flex flex-col grow mx-4" action="app.html" method="get" id="signup-form">
+                    <h2 class="text-2xl flex justify-center my-3">Sign-up</h2>
+                    <div class="flex flex-col my-2">
                         <label class="text-xs" for="signup-email">Email:</label>
-                        <input class="border-1 border-stone-700 border-solid bg-stone-900 rounded-lg" id="signup-email" type="email">
+                        <input class="border-1 h-8 focus-visible:outline-3 outline-stone-600 border-stone-700 border-solid bg-stone-900 rounded-lg" id="signup-email" type="email">
                     </div>
-                    <div class="flex flex-col">
+                    <div class="flex flex-col my-2">
                         <label class="text-xs" for="signup-name">Display Name:</label>
-                        <input class="border-1 border-stone-700 border-solid bg-stone-900 rounded-lg" id="signup-name" type="text">
+                        <input class="border-1 h-8 focus-visible:outline-3 outline-stone-600 border-stone-700 border-solid bg-stone-900 rounded-lg" id="signup-name" type="text">
                     </div>
-                    <div class="flex flex-col">
+                    <div class="flex flex-col my-2">
                         <label class="text-xs" for="signup-password">Password:</label>
-                        <input class="border-1 border-stone-700 border-solid bg-stone-900 rounded-lg" id="signup-password" type="password">
+                        <input class="border-1 h-8 focus-visible:outline-3 outline-stone-600 border-stone-700 border-solid bg-stone-900 rounded-lg" id="signup-password" type="password">
                     </div>
                     <div class="flex justify-center">
-                        <button id="signup-submit" type="submit">Submit</button> 
+                        <button class="rounded-full hover:bg-teal-800 border-2 border-teal-900 min-w-30 min-h-10 bg-teal-700 cursor-pointer" id="signup-submit" type="submit">Submit</button> 
                         <!--<aside><span >Click to navigate to application page</span></aside>-->
                     </div>
                 </form>
-                <div class="size-1 self-center rounded-full h-9/10 bg-stone-500"></div>
-                <form action="app.html" method="get" id="login-form">
-                    <h2 class="text-2xl flex justify-center">Login</h2>
-                    <div class="form-question">
-                        <label for="login-name">Display Name:</label>
-                        <input id="login-name" type="text">
+                <div class="size-[4px] self-center rounded-full h-9/10 bg-stone-500"></div>
+                <form class="flex flex-col grow mx-4" action="app.html" method="get" id="login-form">
+                    <h2 class="text-2xl flex justify-center my-3">Login</h2>
+                    <div class="flex flex-col my-3">
+                        <label class="text-xs" for="login-name">Display Name:</label>
+                        <input class="h-8 focus-visible:outline-3 outline-stone-600 border-1 border-stone-700 border-solid bg-stone-900 rounded-lg" id="login-name" type="text">
                     </div>
-                    <div class="form-question">
-                        <label for="login-password">Password:</label>
-                        <input id="login-password" type="password">
+                    <div class="flex flex-col my-3">
+                        <label class="text-xs" for="login-password">Password:</label>
+                        <input class="h-8 border-1 focus-visible:outline-3 outline-stone-600 border-stone-700 border-solid bg-stone-900 rounded-lg" id="login-password" type="password">
                     </div>
-                    <div class="center-box">
-                        <button id="login-submit" type="submit">Submit</button> 
+                    <div class="flex justify-center">
+                        <button class="rounded-full hover:bg-teal-800 border-2 border-teal-900 min-w-30 min-h-10 bg-teal-700 cursor-pointer" id="login-submit" type="submit">Submit</button> 
                         <!--<aside><span >Click to navigate to application page</span></aside>-->
                     </div>
                 </form>
             </section>
         </div>
     </main>
-    <footer class="flex justify-center ">
-        <p><i>Author: Broderick Johnson</i></p>
-        <div class="flex m-2">
-            <a href="https://github.com/antnest8/startup">GitHub</a>
-            <img src="github.svg" type="image/svg+xml">
-        </div>
+    <footer class="flex justify-center mb-3">
+        <p class="italic">Author: Broderick Johnson</p>
+        <a class="ml-20" href="https://github.com/antnest8/startup">GitHub</a>
+        <img src="github.svg" type="image/svg+xml">
+        
     </footer>  
 </body>
 
