@@ -2,18 +2,36 @@
 <html lang="en">
 <head>
     <title>OfficeTalk Login</title>
+    <link rel="stylesheet" type="text/css" href="./main.css">
 </head>
 
 <body>
     <main>
         <h1 class="logo">OfficeTalk</h1>
+        <div class="signup-box">
+            <h2>Signup</h2>
+            <form action="app.html" method="get" id="signup-form">
+                <div>
+                    <label for="signup-email">Email:</label>
+                    <input id="signup-email" type="email">
+                </div>
+                <div>
+                    <label for="signup-name">Display Name:</label>
+                    <input id="signup-name" type="text">
+                </div>
+                <div>
+                    <label for="signup-password">Password:</label>
+                    <input id="signup-password" type="password">
+                </div>
+                <div>
+                    <button id="signup-submit" type="submit">Submit</button> 
+                    <aside><span >Click to navigate to application page</span></aside>
+                </div>
+            </form>
+        </div>
         <div class="login-box">
             <h2>Login</h2>
             <form action="app.html" method="get" id="login-form">
-                <div>
-                    <label for="login-email">Email:</label>
-                    <input id="login-email" type="email">
-                </div>
                 <div>
                     <label for="login-name">Display Name:</label>
                     <input id="login-name" type="text">
