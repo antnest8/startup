@@ -3,25 +3,30 @@
     <head>
         <meta charset="utf-8">
         <title>OfficeTalk Settings</title>
+        <link rel="stylesheet" href="./index.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </head>
-    <body>
-        <header>
+    <body class="flex flex-col min-h-screen bg-stone-950 text-white font-[rubik]">
+        <header class="bg-stone-900 flex flex-row justify-evenly min-h-10">
             <!--These forms are just for navigating the HTML version of the app-->
             <div>
                 <form>
-                    <button type="submit" formaction="index.html" formmethod="get">Exit App</button>
+                    <button class="rounded-lg my-2 hover:bg-teal-950 border-2 border-stone-700 min-w-30 min-h-10 bg-stone-900 cursor-pointer" type="submit" formaction="index.html" formmethod="get">Exit App</button>
                 </form>
             </div>
             <div>
                 <form>
-                    <button type="submit" formaction="app.html" formmethod="get">OfficeTalk</button>
+                    <button class="rounded-lg my-2 hover:bg-teal-950 border-2 border-stone-700 min-w-30 min-h-10 bg-stone-900 cursor-pointer" type="submit" formaction="app.html" formmethod="get">OfficeTalk</button>
                 </form>
             </div>
         </header>
-        <main>
+        <main class="flex flex-row justify-center grow">
             <!--This information represents data retrieved from a database-->
-            <div class="user-profile">
-                <h1>&ltInsert Your Username Here&gt</h1>
+            <div class="flex flex-col bg-stone-800 rounded-md grow max-w-[70dvw] max-h-[60dvw] mt-8">
+                <h1> &lt;Insert Your Username Here&gt;</h1>
                 <div class="profile-field">
                     <p id="user-email">Email: <span id="user-email-output">youremail@example.com<span></p>
                     <button id="change-email-button" type="button">Change account email</button>
@@ -40,10 +45,11 @@
             </div>
             
         </main>
-        <footer>
-            <p><i>Author: Broderick Johnson</i></p>
-            <a href="https://github.com/antnest8/startup">GitHub</a>
-            <img src="github.svg" type="image/svg+xml">
-        </footer>
+    <footer class="flex justify-center mb-3">
+        <p class="italic content-center">Author: Broderick Johnson</p>
+        <a class="ml-20 text-stone-300 content-center hover:text-cyan-700" href="https://github.com/antnest8/startup">GitHub</a>
+        <img class="ml-2" src="github.svg" type="image/svg+xml">
+        
+    </footer>  
     </body>
 </html>
