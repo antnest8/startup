@@ -7,14 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 
-<body class="flex-col justify-between bg-stone-950 text-white">
+<body class="flex flex-col min-h-screen bg-stone-950 text-white">
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <main>
+    <main class="grow flex flex-col justify-evenly">
         <h1 class="flex justify-center text-5xl">OfficeTalk</h1>
-        <div id="input-center-box" class="flex justify-center">
-            <section class="flex" id="input-form-section">
+        <div id="input-center-box" class="flex justify-center min-h-80">
+            <section class="flex bg-stone-800 rounded-md justify-evenly w-8/10 max-w-[700px]" id="input-form-section">
                 <div>
-                    <h2 class="text-2xl">Signup</h2>
+                    <h2 class="text-2xl flex justify-center">Signup</h2>
                     <form action="app.html" method="get" id="signup-form">
                         <div >
                             <label for="signup-email">Email:</label>
@@ -34,9 +34,9 @@
                         </div>
                     </form>
                 </div>
-                <div class="vertical-divider"></div>
+                <div class="size-1 self-center rounded-full h-9/10 bg-stone-500"></div>
                 <div class="login-box">
-                    <h2 class="text-2xl">Login</h2>
+                    <h2 class="text-2xl flex justify-center">Login</h2>
                     <form action="app.html" method="get" id="login-form">
                         <div class="form-question">
                             <label for="login-name">Display Name:</label>
@@ -55,9 +55,9 @@
             </section>
         </div>
     </main>
-    <footer>
+    <footer class="flex justify-center ">
         <p><i>Author: Broderick Johnson</i></p>
-        <div>
+        <div class="flex m-2">
             <a href="https://github.com/antnest8/startup">GitHub</a>
             <img src="github.svg" type="image/svg+xml">
         </div>
