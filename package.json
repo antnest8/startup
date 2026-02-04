@@ -1,0 +1,30 @@
+{
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.18",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tailwindcss": "^4.1.18"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1"
+  },
+  "name": "startup",
+  "version": "1.0.0",
+  "description": "[My Notes](notes.md)",
+  "main": "vite.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antnest8/startup.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/antnest8/startup/issues"
+  },
+  "homepage": "https://github.com/antnest8/startup#readme"
+}

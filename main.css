@@ -18,11 +18,27 @@ h1 {
     justify-content: center;
 }
 
+h2 {
+    display: flex;
+    justify-content: center;
+}
+
+input {
+    border-radius:8px;
+    border-style:none;
+    background-color: #444444;
+}
+
 footer {
     display:flex;
     justify-content: center;
     margin-bottom: 0px;
 }
+
+/* .form-question {
+    display:flex;
+} 
+*/
 
 footer > * {
     margin: 10px;

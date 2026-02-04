@@ -2,19 +2,21 @@
 <html lang="en">
 <head>
     <title>OfficeTalk Login</title>
-    <link rel="stylesheet" type="text/css" href="./main.css">
+    <!--<link rel="stylesheet" type="text/css" href="./main.css">-->
+    <link rel="stylesheet" href="./index.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 
-<body>
+<body class="flex-col justify-between bg-stone-950 text-white">
+    <noscript>You need to enable JavaScript to run this app.</noscript>
     <main>
-        <h1 class="logo">OfficeTalk</h1>
-        <div class="center-box">
-            <section id="input-form-section">
-                <div class="signup-box">
-                    <h2>Signup</h2>
+        <h1 class="flex justify-center text-5xl">OfficeTalk</h1>
+        <div id="input-center-box" class="flex justify-center">
+            <section class="flex" id="input-form-section">
+                <div>
+                    <h2 class="text-2xl">Signup</h2>
                     <form action="app.html" method="get" id="signup-form">
-                        <div>
+                        <div >
                             <label for="signup-email">Email:</label>
                             <input id="signup-email" type="email">
                         </div>
@@ -28,25 +30,25 @@
                         </div>
                         <div>
                             <button id="signup-submit" type="submit">Submit</button> 
-                            <aside><span >Click to navigate to application page</span></aside>
+                            <!--<aside><span >Click to navigate to application page</span></aside>-->
                         </div>
                     </form>
                 </div>
                 <div class="vertical-divider"></div>
                 <div class="login-box">
-                    <h2>Login</h2>
+                    <h2 class="text-2xl">Login</h2>
                     <form action="app.html" method="get" id="login-form">
-                        <div>
+                        <div class="form-question">
                             <label for="login-name">Display Name:</label>
                             <input id="login-name" type="text">
                         </div>
-                        <div>
+                        <div class="form-question">
                             <label for="login-password">Password:</label>
                             <input id="login-password" type="password">
                         </div>
-                        <div>
+                        <div class="center-box">
                             <button id="login-submit" type="submit">Submit</button> 
-                            <aside><span >Click to navigate to application page</span></aside>
+                            <!--<aside><span >Click to navigate to application page</span></aside>-->
                         </div>
                     </form>
                 </div>
