@@ -52,9 +52,9 @@
 - [x] Responsive design
 - [x] Grid
 - [x] ☑ Flex
-- [ ] ☑ CSS frameworks
-- [ ] Tailwind
-- [ ] Simon CSS
+- [x] ☑ CSS frameworks
+- [x] Tailwind
+- [x] Simon CSS
 - [ ] 🚀 Startup CSS
 ## - [ ] JavaScript & Web frameworks
 ###  [ ] Part 1: HTML/CSS components and routing

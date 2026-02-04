@@ -7,3 +7,8 @@
     3. The border box has the borders and generally represents the edge of the content
     4. The margins is an external box that defines whitespace around the element.
 4. Colors can use both hex `#ffa892` or rgb function `rgb(43, 208, 46)`!
+
+## Bootstrap and Tailwind
+1. Bootstrap basically gives a premade CSS file that you can use (by just adding the classes to HTML elements)
+2. Tailwind has a compiler sort of thing (a toolchain?) that generates CSS files based on html attributes added.
+    1. Tailwind is much lower-level coding so it is more efficient and flexible (like c++ compared to Python) but is not as "out of the box" as bootstrap is.
