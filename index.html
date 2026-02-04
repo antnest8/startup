@@ -13,45 +13,41 @@
         <h1 class="flex justify-center text-5xl">OfficeTalk</h1>
         <div id="input-center-box" class="flex justify-center min-h-80">
             <section class="flex bg-stone-800 rounded-md justify-evenly w-8/10 max-w-[700px]" id="input-form-section">
-                <div>
+                <form action="app.html" method="get" id="signup-form" class="flex flex-col justify-evenly">
                     <h2 class="text-2xl flex justify-center">Signup</h2>
-                    <form action="app.html" method="get" id="signup-form">
-                        <div >
-                            <label for="signup-email">Email:</label>
-                            <input id="signup-email" type="email">
-                        </div>
-                        <div>
-                            <label for="signup-name">Display Name:</label>
-                            <input id="signup-name" type="text">
-                        </div>
-                        <div>
-                            <label for="signup-password">Password:</label>
-                            <input id="signup-password" type="password">
-                        </div>
-                        <div>
-                            <button id="signup-submit" type="submit">Submit</button> 
-                            <!--<aside><span >Click to navigate to application page</span></aside>-->
-                        </div>
-                    </form>
-                </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs" for="signup-email">Email:</label>
+                        <input class="border-1 border-stone-700 border-solid bg-stone-900 rounded-lg" id="signup-email" type="email">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs" for="signup-name">Display Name:</label>
+                        <input class="border-1 border-stone-700 border-solid bg-stone-900 rounded-lg" id="signup-name" type="text">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs" for="signup-password">Password:</label>
+                        <input class="border-1 border-stone-700 border-solid bg-stone-900 rounded-lg" id="signup-password" type="password">
+                    </div>
+                    <div class="flex justify-center">
+                        <button id="signup-submit" type="submit">Submit</button> 
+                        <!--<aside><span >Click to navigate to application page</span></aside>-->
+                    </div>
+                </form>
                 <div class="size-1 self-center rounded-full h-9/10 bg-stone-500"></div>
-                <div class="login-box">
+                <form action="app.html" method="get" id="login-form">
                     <h2 class="text-2xl flex justify-center">Login</h2>
-                    <form action="app.html" method="get" id="login-form">
-                        <div class="form-question">
-                            <label for="login-name">Display Name:</label>
-                            <input id="login-name" type="text">
-                        </div>
-                        <div class="form-question">
-                            <label for="login-password">Password:</label>
-                            <input id="login-password" type="password">
-                        </div>
-                        <div class="center-box">
-                            <button id="login-submit" type="submit">Submit</button> 
-                            <!--<aside><span >Click to navigate to application page</span></aside>-->
-                        </div>
-                    </form>
-                </div>
+                    <div class="form-question">
+                        <label for="login-name">Display Name:</label>
+                        <input id="login-name" type="text">
+                    </div>
+                    <div class="form-question">
+                        <label for="login-password">Password:</label>
+                        <input id="login-password" type="password">
+                    </div>
+                    <div class="center-box">
+                        <button id="login-submit" type="submit">Submit</button> 
+                        <!--<aside><span >Click to navigate to application page</span></aside>-->
+                    </div>
+                </form>
             </section>
         </div>
     </main>
