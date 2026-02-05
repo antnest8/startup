@@ -89,20 +89,20 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **Header, footer, and main content body** - I did not complete this part of the deliverable.
-- [x] **Navigation elements** - I did not complete this part of the deliverable.
-- [x] **Responsive to window resizing** - I did not complete this part of the deliverable.
-- [x] **Application elements** - I did not complete this part of the deliverable.
-- [x] **Application text content** - I did not complete this part of the deliverable.
-- [x] **Application images** - I did not complete this part of the deliverable.
+- [x] **Header, footer, and main content body** - I styled headers and footers
+- [x] **Navigation elements** - I did style my navigation elements
+- [x] **Responsive to window resizing** - I did my best to make this friendly to many window sizes
+- [x] **Application elements** - I did this
+- [x] **Application text content** - Yes
+- [x] **Application images** - I did this.
 
 ## 🚀 React part 1: Routing deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Bundled using Vite** - I did not complete this part of the deliverable.
-- [ ] **Components** - I did not complete this part of the deliverable.
-- [ ] **Router** - I did not complete this part of the deliverable.
+- [x] **Bundled using Vite** - I did this
+- [x] **Components** - I did this
+- [x] **Router** - I did this
 
 ## 🚀 React part 2: Reactivity deliverable
 
