@@ -1,0 +1,54 @@
+
+
+.profile-field {
+    display: flex;
+    flex-direction: column;
+    margin-top:1em;
+
+}
+
+.profile-field *{
+    cursor:default;
+}
+
+#password-visibility-toggle {
+    background-color: oklch(44.4% 0.011 73.639);
+    max-width: 8em;
+    min-width: 5em;
+    border-radius: 6px;
+    border-style:solid;
+    border-width:2px;
+    border-color: oklch(24.808% 0.00399 84.546);
+    min-height: 2em;
+    font-size: small;
+    margin-left: 10px;
+}
+
+#password-visibility-toggle:hover {
+    background-color:oklch(33.386% 0.00586 78.172);
+}
+
+.info-field {
+    background-color: rgb(26, 25, 25);
+    outline-width: 2px;
+    outline-color: rgb(69, 69, 69);
+    outline-style: solid;
+    border-radius: 50px;
+    color: rgb(175, 175, 175);
+    display:flex;
+    justify-content: center;
+
+}
+
+input {
+    background-color: rgb(26, 25, 25);
+    outline-width: 2px;
+    outline-color: rgb(69, 69, 69);
+    outline-style: solid;
+    border-radius: 50px;
+    color: rgb(175, 175, 175);
+    display:flex;
+    justify-content: center;
+    flex: 1;
+}
+

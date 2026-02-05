@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <title>OfficeTalk Settings</title>
         <link rel="stylesheet" href="./index.css">
+        <link rel="stylesheet" href="./demo.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
@@ -27,26 +28,39 @@
             <!--This information represents data retrieved from a database-->
             <div class="flex flex-row justify-center mt-4">
                 <svg class="content-center size-[75px]" width="75" hight="75">
-                        <circle stroke="#000092" stroke-width="3"cx="37" cy="37" r="30" fill="#3F3FDF" />
+                        <circle stroke="#000092" stroke-width="3" cx="37" cy="37" r="30" fill="#3F3FDF"/>
                         <text x="37" y="45" font-size="20" text-anchor="middle" fill="white">U3</text>
                 </svg>
-                <h1 class="content-center"> &lt;Insert Your Username Here&gt;</h1>
+                <h1 class="content-end text-2xl mb-3 font-bold"> &lt;Insert Your Username Here&gt;</h1>
             </div>
             <div class="flex flex-row justify-center grow">
-                <div class="flex flex-col bg-stone-800 rounded-md grow max-w-[70dvw] max-h-[90dvw] mb-6 mt-2">
+                <div class="flex flex-col p-8 px-12 bg-stone-800 rounded-md grow max-w-[70dvw] max-h-[90dvw] mb-6 mt-2">
                     <div class="profile-field">
-                        <p id="user-email">Email: <span id="user-email-output">youremail@example.com<span></p>
-                        <button id="change-email-button" type="button">Change account email</button>
+                        <div>
+                            <h3 id="user-email">Email: </h3>
+                            <p class="info-field" id="user-email-output">youremail@example.com</p>
                         </div>
+                        <div class="flex justify-end">
+                            <button class="flex justify-end text-xs text-stone-400 hover:text-cyan-800" id="change-email-button" type="button">Change account email</button>
+                        </div>
+                    </div>
                     <div class="profile-field">
-                        <p id="user-email">Display name: <span id="user-name-output">youremail@example.com<span></p>
-                        <button id="change-name-button" type="button">Change display name</button>
+                        <div>
+                            <h3 id="user-email">Display name:</h3>
+                            <p class="info-field" id="user-name-output">youremail@example.com</p>
                         </div>
+                        <div class="flex justify-end">
+                            <button class="text-xs text-stone-400 hover:text-cyan-800" id="change-name-button" type="button">Change display name</button>
+                        </div>
+                    </div>
                     <div class="profile-field">
                         <label for="user-password">Password: </label>
-                        <input class="password-display" type="password" disabled="true" id="user-password" value="password123"> <button id="password-visibility-toggle">🙈/🙉</button>
-                        <div>
-                            <button id="change-password-button" type="button">Change display name</button>
+                        <div class="flex">
+                            <input class="password-display" type="password" disabled="true" id="user-password" value="password123"> 
+                            <button id="password-visibility-toggle">🙈/🙉</button>
+                        </div>
+                        <div class="flex justify-end">
+                            <button class="flex justify-end text-xs text-stone-400 hover:text-cyan-800" id="change-password-button" type="button">Change password</button>
                         </div>
                     </div>
                 </div>
