@@ -3,18 +3,18 @@ import React from 'react';
 export function Office(){
     return (
         <div class="flex flex-col grow">
-            <header class="bg-stone-600 flex flex-row justify-end min-h-10">
+            <header class="bg-stone-900 flex flex-row justify-end min-h-10">
                 <div class="flex grow">
                     <h1 class="font-semibold font-[rubik] border-b-2 text-teal-400 m-1 text-5xl max-h-[0.9em]">OfficeTalk</h1>
                 </div>
                 <div>
                     <form>
-                        <button class="rounded-lg my-2 hover:outline-solid outline-teal-700 hover:bg-teal-950 min-w-30 min-h-10 bg-stone-800 mx-3 cursor-pointer" type="submit" formaction="/" formmethod="get">Exit App</button>
+                        <button class="rounded-lg my-2 outline-solid outline-stone-700 hover:outline-teal-700 hover:bg-teal-950 min-w-30 min-h-10 bg-stone-900 mx-3 cursor-pointer" type="submit" formaction="/" formmethod="get">Exit App</button>
                     </form>
                 </div>
                 <div>
                     <form>
-                        <button class="rounded-lg my-2 hover:outline-solid outline-teal-700 hover:bg-teal-950 min-w-30 min-h-10 bg-stone-800 mx-3 cursor-pointer" type="submit" formaction="/settings" formmethod="get">Settings</button>
+                        <button class="rounded-lg my-2 outline-solid outline-stone-700 hover:outline-teal-700 hover:bg-teal-950 min-w-30 min-h-10 bg-stone-900 mx-3 cursor-pointer" type="submit" formaction="/settings" formmethod="get">Settings</button>
                     </form>
                 </div>
                 <figure class="size-[50px] mx-3" id="user-1">
@@ -24,8 +24,8 @@ export function Office(){
                         </svg>
                     </figure>
             </header>
-            <main class="flex grow bg-stone-700">
-                <aside class="bg-stone-600/70 p-2 px-4 flex flex-col justify-top min-w-[25dvw]">
+            <main class="flex grow bg-stone-800">
+                <aside class="bg-stone-900/70 p-2 px-4 flex flex-col justify-top min-w-[25dvw]">
                     <ul class="rounded-md bg-stone-800 p-1 list-disc list-inside">
                         <h3 class="text-stone-500">Active Users</h3>
                         <li class="text-lime-400">You</li>

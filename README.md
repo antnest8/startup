@@ -25,15 +25,15 @@ The productivity advancements that came from the agile frameworks of the 90s and
 ### Design
 
 ##### Login Screen
-![Login Screen Design](Login_Screen_Design.png)
+![Login Screen Design](MoreNotes/Login_Screen_Design.png)
 A simple login/signup screen with two options one on both side.
 
 ##### User Profile Screen
-![User Profile Screen](User_Settings_Design.png)
+![User Profile Screen](MoreNotes/User_Settings_Design.png)
 A settings screen for the user to change their name and avatar.
 
 ##### Application Screen
-![App. Screen Design](Application_screen_design.png)
+![App. Screen Design](MoreNotes/Application_screen_design.png)
 The main application screen. This is where the voice chat function exists.
 
 ```mermaid
