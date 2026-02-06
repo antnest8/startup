@@ -55,23 +55,23 @@
 - [x] ☑ CSS frameworks
 - [x] Tailwind
 - [x] Simon CSS
-- [ ] 🚀 Startup CSS
-## - [ ] JavaScript & Web frameworks
-###  [ ] Part 1: HTML/CSS components and routing
-- [ ] JavaScript introduction
-- [ ] Adding JavaScript to HTML
-- [ ] Node.js
-- [ ] Debugging JavaScript
-- [ ] Debugging Node.js
-- [ ] Web frameworks
-- [ ] Toolchains
-- [ ] ☑ Vite
-- [ ] React
+- [x] 🚀 Startup CSS
+## - [x] JavaScript & Web frameworks
+###  [x] Part 1: HTML/CSS components and routing
+- [x] JavaScript introduction
+- [x] Adding JavaScript to HTML
+- [x] Node.js
+- [x] Debugging JavaScript
+- [x] Debugging Node.js
+- [x] Web frameworks
+- [x] Toolchains
+- [x] ☑ Vite
+- [x] React
 - [ ] ☑ Components
 - [ ] ☑ Router
-- [ ] ☑ Simon React P1: Routing
-- [ ] 🚀 Startup React P1: Routing
-### - [ ] Part 2: Reactivity
+- [x] ☑ Simon React P1: Routing
+- [x] 🚀 Startup React P1: Routing
+### - [x] Part 2: Reactivity
 - [ ] JavaScript Console
 - [ ] Functions
 - [ ] Arrow functions
