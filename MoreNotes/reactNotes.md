@@ -40,3 +40,7 @@ root.render(<App />);
 1. Functions in javascript are funny because they don't need to be named. In fact arrow functions (() => ; syntax) are super common. 
 2. Javascript functions can access variables from their definition scope using the `this` keyword (this.varNameInDefinition). Super useful for creating mini "global" variables for any anonymous function.
     1. This is called "closure" and is super useful in react since you are passing lots of potentially anonymous functions into HTML contexts far away from their definitions.
+
+#### Classes
+1. Javascript uses the `this` keyword instead of the `self` keyword that python uses. 
+2. Javascript is like python in that all methods and properties of a class are public unless they are marked private by a `#` operator
