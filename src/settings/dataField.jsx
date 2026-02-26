@@ -23,15 +23,15 @@ export function DataField(props){
 export function PasswordField(props){
     purpose = props.purpose;
     fieldData = props.data;
-    const [isHidden, changeHidden] = React.useState("password");
+    const [isHidden, changeHidden] = React.useState(true);
 
     return (
         <div className="flex justify-center">
             <div className="flex flex-col mt-[1em] max-w-120 grow relative left-10">
                 <label for="user-password">{purpose}: </label>
                 <div className="flex">
-                    <input className=" bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2 grow" type="password" disabled="true" id="user-password" value={userPass}/> 
-                    <button className="bg-stone-500 border-stone-600 max-w-[8em] min-w-[5em] rounded-md border-solid border-2 min-h-[2em] text-sm ml-[10px] hover:bg-stone-700" id="password-visibility-toggle">🙈/🙉</button>
+                    <input className=" bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2 grow" type={isHidden ? "password" : "text"} disabled="true" id="user-password" value={userPass}/> 
+                    <button className="bg-stone-500 border-stone-600 max-w-[8em] min-w-[5em] rounded-md border-solid border-2 min-h-[2em] text-sm ml-[10px] hover:bg-stone-700" onClick={() => changeHidden(true)} id="password-visibility-toggle">{isHidden ? "🙉" : "🙈"}</button>
                 </div>
                 <div className="flex justify-end">
                     <button className="flex relative right-20 justify-end text-xs text-stone-400 hover:text-cyan-800" id="change-password-button" type="button">Change {purpose}</button>
