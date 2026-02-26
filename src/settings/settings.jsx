@@ -1,6 +1,13 @@
 import React from 'react';
+import { DataField } from 'dataField.jsx'
 
-export function Settings(){
+export function Settings(props){
+    userName = props.userName;
+    userData = localStorage.getItem(userName + "_data");
+    userPass = userData.password;
+    userDisplay = userData.displayName;
+    userEmail = userData.email;
+
     return (
         <div className="flex flex-col grow">
             <header className="bg-stone-900 flex flex-row justify-evenly min-h-10">
@@ -25,28 +32,8 @@ export function Settings(){
                 </div>
                 <div className="flex flex-row justify-center grow">
                     <div className="flex flex-col p-8 px-12 bg-stone-800 rounded-md grow max-w-[70dvw] max-h-[90dvw] mb-6 mt-2">
-                        <div className="flex justify-center">
-                            <div className="flex flex-col mt-[1em] max-w-100 grow">
-                                <div>
-                                    <h3 id="user-email">Email: </h3>
-                                    <p className="max-w-100 bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2" id="user-email-output">youremail@example.com</p>
-                                </div>
-                                <div className="flex justify-end">
-                                    <button className="flex justify-end text-xs text-stone-400 hover:text-cyan-800" id="change-email-button" type="button">Change account email</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex justify-center">
-                            <div className="flex flex-col mt-[1em] max-w-100 grow">
-                                <div>
-                                    <h3 id="user-email">Display name:</h3>
-                                    <p className="max-w-100 bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2" id="user-name-output">youremail@example.com</p>
-                                </div>
-                                <div className="flex justify-end">
-                                    <button className="text-xs text-stone-400 hover:text-cyan-800" id="change-name-button" type="button">Change display name</button>
-                                </div>
-                            </div>
-                        </div>
+                        <DataField purpose="display name" fieldData={userDisplay}/>
+                        <DataField purpose="email" fieldData={userEmail}/>
                         <div className="flex justify-center">
                             <div className="flex flex-col mt-[1em] max-w-120 grow relative left-10">
                                 <label for="user-password">Password: </label>
