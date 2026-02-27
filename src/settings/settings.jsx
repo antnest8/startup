@@ -1,6 +1,7 @@
 import React from 'react';
 import { DataField, PasswordField } from './dataField';
 import { generateInitials } from './settingsUtils.js'
+import { NavBarButton } from '../nav/barButtons.jsx';
 
 export function Settings(props){
     // TODO: pass data into Settings and handle
@@ -36,16 +37,8 @@ export function Settings(props){
     return (
         <div className="flex flex-col grow">
             <header className="bg-stone-900 flex flex-row justify-evenly min-h-10">
-                <div>
-                    <form>
-                        <button className="rounded-lg my-2 hover:bg-teal-950 border-2 border-stone-700 min-w-30 min-h-10 bg-stone-900 cursor-pointer" type="submit" formAction="/" formMethod="get">Exit App</button>
-                    </form>
-                </div>
-                <div>
-                    <form>
-                        <button className="rounded-lg my-2 hover:bg-teal-950 border-2 border-stone-700 min-w-30 min-h-10 bg-stone-900 cursor-pointer" type="submit" formAction="/app" formMethod="get">OfficeTalk</button>
-                    </form>
-                </div>
+                    <NavBarButton DisText="OfficeTalk" dest="/app"/>
+                    <NavBarButton DisText="Exit App" dest="/"/>
             </header>
             <main className="flex flex-col grow">
                 <div className="flex flex-row justify-center mt-4">

@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavBarButton } from '../nav/barButtons';
 
 export function Office(){
     return (
@@ -7,16 +8,8 @@ export function Office(){
                 <div className="flex grow">
                     <h1 className="font-semibold font-[rubik] border-b-2 text-teal-400 m-1 text-5xl max-h-[0.9em]">OfficeTalk</h1>
                 </div>
-                <div>
-                    <form>
-                        <button className="rounded-lg my-2 outline-solid outline-stone-700 hover:outline-teal-700 hover:bg-teal-950 min-w-30 min-h-10 bg-stone-900 mx-3 cursor-pointer" type="submit" formAction="/" formMethod="get">Exit App</button>
-                    </form>
-                </div>
-                <div>
-                    <form>
-                        <button className="rounded-lg my-2 outline-solid outline-stone-700 hover:outline-teal-700 hover:bg-teal-950 min-w-30 min-h-10 bg-stone-900 mx-3 cursor-pointer" type="submit" formAction="/settings" formMethod="get">Settings</button>
-                    </form>
-                </div>
+                <NavBarButton DisText="Exit App" dest="/"/>
+                <NavBarButton DisText="Settings" dest="/settings" />
                 <figure className="size-[50px] mx-3" id="user-1">
                         <svg className="profile-token" width="50" height="50">
                             <circle stroke="#009200" strokeWidth="3" cx="25" cy="25" r="23" fill="#00BF00" />
