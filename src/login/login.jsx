@@ -9,6 +9,9 @@ export function Login(props){
     const setUserName = props.changeUserName;
     const setAuthState = props.setAuthState;
 
+    React.useEffect(() => {
+        localStorage.setItem("currentUser",'')
+    },[])
 
     return (
         <main className="grow flex flex-col justify-evenly">
