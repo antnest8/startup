@@ -39,6 +39,7 @@ function LoginForm(props){
         if(user && password){
             if(localStorage.getItem(user + "_Data")){
                 setUserName(user);
+                localStorage.setItem("currentUser",user);
                 setAuthState(AuthState.Authenticated);
                 nav('/app');
             }
@@ -66,6 +67,7 @@ function LoginForm(props){
                     initials : generateInitials(name)
                 });
                 localStorage.setItem(user + "_Data", JSON.stringify(newData))
+                localStorage.setItem("currentUser",user)
                 setUserName(user);
                 setAuthState(AuthState.Authenticated);
                 Navigate('/app');
