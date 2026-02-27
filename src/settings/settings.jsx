@@ -4,16 +4,22 @@ import { DataField, PasswordField } from './dataField';
 export function Settings(props){
     // TODO: pass data into Settings and handle
     //userName = props.userName;
-    //userData = localStorage.getItem(userName + "_data");
-    const userData = new Object({
-        password : "testPass",
-        displayName : "testName",
-        email : "testEmail",
-    });
     const userName = "testUser"; //delete after
+    const userData = JSON.parse(localStorage.getItem(userName + "_Data"));
+    
     const [userPass, changeUserPass] = React.useState(userData.password);
     const [userDisplay, changeUserDisplay] = React.useState(userData.displayName);
     const [userEmail, changeUserEmail] = React.useState(userData.email);
+
+    React.useEffect(() => {
+        console.log("Data change detected. Saving data...")
+        const newData = new Object({
+            password : userPass,
+            displayName : userDisplay,
+            email : userEmail,
+        });
+        localStorage.setItem(userName + "_Data", JSON.stringify(newData));
+    }, [userPass, userDisplay, userEmail])
 
     return (
         <div className="flex flex-col grow">
