@@ -7,12 +7,16 @@ import { Settings } from './settings/settings';
 
 
 export default function App(){
+    const [userName, setUserName] = React.useState(localStorage.getItem("currentUser") || '');
+    const currentAuthState = true; //replace with Authentication Mock
+    const [authState, setAuthState] = React.useState(currentAuthState);
+
     return (
         <BrowserRouter>
                 <Routes>
                     <Route path='/' element={<Login />} exact />
-                    <Route path='/app' element={<Office />} />
-                    <Route path='/settings' element={<Settings />} />
+                    {authState ? <Route path='/app' element={<Office />} /> : <Route path='/app' element={<Login />} />}
+                    {authState ? <Route path='/settings' element={<Settings />} /> : <Route path='/app' element={<Login />} />}
                     <Route path='*' element={<NotFound />} />
                 </Routes>
                 <footer className="flex justify-center mb-3 bg-stone-900">

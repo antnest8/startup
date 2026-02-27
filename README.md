@@ -109,7 +109,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
 - [ ] Settings Page
-    - [ ] Show current username and profile
+    - [x] Show current username and profile
     - [ ] Pass userName into settings and handle
     - [x] Persist saved changes
     - [x] DataFields
@@ -119,15 +119,16 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [ ] Login Page
     - [ ] set local data (fake auth)
     - [ ] press submit button!  
-- [ ] App Page
+- [ ] Office Page
     - [ ] move token based on click
     - [ ] enter office button popup/fade-out-wall
     - [ ] dynamic "player" list
     - [ ] audio playing
     - [ ] audio controls 
-- [ ] Make Nav Bar standard and just don't show on login page
+- [x] Make Nav Bar standard
 - [x] Fix Tailwind CSS not rendering correctly
-- [ ]
+- [ ] App Context
+    - [ ] persist username and authentication
 
 ## 🚀 Service deliverable
 
