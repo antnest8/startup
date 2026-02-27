@@ -8,7 +8,7 @@ export function Office(){
                 <div className="flex grow">
                     <h1 className="font-semibold font-[rubik] border-b-2 text-teal-400 m-1 text-5xl max-h-[0.9em]">OfficeTalk</h1>
                 </div>
-                <NavBarButton DisText="Exit App" dest="/"/>
+                <NavBarButton DisText="Logout" dest="/"/>
                 <NavBarButton DisText="Settings" dest="/settings" />
                 <figure className="size-[50px] mx-3" id="user-1">
                         <svg className="profile-token" width="50" height="50">

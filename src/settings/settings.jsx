@@ -38,7 +38,7 @@ export function Settings(props){
         <div className="flex flex-col grow">
             <header className="bg-stone-900 flex flex-row justify-evenly min-h-10">
                     <NavBarButton DisText="OfficeTalk" dest="/app"/>
-                    <NavBarButton DisText="Exit App" dest="/"/>
+                    <NavBarButton DisText="Logout" dest="/"/>
             </header>
             <main className="flex flex-col grow">
                 <div className="flex flex-row justify-center mt-4">

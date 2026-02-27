@@ -2,21 +2,22 @@ import React from 'react';
 import './app.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Login } from './login/login';
+import { AuthState } from './login/authState';
 import { Office } from './office/office';
 import { Settings } from './settings/settings';
 
 
 export default function App(){
     const [userName, setUserName] = React.useState(localStorage.getItem("currentUser") || '');
-    const currentAuthState = true; //replace with Authentication Mock
+    const currentAuthState = userName ? AuthState.Authenticated : AuthState.Unauthenticated; //replace with Authentication Mock
     const [authState, setAuthState] = React.useState(currentAuthState);
 
     return (
         <BrowserRouter>
                 <Routes>
-                    <Route path='/' element={<Login />} exact />
-                    {authState ? <Route path='/app' element={<Office />} /> : <Route path='/app' element={<Login />} />}
-                    {authState ? <Route path='/settings' element={<Settings />} /> : <Route path='/app' element={<Login />} />}
+                    <Route path='/' element={<Login userName={userName} setAuthState={setAuthState} setUserName={setUserName}/>} exact />
+                    {authState === AuthState.Authenticated ? <Route path='/app' element={<Office />} /> : <Route path='/app' element={<Login />} />}
+                    {authState === AuthState.Authenticated ? <Route path='/settings' element={<Settings userName={userName}/>} /> : <Route path='/app' element={<Login />} />}
                     <Route path='*' element={<NotFound />} />
                 </Routes>
                 <footer className="flex justify-center mb-3 bg-stone-900">
