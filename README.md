@@ -110,10 +110,11 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 - [ ] Settings Page
     - [ ] Show current username and profile
-    - [ ] Pass settings into data and handle
-    - [ ] DataFields
-        - [ ] Change data buttons
-        - [ ] Password Field
+    - [ ] Pass userName into settings and handle
+    - [x] Persist saved changes
+    - [x] DataFields
+        - [x] Change data buttons
+        - [x] Password Field
             - [x] Toggle hide and not
 - [ ] Login Page
     - [ ] set local data (fake auth)
