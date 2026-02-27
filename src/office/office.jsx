@@ -1,10 +1,16 @@
 import React from 'react';
 import { NavBarButton } from '../nav/barButtons';
+import { Connections } from './connections';
 
 export function Office(props){
 
     const userName = props.userName;
     const userData = JSON.parse(localStorage.getItem(userName + "_Data"));
+    const connections = new Connections();
+
+    React.useEffect(() => {
+        Connections.connectUser(userName);
+    },[]);
     
 
     return (
@@ -62,9 +68,14 @@ export function Office(props){
     )
 }
 
-function userToken(props){
+function OfficeSpace(props){
+
+}
+
+
+function UserToken(props){
     const initials = props.initials;
-    const userName = props.userName;
+    //const userName = props.userName;
     const x = ` bottom-${props.x}/100`;
     const y = ` right-${props.y}/100`;
 

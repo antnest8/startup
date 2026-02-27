@@ -4,6 +4,8 @@ export class Connections{
 
     static connectUser(userName){
         this.onlineUsers.append(new UserInstance(userName));
+        console.log("Attempting to connect user: " + userName);
+        console.log(JSON.stringify(this.onlineUsers))
     }
 
     static updateUserPosition(userName, x, y){
