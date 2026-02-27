@@ -4,7 +4,7 @@ import { NavBarButton } from '../nav/barButtons';
 export function Office(props){
 
     const userName = props.userName;
-    const userData = localStorage.getItem(userName + "_Data");
+    const userData = JSON.parse(localStorage.getItem(userName + "_Data"));
     
 
     return (
@@ -60,4 +60,22 @@ export function Office(props){
             </main>
         </div>
     )
+}
+
+function userToken(props){
+    const initials = props.initials;
+    const userName = props.userName;
+    const x = props.x;
+    const y = props.y;
+
+
+    return (
+        <figure className="absolute top-3/5 left-30/100 size-[75px]" id="user-1">
+            <svg width="75" height="75">
+                <circle stroke="#599259" strokeWidth="3" cx="37" cy="37" r="30" fill="#8FBF8F" />
+                <text x="37" y="45" fontSize="20" textAnchor="middle" fill="white">{initials}</text>
+            </svg>
+            <img className="size-[20px] hidden absolute bottom-0 right-0" type="image/svg+xml" src="./microphone-svgrepo-com.svg" />
+        </figure>
+    );
 }
