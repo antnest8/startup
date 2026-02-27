@@ -65,12 +65,12 @@ export function Office(props){
 function userToken(props){
     const initials = props.initials;
     const userName = props.userName;
-    const x = props.x;
-    const y = props.y;
+    const x = ` bottom-${props.x}/100`;
+    const y = ` right-${props.y}/100`;
 
 
     return (
-        <figure className="absolute top-3/5 left-30/100 size-[75px]" id="user-1">
+        <figure className={"absolute size-[75px]" + x + y} id="user-1">
             <svg width="75" height="75">
                 <circle stroke="#599259" strokeWidth="3" cx="37" cy="37" r="30" fill="#8FBF8F" />
                 <text x="37" y="45" fontSize="20" textAnchor="middle" fill="white">{initials}</text>
