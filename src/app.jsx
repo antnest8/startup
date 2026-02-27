@@ -15,9 +15,9 @@ export default function App(){
     return (
         <BrowserRouter>
                 <Routes>
-                    <Route path='/' element={<Login userName={userName} setAuthState={setAuthState} setUserName={setUserName}/>} exact />
-                    {authState === AuthState.Authenticated ? <Route path='/app' element={<Office />} /> : <Route path='/app' element={<Login />} />}
-                    {authState === AuthState.Authenticated ? <Route path='/settings' element={<Settings userName={userName}/>} /> : <Route path='/app' element={<Login />} />}
+                    <Route path='/' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} exact />
+                    {authState === AuthState.Authenticated ? <Route path='/app' element={<Office />} /> : <Route path='/app' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} />}
+                    {authState === AuthState.Authenticated ? <Route path='/settings' element={<Settings userName={userName}/>} /> : <Route path='/app' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} />}
                     <Route path='*' element={<NotFound />} />
                 </Routes>
                 <footer className="flex justify-center mb-3 bg-stone-900">
