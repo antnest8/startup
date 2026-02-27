@@ -21,7 +21,7 @@ export function DataField(props){
     const editField = () => {
         return (<div>
             <h3 id="user-email">{purpose}: </h3>
-            <input className="max-w-100 bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2" type="text" id="user-email-input"/>
+            <input className="max-w-100 w-1/1 bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2" type="text" id={"user-" + purpose + "-input"}/>
         </div>);
     }
 
@@ -30,7 +30,7 @@ export function DataField(props){
     }
 
     const submitEditButton = () => {
-        return <button className="flex justify-end text-xs text-stone-400 hover:text-cyan-800" id="change-email-button" onClick={(e) => {saveChanges(e.value)}} type="button">Save new {purpose}</button>
+        return <button className="flex justify-end text-xs text-stone-400 hover:text-cyan-800" id="change-email-button" onClick={(e) => {saveChanges(document.getElementById("user-" + purpose + "-input").value)}} type="button">Save new {purpose}</button>
     }
 
     return (

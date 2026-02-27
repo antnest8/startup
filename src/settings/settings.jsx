@@ -39,8 +39,8 @@ export function Settings(props){
                 </div>
                 <div className="flex flex-row justify-center grow">
                     <div className="flex flex-col p-8 px-12 bg-stone-800 rounded-md grow max-w-[70dvw] max-h-[90dvw] mb-6 mt-2">
-                        <DataField purpose="display name" fieldData={userDisplay}/>
-                        <DataField purpose="email" fieldData={userEmail}/>
+                        <DataField purpose="display name" fieldData={userDisplay} changeFunction={changeUserDisplay}/>
+                        <DataField purpose="email" fieldData={userEmail} changeFunction={changeUserEmail}/>
                         <PasswordField purpose="password" fieldData={userPass} />
                     </div>
                 </div>
