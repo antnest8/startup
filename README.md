@@ -116,9 +116,10 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
         - [x] Change data buttons
         - [x] Password Field
             - [x] Toggle hide and not
-- [ ] Login Page
-    - [ ] set local data (fake auth)
-    - [ ] press submit button!  
+- [x] Login Page
+    - [x] set local data (fake auth)
+    - [x] press submit button!
+    - [x] logout logic  
 - [ ] Office Page
     - [ ] move token based on click
     - [ ] enter office button popup/fade-out-wall
@@ -127,8 +128,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
     - [ ] audio controls 
 - [x] Make Nav Bar standard
 - [x] Fix Tailwind CSS not rendering correctly
-- [ ] App Context
-    - [ ] persist username and authentication
+- [x] App Context
+    - [x] persist username and authentication
 
 ## 🚀 Service deliverable
 

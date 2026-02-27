@@ -73,7 +73,7 @@ function LoginForm(props){
                 localStorage.setItem("currentUser",user)
                 setUserName(user);
                 setAuthState(AuthState.Authenticated);
-                Navigate('/app');
+                nav('/app');
             }
             else{
                 setSignupErrorMessage(user + ' is already taken')

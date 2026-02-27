@@ -1,7 +1,12 @@
 import React from 'react';
 import { NavBarButton } from '../nav/barButtons';
 
-export function Office(){
+export function Office(props){
+
+    const userName = props.userName;
+    const userData = localStorage.getItem(userName + "_Data");
+    
+
     return (
         <div className="flex flex-col grow">
             <header className="bg-stone-900 flex flex-row justify-end min-h-10">
@@ -13,7 +18,7 @@ export function Office(){
                 <figure className="size-[50px] mx-3" id="user-1">
                         <svg className="profile-token" width="50" height="50">
                             <circle stroke="#009200" strokeWidth="3" cx="25" cy="25" r="23" fill="#00BF00" />
-                            <text x="25" y="30" fontSize="20" textAnchor="middle" fill="white">You</text>
+                            <text x="25" y="30" fontSize="20" textAnchor="middle" fill="white">{userData.initials}</text>
                         </svg>
                     </figure>
             </header>

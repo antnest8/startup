@@ -5,8 +5,7 @@ import { NavBarButton } from '../nav/barButtons.jsx';
 
 export function Settings(props){
     // TODO: pass data into Settings and handle
-    //userName = props.userName;
-    const userName = "testUser"; //delete after
+    const userName = props.userName;
     const userData = JSON.parse(localStorage.getItem(userName + "_Data"));
 
     const [userPass, changeUserPass] = React.useState(userData.password);
