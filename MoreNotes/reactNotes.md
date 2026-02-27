@@ -44,19 +44,3 @@ root.render(<App />);
 #### Classes
 1. Javascript uses the `this` keyword instead of the `self` keyword that python uses. 
 2. Javascript is like python in that all methods and properties of a class are public unless they are marked private by a `#` operator
-
-## Checklist
-
-- [ ] Settings Page
-    - [ ] Show current username and profile
-    - [ ] DataFields
-        - [ ] Change data buttons
-        - [ ] Password Field
-            - [ ] Toggle hide and not
-- [ ] Login Page
-- [ ] 
-- [ ] App Page
-- [ ]
-- [ ]
-- [ ]
-- [ ]

@@ -108,8 +108,24 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **All functionality implemented or mocked out** - I did not complete this part of the deliverable.
-- [ ] **Hooks** - I did not complete this part of the deliverable.
+- [ ] Settings Page
+    - [ ] Show current username and profile
+    - [ ] DataFields
+        - [ ] Change data buttons
+        - [ ] Password Field
+            - [x] Toggle hide and not
+- [ ] Login Page
+    - [ ] set local data (fake auth)
+    - [ ] press submit button!  
+- [ ] App Page
+    - [ ] move token based on click
+    - [ ] enter office button popup/fade-out-wall
+    - [ ] dynamic "player" list
+    - [ ] audio playing
+    - [ ] audio controls 
+- [ ] Make Nav Bar standard and just don't show on login page
+- [x] Fix Tailwind CSS not rendering correctly
+- [ ]
 
 ## 🚀 Service deliverable
 
