@@ -1,19 +1,44 @@
 import React from 'react';
 
-
 export function DataField(props){
     const purpose = props.purpose;
-    const fieldData = props.data;
+    const fieldData = props.fieldData;
+    const changeFunction = props.changeFunction;
+    const [isEditing, changeIsEditing] = React.useState(false);
+
+    function saveChanges(value){
+        changeFunction(value);
+        changeIsEditing(false);
+    }
+
+    const normalField = () => {
+        return (<div>
+            <h3 id="user-email">{purpose}: </h3>
+            <p className="max-w-100 bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2" id="user-email-output">{fieldData}</p>
+        </div>);
+    }
+
+    const editField = () => {
+        return (<div>
+            <h3 id="user-email">{purpose}: </h3>
+            <input className="max-w-100 bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2" type="text" id="user-email-input"/>
+        </div>);
+    }
+
+    const editButton = () => {
+        return <button className="flex justify-end text-xs text-stone-400 hover:text-cyan-800" id="change-email-button" onClick={() => changeIsEditing(true)} type="button">Change {purpose}</button>
+    }
+
+    const submitEditButton = () => {
+        return <button className="flex justify-end text-xs text-stone-400 hover:text-cyan-800" id="change-email-button" onClick={(e) => {saveChanges(e.value)}} type="button">Save new {purpose}</button>
+    }
 
     return (
         <div className="flex justify-center">
             <div className="flex flex-col mt-[1em] max-w-100 grow">
-                <div>
-                    <h3 id="user-email">{purpose}: </h3>
-                    <p className="max-w-100 bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2" id="user-email-output">{fieldData}</p>
-                </div>
+                {isEditing ? editField() : normalField()}
                 <div className="flex justify-end">
-                    <button className="flex justify-end text-xs text-stone-400 hover:text-cyan-800" id="change-email-button" type="button">Change {purpose}</button>
+                    {isEditing ? submitEditButton() : editButton()}
                 </div>
             </div>
         </div>
@@ -22,12 +47,8 @@ export function DataField(props){
 
 export function PasswordField(props){
     const purpose = props.purpose;
-    const fieldData = props.data;
+    const fieldData = props.fieldData;
     const [isHidden, changeHidden] = React.useState(true);
-
-    React.useEffect(() => {
-        console.log("isHidden was changed to " + isHidden);
-    }, [isHidden]);
     
     return (
         <div className="flex justify-center">

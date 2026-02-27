@@ -110,6 +110,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 - [ ] Settings Page
     - [ ] Show current username and profile
+    - [ ] Pass settings into data and handle
     - [ ] DataFields
         - [ ] Change data buttons
         - [ ] Password Field

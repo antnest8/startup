@@ -2,6 +2,7 @@ import React from 'react';
 import { DataField, PasswordField } from './dataField';
 
 export function Settings(props){
+    // TODO: pass data into Settings and handle
     //userName = props.userName;
     //userData = localStorage.getItem(userName + "_data");
     const userData = new Object({
@@ -10,9 +11,9 @@ export function Settings(props){
         email : "testEmail",
     });
     const userName = "testUser"; //delete after
-    const userPass = userData.password;
-    const userDisplay = userData.displayName;
-    const userEmail = userData.email;
+    const [userPass, changeUserPass] = React.useState(userData.password);
+    const [userDisplay, changeUserDisplay] = React.useState(userData.displayName);
+    const [userEmail, changeUserEmail] = React.useState(userData.email);
 
     return (
         <div className="flex flex-col grow">
