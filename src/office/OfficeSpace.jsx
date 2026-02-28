@@ -5,6 +5,7 @@ export function OfficeSpace(props){
     //const fakeUser = new Object({initials: "YA", xPos: "50", yPos:"50"});
     const userList = props.userList; //replace this with live data from WebSocket mock
     const moveUser = props.moveUserFunc;
+    //const testGainNode = props.gainNode;
 
     function calculateClick(event){
         const screenCoords = [event.clientX, event.clientY];
@@ -33,7 +34,7 @@ export function OfficeSpace(props){
     }
 
     function renderUsers(props){
-
+        
         console.log(`rendererTokenListSize: ${userList.length}`)
 
         const userTokens = userList.map((userObj, index) => <UserToken key={`token-${index}`} initials={userObj.initials} xPos={userObj.x} yPos={userObj.y}/>);

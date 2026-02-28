@@ -8,6 +8,7 @@ class Connections{
         const testUser = {
             userName: "otherDude",
             initials: "OD",
+            displayName: "Other Dude!",
             x : 50,
             y : 50,
             isTalking: false, //fix later

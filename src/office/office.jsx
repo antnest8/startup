@@ -5,14 +5,13 @@ import { UserInstance } from './userObj';
 import { OfficeSpace } from './OfficeSpace';
 
 export function Office(props){
-    //this is where I need to handle the WebSocket connection
-
     const userName = props.userName;
     const userData = JSON.parse(localStorage.getItem(userName + "_Data")); 
     const [clientCoords, setClientCoords] = React.useState([50, 50]);
     const [otherUsers, setOtherUsers] = React.useState([]);
     const startingUser = {
             userName: userName,
+            displayName: userData.displayName,
             initials: userData.initials,
             x : clientCoords[0],
             y : clientCoords[1],
@@ -20,9 +19,13 @@ export function Office(props){
         }
     var userList = [startingUser, ...otherUsers];
 
+    const testContext = new AudioContext();//test
+    const gainNode = testContext.createGain();
+
     function handleData(newData){
         const localRenderData = {
             userName: userName,
+            displayName: userData.displayName,
             initials: userData.initials,
             x : clientCoords[0],
             y : clientCoords[1],
@@ -30,15 +33,16 @@ export function Office(props){
         }
 
         userList = [localRenderData, ...newData];
-        console.log("DEBUG: userList" + JSON.stringify(userList));
+        //console.log("DEBUG: userList" + JSON.stringify(userList));
         setOtherUsers(newData);
-        console.log("handleData recieved data!: " + JSON.stringify(newData));
+        //console.log("handleData recieved data!: " + JSON.stringify(newData));
 
     }
 
     function moveUser(newCoords){
         const localRenderData = {
             userName: userName,
+            displayName: userData.displayName,
             initials: userData.initials,
             x : newCoords[0],
             y : newCoords[1],
@@ -48,14 +52,13 @@ export function Office(props){
         userList = [localRenderData, ...otherUsers];
         OfficeConnections.pushData(localRenderData);
         setClientCoords(newCoords);
-        console.log("moveUser succesfully called!");
-        //sendMovementToWebSocket
     }
 
     React.useEffect(() => {
         console.log("Full Office App finished rendering!")
         const localRenderData = {
             userName: userName,
+            displayName: userData.displayName,
             initials: userData.initials,
             x : clientCoords[0],
             y : clientCoords[1],
@@ -63,6 +66,16 @@ export function Office(props){
         }
         OfficeConnections.connectSelf(localRenderData, handleData)
     },[clientCoords]);
+
+    React.useEffect(() => {
+        const audioElement = document.createElement("audio");
+        const srcAttr = document.createAttribute("src");
+        srcAttr.value = "testAudio.m4a";
+        audioElement.setAttributeNode(srcAttr);
+        const testAudio = testContext.createMediaElementSource(audioElement);
+        testAudio.connect(gainNode).connect(testContext.destination);
+        console.log("audioState: " + testContext.state);
+    },[]);
 
     return (
         <div className="flex flex-col grow">
@@ -89,7 +102,7 @@ export function Office(props){
 
 function ActiveUsers(props){
     const fakeUser = new Object({initials: "YA", xPos: "50", yPos:"50", displayName:"You", userName:"testUser"});
-    const userList = [fakeUser]; //replace this with live data from WebSocket mock
+    const userList = props.userList; //replace this with live data from WebSocket mock
     const userName = props.userName;
 
     function renderUserList(){
@@ -132,7 +145,6 @@ function ActiveUsers(props){
             <circle stroke="#925959" strokeWidth="3" cx="37" cy="37" r="30" fill="#BF8F8F" />
             <text x="37" y="45" fontSize="20" textAnchor="middle" fill="white">U2</text>
         </svg>
-        <audio src="https://radioteca.net/media/uploads/audios/%25Y_%25m/never gonna give you up - astley rick top 20.mp3"></audio>
         <img className="size-[20px] absolute bottom-0 right-0" type="image/svg+xml" src="./microphone-svgrepo-com.svg" />
     </figure>
     
