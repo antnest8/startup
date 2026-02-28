@@ -18,7 +18,7 @@ export function Office(props){
             y : clientCoords[1],
             isTalking: false, //fix later
         }
-    var userList = [startingUser];
+    var userList = [startingUser, ...otherUsers];
 
     function handleData(newData){
         const localRenderData = {
@@ -29,9 +29,10 @@ export function Office(props){
             isTalking: false, //fix later
         }
 
-        userList = [localRenderData, ...otherUsers];
+        userList = [localRenderData, ...newData];
+        console.log("DEBUG: userList" + JSON.stringify(userList));
         setOtherUsers(newData);
-        console.log("handleData recieved data!")
+        console.log("handleData recieved data!: " + JSON.stringify(newData));
 
     }
 

@@ -23,12 +23,12 @@ class Connections{
     }
 
     connectSelf(userData, handler){
-        console.log("User Connected");
+        console.log("OFFICE-CONNECTIONS: User Connected");
         this.handler = handler;
     }
 
     pushData(userData){
-        console.log("Data Recieved");
+        console.log("OFFICE-CONNECTIONS: Data Recieved");
     }
     
 }
