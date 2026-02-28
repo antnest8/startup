@@ -10,27 +10,22 @@ export function Office(props){
     const [clientCoords, setClientCoords] = React.useState([50, 50]);
     const [otherUsers, setOtherUsers] = React.useState([]);
     const [audioList, setAudioList] = React.useState([]);
-    const startingUser = {
+
+    function makeUserObj(coords=clientCoords){
+        return {
             userName: userName,
             displayName: userData.displayName,
             initials: userData.initials,
             x : clientCoords[0],
             y : clientCoords[1],
             isTalking: false, //fix later
-        }
-    var userList = [startingUser, ...otherUsers];
+        };
+    }
+    var userList = [makeUserObj(), ...otherUsers];
 
     function handleData(newData){
-        const localRenderData = {
-            userName: userName,
-            displayName: userData.displayName,
-            initials: userData.initials,
-            x : clientCoords[0],
-            y : clientCoords[1],
-            isTalking: false, //fix later
-        }
 
-        userList = [localRenderData, ...newData];
+        userList = [makeUserObj(), ...newData];
         //console.log("DEBUG: userList" + JSON.stringify(userList));
         setOtherUsers(newData);
         //console.log("handleData recieved data!: " + JSON.stringify(newData));
@@ -38,14 +33,7 @@ export function Office(props){
     }
 
     function moveUser(newCoords){
-        const localRenderData = {
-            userName: userName,
-            displayName: userData.displayName,
-            initials: userData.initials,
-            x : newCoords[0],
-            y : newCoords[1],
-            isTalking: false, //fix later
-        }
+        const localRenderData = makeUserObj(newCoords);
 
         userList = [localRenderData, ...otherUsers];
         OfficeConnections.pushData(localRenderData);
@@ -53,7 +41,7 @@ export function Office(props){
     }
 
     React.useEffect(()=>{
-        OfficeConnections.connectSelf(startingUser, handleData)
+        OfficeConnections.connectSelf(makeUserObj(), handleData)
         setAudioList(generateAudioList());
     },[])
 

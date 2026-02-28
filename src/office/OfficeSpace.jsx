@@ -6,7 +6,8 @@ export function OfficeSpace(props){
     const userList = props.userList; //replace this with live data from WebSocket mock
     const moveUser = props.moveUserFunc;
     const audioList = props.audioList;
-    const userGains = {};
+    const [userGains, setUserGains] = React.useState({})
+    console.log(`DEBUG-normal audioList.length: ${audioList.length}`)
 
 
 
@@ -37,15 +38,17 @@ export function OfficeSpace(props){
     }
 
     function adjustGains(){
-        for([talkingUserName, userGain] in userGains){
-            const userObj = userList.find((userObj)=>userObj.userName == talkingUserName);
-            userGain.gain.value = calcProximity(userList[0], userObj);
+        for(const [key, obj] of Object.entries(userGains)){
+            const userObj = userList.find((userObj)=>userObj.userName == key);
+            if(userObj){
+                obj.gain.value = calcProximity(userList[0], userObj);
+            }
         }
     }
 
     function renderUsers(props){
         
-        console.log(`rendererTokenListSize: ${userList.length}, #ofTalkingUsers: ${userGains.length}`)
+        console.log(`rendererTokenListSize: ${userList.length}, #ofTalkingUsers: ${Object.keys(userGains).length}`)
         adjustGains();
 
         const userTokens = userList.map((userObj, index) => <UserToken key={`token-${index}`} initials={userObj.initials} xPos={userObj.x} yPos={userObj.y}/>);
@@ -53,15 +56,20 @@ export function OfficeSpace(props){
     }
 
     React.useEffect(()=>{
-        audioList.forEach((soundPackage)=>{
+        const tempGains = {}
+        console.log(`DEBUG-OfficeSpace is mounting with ${audioList.length} audio streams`)
+        audioList.forEach(soundPackage=>{
             const context = new AudioContext();
             const userGain = context.createGain();
-            userGains[soundPackage.id] = userGain;
+            console.log(`DEBUG-soundPackageID: ${soundPackage.id}`)
+            tempGains[soundPackage.id] = userGain;
+            console.log(`DEBUG-userGains print: ${JSON.stringify(userGains)}`)
             context.createMediaStreamSource(soundPackage.audio)
                 .connect(userGain)
                 .connect(context.destination);
         })
-    },[])
+        setUserGains(tempGains)
+    },[audioList])
 
     return(
     <div id="app-window" className="relative grow" onClick={calculateClick}>
@@ -96,8 +104,8 @@ function UserToken(props){
 
 
 function calcProximity(localUser, otherUser){
-    const maxDistance = 40;
-    const distance = Math.sqrt((localUser.xPos - otherUser.xPos)**2 + (localUser.yPos - otherUser.yPos)**2);
+    const maxDistance = 80;
+    const distance = Math.sqrt((localUser.x - otherUser.x)**2 + (localUser.y - otherUser.y)**2);
     const volume = Math.max(0, 1 - (distance / maxDistance));
     return volume;
 }
