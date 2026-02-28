@@ -5,14 +5,30 @@ export function OfficeSpace(props){
     //const fakeUser = new Object({initials: "YA", xPos: "50", yPos:"50"});
     const userList = props.userList; //replace this with live data from WebSocket mock
     const moveUser = props.moveUserFunc;
-    //const testGainNode = props.gainNode;
+    const audioList = props.audioList;
+    const userGains = {};
 
-    
+
 
     function calculateClick(event){
         const screenCoords = [event.clientX, event.clientY];
         const windowRect = document.getElementById("app-window").getBoundingClientRect();
         const relativeCoords = [screenCoords[0] - windowRect.x, screenCoords[1] - windowRect.y];
+
+        function boundBounce(relativeCoords){
+            if(relativeCoords[0] < 37){
+                relativeCoords[0] = 37;
+            }
+            if(relativeCoords[1] < 37){
+                relativeCoords[1] = 37;
+            }
+            if(relativeCoords[0] + 37 > windowRect.width){
+                relativeCoords[0] = windowRect.width - 38;
+            }
+            if(relativeCoords[1] + 37 > windowRect.height){
+                relativeCoords[1] = windowRect.height - 38;
+    }
+}
 
         boundBounce(relativeCoords);
         const normalizedCoords = [relativeCoords[0] / windowRect.width * 100, relativeCoords[1] / windowRect.height * 100]
@@ -20,13 +36,32 @@ export function OfficeSpace(props){
         moveUser(normalizedCoords);
     }
 
+    function adjustGains(){
+        for([talkingUserName, userGain] in userGains){
+            const userObj = userList.find((userObj)=>userObj.userName == talkingUserName);
+            userGain.gain.value = calcProximity(userList[0], userObj);
+        }
+    }
+
     function renderUsers(props){
         
-        console.log(`rendererTokenListSize: ${userList.length}`)
+        console.log(`rendererTokenListSize: ${userList.length}, #ofTalkingUsers: ${userGains.length}`)
+        adjustGains();
 
         const userTokens = userList.map((userObj, index) => <UserToken key={`token-${index}`} initials={userObj.initials} xPos={userObj.x} yPos={userObj.y}/>);
         return userTokens;
     }
+
+    React.useEffect(()=>{
+        audioList.forEach((soundPackage)=>{
+            const context = new AudioContext();
+            const userGain = context.createGain();
+            userGains[soundPackage.id] = userGain;
+            context.createMediaStreamSource(soundPackage.audio)
+                .connect(userGain)
+                .connect(context.destination);
+        })
+    },[])
 
     return(
     <div id="app-window" className="relative grow" onClick={calculateClick}>
@@ -58,20 +93,7 @@ function UserToken(props){
     );
 }
 
-function boundBounce(relativeCoords){
-    if(relativeCoords[0] < 37){
-        relativeCoords[0] = 37;
-    }
-    if(relativeCoords[1] < 37){
-        relativeCoords[1] = 37;
-    }
-    if(relativeCoords[0] + 37 > windowRect.width){
-        relativeCoords[0] = windowRect.width - 38;
-    }
-    if(relativeCoords[1] + 37 > windowRect.height){
-        relativeCoords[1] = windowRect.height - 38;
-    }
-}
+
 
 function calcProximity(localUser, otherUser){
     const maxDistance = 40;

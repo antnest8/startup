@@ -52,19 +52,8 @@ export function Office(props){
         setClientCoords(newCoords);
     }
 
-    React.useEffect(() => {
-        const localRenderData = {
-            userName: userName,
-            displayName: userData.displayName,
-            initials: userData.initials,
-            x : clientCoords[0],
-            y : clientCoords[1],
-            isTalking: false, //fix later
-        }
-        OfficeConnections.connectSelf(localRenderData, handleData)
-    },[clientCoords]);
-
     React.useEffect(()=>{
+        OfficeConnections.connectSelf(startingUser, handleData)
         setAudioList(generateAudioList());
     },[])
 
