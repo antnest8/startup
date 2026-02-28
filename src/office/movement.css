@@ -1,0 +1,20 @@
+
+
+.moveThisNow {
+    animation-duration:1s;
+    animation-name: tokenMovement;
+
+}
+
+@keyframes tokenMovement {
+    from{
+        left:--startX;
+        top:--startY;
+    }
+
+    to{
+        left:--destinationX;
+        top:--destinationY;
+    }
+
+}
