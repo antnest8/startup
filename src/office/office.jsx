@@ -26,18 +26,36 @@ export function Office(props){
                     </figure>
             </header>
             <main className="flex grow bg-stone-800">
-                <aside className="bg-stone-900/70 p-2 px-4 flex flex-col justify-top min-w-[25dvw]">
-                    <ul className="rounded-md bg-stone-800 p-1 list-disc list-inside">
-                        <h3 className="text-stone-500">Active Users</h3>
-                        <li className="text-lime-400">You</li>
-                        <li className="text-stone-300">User 2</li>
-                        <li className="text-stone-300">User 3</li>
-                    </ul>
-                </aside>
+                <ActiveUsers userName={userName} />
                 <OfficeSpace/>
             </main>
         </div>
     )
+}
+
+function ActiveUsers(props){
+    const fakeUser = new Object({initials: "YA", xPos: "50", yPos:"50", displayName:"You", userName:"testUser"});
+    const userList = [fakeUser]; //replace this with live data from WebSocket mock
+    const userName = props.userName;
+
+    function renderUserList(){
+        return userList.map((userObj, index) => {
+            const textColor = userObj.userName == userName ? "oklch(84.1% 0.238 128.85)" : "oklch(86.9% 0.005 56.366)";
+            const dynamicStyle = {
+                color: textColor,
+            };
+            return <li key={"userListItem-" + index} style={dynamicStyle} > {userObj.displayName}</li>
+        })
+    }
+
+    return(
+        <aside className="bg-stone-900/70 p-2 px-4 flex flex-col justify-top min-w-[25dvw]">
+            <ul className="rounded-md bg-stone-800 p-1 list-disc list-inside">
+                <h3 className="text-stone-500">Active Users</h3>
+                {renderUserList()}
+            </ul>
+        </aside>
+    );
 }
 
 
