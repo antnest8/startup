@@ -1,24 +1,36 @@
 
-export class Connections{
-    static onlineUsers = [];
+class Connections{
+    onlineUsers = [];
+    clientHandlers = [];
 
-    static connectUser(userName, initials){
+    connectSelf(userName, initials){
         this.onlineUsers.push(new UserInstance(userName, initials));
         console.log("Attempting to connect user: " + userName);
-        console.log(JSON.stringify(this.onlineUsers))
+        console.log(JSON.stringify(this.onlineUsers));
+        this.notifyClients();
     }
 
-    static getUsers(){
+    addHandler(handler){
+        this.clientHandlers.push(handler);
         return this.onlineUsers;
     }
 
-    static updateUserPosition(userName, x, y){
+    updateUserPosition(userName, x, y){
         userObj = this.onlineUsers.find(item => item.userName == userName);
         userObj.x = x;
         userObj.y = y;
-    }
 
+        this.notifyClients();
+    }
+    
+    notifyClients(){
+        this.clientHandlers.forEach(handler => {
+            handler(this.onlineUsers)
+        })
+    }
+    
 }
+
 
 class UserInstance{
     userName;
@@ -36,3 +48,6 @@ class UserInstance{
     }
 
 }
+
+const OfficeConnections = new Connections();
+export { OfficeConnections };

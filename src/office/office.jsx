@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavBarButton } from '../nav/barButtons';
-import { Connections } from './connections';
+import { OfficeConnections } from './connections';
 
 export function Office(props){
 
@@ -8,8 +8,9 @@ export function Office(props){
     const userData = JSON.parse(localStorage.getItem(userName + "_Data"));
 
     React.useEffect(() => {
-        Connections.connectUser(userName, userData.initials);
+        OfficeConnections.connectSelf(userName, userData.initials);
     },[]);
+
     
 
     return (
@@ -43,12 +44,20 @@ export function Office(props){
 }
 
 function OfficeSpace(props){
+    const returnedList = OfficeConnections.addHandler(handleConnectionData);
+    const [userList, setUserList] = React.useState(returnedList);
+
+    function handleConnectionData(newList){
+        console.log("Handler called with " + JSON.stringify(newList))
+        setUserList(newList);
+    }
 
     function renderUsers(props){
-        const connectedUsers = Connections.getUsers();
         const userTokens = [];
 
-        connectedUsers.forEach((userObj) => {
+        console.log(`rendererTokenListSize: ${userList.length}`)
+
+        userList.forEach((userObj) => {
             userTokens.push(
                 <UserToken initials={userObj.initials} x={userObj.x} y={userObj.y}/>
             )
