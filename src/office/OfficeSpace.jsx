@@ -19,7 +19,7 @@ export function OfficeSpace(props){
 
         console.log(`rendererTokenListSize: ${userList.length}`)
 
-        const userTokens = userList.map((userObj, index) => <UserToken key={`token-${index}`} initials={userObj.initials} xPos={userObj.xPos} yPos={userObj.yPos}/>);
+        const userTokens = userList.map((userObj, index) => <UserToken key={`token-${index}`} initials={userObj.initials} xPos={userObj.x} yPos={userObj.y}/>);
         return userTokens;
     }
 

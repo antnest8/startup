@@ -31,8 +31,13 @@ export function Office(props){
 
         userList = [localRenderData, ...otherUsers];
         setClientCoords(newCoords);
+        console.log("moveUser succesfully called!")
         //sendMovementToWebSocket
     }
+
+    React.useEffect(() => {
+        console.log("Full Office App finished rendering!")
+    },[clientCoords]);
 
     return (
         <div className="flex flex-col grow">
