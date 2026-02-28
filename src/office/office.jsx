@@ -9,7 +9,7 @@ export function Office(props){
 
     const userName = props.userName;
     const userData = JSON.parse(localStorage.getItem(userName + "_Data")); 
-    const [clientCoords, setClientCoords] = React.useState([0, 0]);
+    const [clientCoords, setClientCoords] = React.useState([50, 50]);
     const [otherUsers, setOtherUsers] = React.useState([]);
     const startingUser = {
             userName: userName,

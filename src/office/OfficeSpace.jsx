@@ -41,7 +41,7 @@ function UserToken(props){
     };
 
     return (
-        <figure style={dynamicStyle} className="size-[75px]"  id="user-1">
+        <figure style={dynamicStyle} className="size-[75px] translate-[-50%]"  id="user-1">
             <svg width="75" height="75">
                 <circle stroke="#599259" strokeWidth="3" cx="37" cy="37" r="30" fill="#8FBF8F" />
                 <text x="37" y="45" fontSize="20" textAnchor="middle" fill="white">{initials}</text>
