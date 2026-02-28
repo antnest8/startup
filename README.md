@@ -126,6 +126,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
     - [ ] dynamic "player" list
     - [ ] audio playing
     - [ ] audio controls 
+    - [ ] Connections
 - [x] Make Nav Bar standard
 - [x] Fix Tailwind CSS not rendering correctly
 - [x] App Context

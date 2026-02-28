@@ -1,17 +1,14 @@
 import React from 'react';
 import { NavBarButton } from '../nav/barButtons';
 import { OfficeConnections } from './connections';
+import { OfficeSpace } from './OfficeSpace';
 
 export function Office(props){
 
+    //this is where I need to handle the WebSocket connection
+
     const userName = props.userName;
-    const userData = JSON.parse(localStorage.getItem(userName + "_Data"));
-
-    React.useEffect(() => {
-        OfficeConnections.connectSelf(userName, userData.initials);
-    },[]);
-
-    
+    const userData = JSON.parse(localStorage.getItem(userName + "_Data"));    
 
     return (
         <div className="flex flex-col grow">
@@ -43,54 +40,6 @@ export function Office(props){
     )
 }
 
-function OfficeSpace(props){
-    const returnedList = OfficeConnections.addHandler(handleConnectionData);
-    const [userList, setUserList] = React.useState(returnedList);
-
-    function handleConnectionData(newList){
-        console.log("Handler called with " + JSON.stringify(newList))
-        setUserList(newList);
-    }
-
-    function renderUsers(props){
-        const userTokens = [];
-
-        console.log(`rendererTokenListSize: ${userList.length}`)
-
-        userList.forEach((userObj) => {
-            userTokens.push(
-                <UserToken initials={userObj.initials} x={userObj.x} y={userObj.y}/>
-            )
-        })
-
-        return userTokens;
-    }
-
-    return(
-    <div className="application-window">
-        {renderUsers()}
-    </div>
-    );
-}
-
-
-function UserToken(props){
-    const initials = props.initials;
-    //const userName = props.userName;
-    const x = ` bottom-${props.x}/100`;
-    const y = ` right-${props.y}/100`;
-
-
-    return (
-        <figure className={"absolute size-[75px]" + x + y} id="user-1">
-            <svg width="75" height="75">
-                <circle stroke="#599259" strokeWidth="3" cx="37" cy="37" r="30" fill="#8FBF8F" />
-                <text x="37" y="45" fontSize="20" textAnchor="middle" fill="white">{initials}</text>
-            </svg>
-            <img className="size-[20px] hidden absolute bottom-0 right-0" type="image/svg+xml" src="./microphone-svgrepo-com.svg" />
-        </figure>
-    );
-}
 
 
 
