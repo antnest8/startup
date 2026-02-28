@@ -7,25 +7,12 @@ export function OfficeSpace(props){
     const moveUser = props.moveUserFunc;
     //const testGainNode = props.gainNode;
 
+    
+
     function calculateClick(event){
         const screenCoords = [event.clientX, event.clientY];
         const windowRect = document.getElementById("app-window").getBoundingClientRect();
         const relativeCoords = [screenCoords[0] - windowRect.x, screenCoords[1] - windowRect.y];
-
-        const boundBounce = (relativeCoords) => {
-            if(relativeCoords[0] < 37){
-                relativeCoords[0] = 37;
-            }
-            if(relativeCoords[1] < 37){
-                relativeCoords[1] = 37;
-            }
-            if(relativeCoords[0] + 37 > windowRect.width){
-                relativeCoords[0] = windowRect.width - 38;
-            }
-            if(relativeCoords[1] + 37 > windowRect.height){
-                relativeCoords[1] = windowRect.height - 38;
-            }
-        }
 
         boundBounce(relativeCoords);
         const normalizedCoords = [relativeCoords[0] / windowRect.width * 100, relativeCoords[1] / windowRect.height * 100]
@@ -70,3 +57,26 @@ function UserToken(props){
         </figure>
     );
 }
+
+function boundBounce(relativeCoords){
+    if(relativeCoords[0] < 37){
+        relativeCoords[0] = 37;
+    }
+    if(relativeCoords[1] < 37){
+        relativeCoords[1] = 37;
+    }
+    if(relativeCoords[0] + 37 > windowRect.width){
+        relativeCoords[0] = windowRect.width - 38;
+    }
+    if(relativeCoords[1] + 37 > windowRect.height){
+        relativeCoords[1] = windowRect.height - 38;
+    }
+}
+
+function calcProximity(localUser, otherUser){
+    const maxDistance = 40;
+    const distance = Math.sqrt((localUser.xPos - otherUser.xPos)**2 + (localUser.yPos - otherUser.yPos)**2);
+    const volume = Math.max(0, 1 - (distance / maxDistance));
+    return volume;
+}
+

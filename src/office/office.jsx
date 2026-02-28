@@ -1,14 +1,15 @@
 import React from 'react';
 import { NavBarButton } from '../nav/barButtons';
 import { OfficeConnections } from './connections';
-import { UserInstance } from './userObj';
 import { OfficeSpace } from './OfficeSpace';
+import { generateAudioList } from './audioMock';
 
 export function Office(props){
     const userName = props.userName;
     const userData = JSON.parse(localStorage.getItem(userName + "_Data")); 
     const [clientCoords, setClientCoords] = React.useState([50, 50]);
     const [otherUsers, setOtherUsers] = React.useState([]);
+    const [audioList, setAudioList] = React.useState([]);
     const startingUser = {
             userName: userName,
             displayName: userData.displayName,
@@ -18,9 +19,6 @@ export function Office(props){
             isTalking: false, //fix later
         }
     var userList = [startingUser, ...otherUsers];
-
-    const testContext = new AudioContext();//test
-    const gainNode = testContext.createGain();
 
     function handleData(newData){
         const localRenderData = {
@@ -55,7 +53,6 @@ export function Office(props){
     }
 
     React.useEffect(() => {
-        console.log("Full Office App finished rendering!")
         const localRenderData = {
             userName: userName,
             displayName: userData.displayName,
@@ -67,15 +64,9 @@ export function Office(props){
         OfficeConnections.connectSelf(localRenderData, handleData)
     },[clientCoords]);
 
-    React.useEffect(() => {
-        const audioElement = document.createElement("audio");
-        const srcAttr = document.createAttribute("src");
-        srcAttr.value = "testAudio.m4a";
-        audioElement.setAttributeNode(srcAttr);
-        const testAudio = testContext.createMediaElementSource(audioElement);
-        testAudio.connect(gainNode).connect(testContext.destination);
-        console.log("audioState: " + testContext.state);
-    },[]);
+    React.useEffect(()=>{
+        setAudioList(generateAudioList());
+    },[])
 
     return (
         <div className="flex flex-col grow">
@@ -94,7 +85,7 @@ export function Office(props){
             </header>
             <main className="flex grow bg-stone-800">
                 <ActiveUsers userName={userName} userList={userList}/>
-                <OfficeSpace userList={userList} moveUserFunc={moveUser}/>
+                <OfficeSpace userList={userList} moveUserFunc={moveUser} audioList={audioList}/>
             </main>
         </div>
     )
