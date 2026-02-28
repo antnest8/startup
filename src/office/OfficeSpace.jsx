@@ -10,6 +10,23 @@ export function OfficeSpace(props){
         const screenCoords = [event.clientX, event.clientY];
         const windowRect = document.getElementById("app-window").getBoundingClientRect();
         const relativeCoords = [screenCoords[0] - windowRect.x, screenCoords[1] - windowRect.y];
+
+        const boundBounce = (relativeCoords) => {
+            if(relativeCoords[0] < 37){
+                relativeCoords[0] = 37;
+            }
+            if(relativeCoords[1] < 37){
+                relativeCoords[1] = 37;
+            }
+            if(relativeCoords[0] + 37 > windowRect.width){
+                relativeCoords[0] = windowRect.width - 38;
+            }
+            if(relativeCoords[1] + 37 > windowRect.height){
+                relativeCoords[1] = windowRect.height - 38;
+            }
+        }
+
+        boundBounce(relativeCoords);
         const normalizedCoords = [relativeCoords[0] / windowRect.width * 100, relativeCoords[1] / windowRect.height * 100]
         console.log("Click Detected! coords: " + JSON.stringify(normalizedCoords));
         moveUser(normalizedCoords);
