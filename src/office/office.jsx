@@ -20,6 +20,21 @@ export function Office(props){
         }
     var userList = [startingUser];
 
+    function handleData(newData){
+        const localRenderData = {
+            userName: userName,
+            initials: userData.initials,
+            x : clientCoords[0],
+            y : clientCoords[1],
+            isTalking: false, //fix later
+        }
+
+        userList = [localRenderData, ...otherUsers];
+        setOtherUsers(newData);
+        console.log("handleData recieved data!")
+
+    }
+
     function moveUser(newCoords){
         const localRenderData = {
             userName: userName,
@@ -30,13 +45,22 @@ export function Office(props){
         }
 
         userList = [localRenderData, ...otherUsers];
+        OfficeConnections.pushData(localRenderData);
         setClientCoords(newCoords);
-        console.log("moveUser succesfully called!")
+        console.log("moveUser succesfully called!");
         //sendMovementToWebSocket
     }
 
     React.useEffect(() => {
         console.log("Full Office App finished rendering!")
+        const localRenderData = {
+            userName: userName,
+            initials: userData.initials,
+            x : clientCoords[0],
+            y : clientCoords[1],
+            isTalking: false, //fix later
+        }
+        OfficeConnections.connectSelf(localRenderData, handleData)
     },[clientCoords]);
 
     return (

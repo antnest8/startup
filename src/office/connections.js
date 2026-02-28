@@ -2,32 +2,33 @@ import { UserInstance } from "./userObj";
 
 class Connections{
     onlineUsers = [];
-    clientHandlers = [];
+    handler;
 
-    connectSelf(userName, initials){
-        this.onlineUsers.push(new UserInstance(userName, initials));
-        console.log("Attempting to connect user: " + userName);
-        console.log(JSON.stringify(this.onlineUsers));
-        this.notifyClients();
+    constructor(){
+        const testUser = {
+            userName: "otherDude",
+            initials: "OD",
+            x : 50,
+            y : 50,
+            isTalking: false, //fix later
+        }
+        setInterval(()=>{
+            //updateMovement
+            if(this.handler){
+                testUser.x = Math.random() * 100;
+                testUser.y = Math.random() * 100;
+                this.handler([testUser])
+            }
+        },10000)
     }
 
-    addHandler(handler){
-        this.clientHandlers.push(handler);
-        return this.onlineUsers;
+    connectSelf(userData, handler){
+        console.log("User Connected");
+        this.handler = handler;
     }
 
-    updateUserPosition(userName, x, y){
-        userObj = this.onlineUsers.find(item => item.userName == userName);
-        userObj.x = x;
-        userObj.y = y;
-
-        this.notifyClients();
-    }
-    
-    notifyClients(){
-        this.clientHandlers.forEach(handler => {
-            handler(this.onlineUsers)
-        })
+    pushData(userData){
+        console.log("Data Recieved");
     }
     
 }

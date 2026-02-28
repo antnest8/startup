@@ -55,8 +55,8 @@ function UserToken(props){
         left: `${props.xPos}%`,
         top: `${props.yPos}%`,
         position: "absolute",
-        "transition-property":"left top",
-        "transition-duration":"1s"
+        transitionProperty:"left top",
+        transitionDuration:"1s"
     };
 
     return (
