@@ -1,14 +1,38 @@
 import React from 'react';
 import { NavBarButton } from '../nav/barButtons';
 import { OfficeConnections } from './connections';
+import { UserInstance } from './userObj';
 import { OfficeSpace } from './OfficeSpace';
 
 export function Office(props){
-
     //this is where I need to handle the WebSocket connection
 
     const userName = props.userName;
-    const userData = JSON.parse(localStorage.getItem(userName + "_Data"));    
+    const userData = JSON.parse(localStorage.getItem(userName + "_Data")); 
+    const [clientCoords, setClientCoords] = React.useState([0, 0]);
+    const [otherUsers, setOtherUsers] = React.useState([]);
+    const startingUser = {
+            userName: userName,
+            initials: userData.initials,
+            x : clientCoords[0],
+            y : clientCoords[1],
+            isTalking: false, //fix later
+        }
+    var userList = [startingUser];
+
+    function moveUser(newCoords){
+        const localRenderData = {
+            userName: userName,
+            initials: userData.initials,
+            x : newCoords[0],
+            y : newCoords[1],
+            isTalking: false, //fix later
+        }
+
+        userList = [localRenderData, ...otherUsers];
+        setClientCoords(newCoords);
+        //sendMovementToWebSocket
+    }
 
     return (
         <div className="flex flex-col grow">
@@ -26,8 +50,8 @@ export function Office(props){
                     </figure>
             </header>
             <main className="flex grow bg-stone-800">
-                <ActiveUsers userName={userName} />
-                <OfficeSpace/>
+                <ActiveUsers userName={userName} userList={userList}/>
+                <OfficeSpace userList={userList} moveUserFunc={moveUser}/>
             </main>
         </div>
     )

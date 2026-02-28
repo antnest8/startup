@@ -2,8 +2,18 @@ import React from 'react';
 
 
 export function OfficeSpace(props){
-    const fakeUser = new Object({initials: "YA", xPos: "50", yPos:"50"});
-    const userList = [fakeUser]; //replace this with live data from WebSocket mock
+    //const fakeUser = new Object({initials: "YA", xPos: "50", yPos:"50"});
+    const userList = props.userList; //replace this with live data from WebSocket mock
+    const moveUser = props.moveUserFunc;
+
+    function calculateClick(event){
+        const screenCoords = [event.clientX, event.clientY];
+        const windowRect = document.getElementById("app-window").getBoundingClientRect();
+        const relativeCoords = [screenCoords[0] - windowRect.x, screenCoords[1] - windowRect.y];
+        const normalizedCoords = [relativeCoords[0] / windowRect.width * 100, relativeCoords[1] / windowRect.height * 100]
+        console.log("Click Detected! coords: " + JSON.stringify(normalizedCoords));
+        moveUser(normalizedCoords);
+    }
 
     function renderUsers(props){
 
@@ -14,7 +24,7 @@ export function OfficeSpace(props){
     }
 
     return(
-    <div className="relative grow">
+    <div id="app-window" className="relative grow" onClick={calculateClick}>
         {renderUsers()}
     </div>
     );
