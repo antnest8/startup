@@ -108,27 +108,18 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] Settings Page
-    - [x] Show current username and profile
-    - [ ] Pass userName into settings and handle
-    - [x] Persist saved changes
-    - [x] DataFields
-        - [x] Change data buttons
-        - [x] Password Field
-            - [x] Toggle hide and not
-- [x] Login Page
+- [x] Settings Page - I pass in and call data from local storage, displaying it dynamically. I use reactivity to create functionality to change stored account data.
+- [x] Login Page - Creation of new accounts and logging in of past accounts are enabled with persitance accross navigation. I also protected sever routes to reroute here until logged in.
     - [x] set local data (fake auth)
     - [x] press submit button!
     - [x] logout logic  
-- [ ] Office Page
-    - [ ] move token based on click
-    - [ ] enter office button popup/fade-out-wall
-    - [ ] dynamic "player" list
-    - [ ] audio playing
-    - [ ] audio controls 
-    - [ ] Connections
-- [x] Make Nav Bar standard
-- [x] Fix Tailwind CSS not rendering correctly
+- [X] Office Page
+    - [x] move token based on click - Using lots of state to ensure rerenders are done properly
+    - [x] dynamic "player" list - created by passing state down from parent components where parent component manages WebSocket data
+    - [x] audio playing and proximity - used Web Audio API to mess with audio to make proximity chat. Mocked WebRTC service with meme song. user React.useEffect in order to create AudioGraphs.
+    - [x] Handling data - Used React.useEffect in order to set up WebSocket connection
+- [x] Mocking Databases - using localStorage
+- [X] Mocking WebSocket, services and WebRTC using external functions in .js files
 - [x] App Context
     - [x] persist username and authentication
 

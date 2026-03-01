@@ -16,8 +16,8 @@ class Connections{
         setInterval(()=>{
             //updateMovement
             if(this.handler){
-                testUser.x = Math.random() * 100;
-                testUser.y = Math.random() * 100;
+                testUser.x = Math.random() * 90 + 5;
+                testUser.y = Math.random() * 90 + 5;
                 this.handler([testUser])
             }
         },10000)
