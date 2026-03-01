@@ -106,7 +106,7 @@ function UserToken(props){
 function calcProximity(localUser, otherUser){
     const maxDistance = 80;
     const distance = Math.sqrt((localUser.x - otherUser.x)**2 + (localUser.y - otherUser.y)**2);
-    const volume = Math.max(0, 1 - (distance / maxDistance));
+    const volume = Math.max(0, 1 - (Math.log(0.1 + distance) / Math.log(0.1 + maxDistance)));
     return volume;
 }
 
