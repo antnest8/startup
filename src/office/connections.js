@@ -26,6 +26,15 @@ class Connections{
     connectSelf(userData, handler){
         console.log("OFFICE-CONNECTIONS: User Connected");
         this.handler = handler;
+        const testUser = {
+            userName: "otherDude",
+            initials: "OD",
+            displayName: "Other Dude!",
+            x : 25,
+            y : 25,
+            isTalking: false, //fix later
+        }
+        handler([testUser])
     }
 
     pushData(userData){

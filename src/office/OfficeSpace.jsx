@@ -7,7 +7,7 @@ export function OfficeSpace(props){
     const moveUser = props.moveUserFunc;
     const audioList = props.audioList;
     const [userGains, setUserGains] = React.useState({})
-    console.log(`DEBUG-normal audioList.length: ${audioList.length}`)
+    //console.log(`DEBUG-normal audioList.length: ${audioList.length}`)
 
 
 
@@ -57,13 +57,13 @@ export function OfficeSpace(props){
 
     React.useEffect(()=>{
         const tempGains = {}
-        console.log(`DEBUG-OfficeSpace is mounting with ${audioList.length} audio streams`)
+        //console.log(`DEBUG-OfficeSpace is mounting with ${audioList.length} audio streams`)
         audioList.forEach(soundPackage=>{
             const context = new AudioContext();
             const userGain = context.createGain();
-            console.log(`DEBUG-soundPackageID: ${soundPackage.id}`)
+            //console.log(`DEBUG-soundPackageID: ${soundPackage.id}`)
             tempGains[soundPackage.id] = userGain;
-            console.log(`DEBUG-userGains print: ${JSON.stringify(userGains)}`)
+            //console.log(`DEBUG-userGains print: ${JSON.stringify(userGains)}`)
             context.createMediaStreamSource(soundPackage.audio)
                 .connect(userGain)
                 .connect(context.destination);
