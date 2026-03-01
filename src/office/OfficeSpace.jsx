@@ -51,15 +51,17 @@ export function OfficeSpace(props){
         console.log(`rendererTokenListSize: ${userList.length}, #ofTalkingUsers: ${Object.keys(userGains).length}`)
         adjustGains();
 
-        const userTokens = userList.map((userObj, index) => <UserToken key={`token-${index}`} initials={userObj.initials} xPos={userObj.x} yPos={userObj.y}/>);
+        const userTokens = userList.map((userObj, index) => <UserToken key={`token-${index}`} isTalking={userObj.isTalking} initials={userObj.initials} xPos={userObj.x} yPos={userObj.y}/>);
         return userTokens;
     }
 
     React.useEffect(()=>{
         const tempGains = {}
+        const tempContexts = []
         //console.log(`DEBUG-OfficeSpace is mounting with ${audioList.length} audio streams`)
         audioList.forEach(soundPackage=>{
             const context = new AudioContext();
+            tempContexts.push(context);
             const userGain = context.createGain();
             //console.log(`DEBUG-soundPackageID: ${soundPackage.id}`)
             tempGains[soundPackage.id] = userGain;
@@ -69,6 +71,10 @@ export function OfficeSpace(props){
                 .connect(context.destination);
         })
         setUserGains(tempGains)
+
+        return () => {
+            tempContexts.forEach(context=>context.close());
+        }
     },[audioList])
 
     return(
@@ -90,13 +96,18 @@ function UserToken(props){
         transitionDuration:"1s"
     };
 
+    const displayVal = props.isTalking ? "block": "none"
+    const micStyle = {
+        display: displayVal,
+    }
+
     return (
         <figure style={dynamicStyle} className="size-[75px] translate-[-50%]"  id="user-1">
             <svg width="75" height="75">
                 <circle stroke="#599259" strokeWidth="3" cx="37" cy="37" r="30" fill="#8FBF8F" />
                 <text x="37" y="45" fontSize="20" textAnchor="middle" fill="white">{initials}</text>
             </svg>
-            <img className="size-[20px] hidden absolute bottom-0 right-0" type="image/svg+xml" src="./microphone-svgrepo-com.svg" />
+            <img style={micStyle} className="size-[20px] absolute bottom-0 right-0" type="image/svg+xml" src="./microphone-svgrepo-com.svg" />
         </figure>
     );
 }

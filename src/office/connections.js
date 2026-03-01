@@ -11,7 +11,7 @@ class Connections{
             displayName: "Other Dude!",
             x : 50,
             y : 50,
-            isTalking: false, //fix later
+            isTalking: true, //fix later
         }
         setInterval(()=>{
             //updateMovement
@@ -32,7 +32,7 @@ class Connections{
             displayName: "Other Dude!",
             x : 25,
             y : 25,
-            isTalking: false, //fix later
+            isTalking: true, //fix later
         }
         handler([testUser])
     }
