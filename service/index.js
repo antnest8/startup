@@ -21,18 +21,28 @@ app.use(express.static('public'))
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
 
+//register new user endpoint
 apiRouter.post('/auth/register', async (req, res) => {
     if(await getUser('userName', req.body.user)){
         return res.status(409).send({msg: "Existing User"});
     } else{
         const user = await createUser(req.body);
-        await setAuthCookie(res, user);
+        setAuthCookie(res, user);
         return res.status(201).send({msg:`${req.body}`});
     }
 });
 
-apiRouter.post('/auth/login', (req, res) => {
-    return res.status(200).send({'msg':'login endpoint reached!'});
+//login endpoint
+apiRouter.post('/auth/login', async (req, res) => {
+    const user = await getUser("userName", req.body.user)
+
+    if(user && (await bcrypt.compare(req.body.password, user.password))){
+        setAuthCookie(res, user);
+
+        return  res.status(200).send({'msg':'login endpoint reached!'});
+    }
+    
+    return res.status(401).send({msg:"Unauthorized"});
 });
 
 apiRouter.delete('/auth/login', (req, res) => {
@@ -68,7 +78,7 @@ async function getUser(field, value){
 }
 
 async function createUser(body){
-    const passwordHash = await bcrypt.hash(body.password, 'salty');
+    const passwordHash = await bcrypt.hash(body.password, 10);
 
     const user = {
         email: body.email,
@@ -82,7 +92,7 @@ async function createUser(body){
     return user;
 }
 
-async function setAuthCookie(res, user){
+function setAuthCookie(res, user){
     user.token = uuid.v4();
 
     res.cookie('authToken', user.token, {
