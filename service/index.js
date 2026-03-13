@@ -83,7 +83,14 @@ async function createUser(body){
 }
 
 async function setAuthCookie(res, user){
+    user.token = uuid.v4();
 
+    res.cookie('authToken', user.token, {
+        maxAge: 1000 * 60 * 60,
+        secure: true,
+        httpOnly: true,
+        sameSite: 'strict'
+    });
 }
 
 //listening --------------
