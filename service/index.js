@@ -88,7 +88,11 @@ app.use(function (err, req, res, next){
 
 //utility functions -------------
 async function checkAuth(req, res, next){
-    //TODO: check
+    if(await getUser('token', req.cookie['authToken'])){
+        next();
+    } else{
+        return res.status(401).send({msg : "Unauthorized"});
+    }
 }
 
 async function getUser(field, value){
