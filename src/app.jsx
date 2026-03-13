@@ -8,8 +8,8 @@ import { Settings } from './settings/settings';
 
 
 export default function App(){
-    const [userName, setUserName] = React.useState(localStorage.getItem("currentUser") || '');
-    const currentAuthState = userName ? AuthState.Authenticated : AuthState.Unauthenticated; //replace with Authentication Mock
+    const currentAuthState = getAuthState();  //replace with Authentication Mock
+    const [userName, setUserName] = React.useState(getUserName(currentAuthState));
     const [authState, setAuthState] = React.useState(currentAuthState);
 
     return (
@@ -27,6 +27,46 @@ export default function App(){
                 </footer>
         </BrowserRouter>
     );
+}
+
+function getAuthState(){
+    fetch('/api/auth/check', {
+        method: "GET",
+    })
+    .then((response) => {
+        console.log(`response status: ${response.status}`)
+        if(response.status == 401){
+            console.log("Not Authenticated");
+            return AuthState.Authenticated
+        } else {
+            console.log("Authenticated")
+            return AuthState.Unauthenticated
+        }
+    })
+    .catch((err) => console.log(err))
+}
+
+function getUserName(currentAuth){
+    if(currentAuth === AuthState.Authenticated){
+        return fetch('/api/user/data', {
+            method: "GET",
+        })
+        .then((response) => {
+            if(response.status == 401){
+                throw Error("Previous Authentication succesful but data retrival failed");
+            } else {
+                return response.json();
+            }
+        })
+        .then((resBody) => {
+            console.log(`Name DEBUG: ${resBody.user}`);
+            return resBody.user;
+        })
+        .catch((err) => console.log(err))
+    }else {
+        console.log('Returning blank username')
+        return ''
+    }
 }
 
 function NotFound() {

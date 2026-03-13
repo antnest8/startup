@@ -10,7 +10,7 @@ export function Login(props){
     const setAuthState = props.setAuthState;
 
     React.useEffect(() => {
-        localStorage.setItem("currentUser",'')
+        logoutUser();
     },[])
 
     return (
@@ -127,4 +127,13 @@ function LoginForm(props){
             </div>
         </section>
     );
+}
+
+function logoutUser(setAuthState){
+    fetch('/api/auth/login', {
+        method: 'DELETE',
+    }).then((response) => {
+        console.log(`logou DEBUG: ${response.status}`)
+    })
+    setAuthState(AuthState.Unauthenticated);
 }

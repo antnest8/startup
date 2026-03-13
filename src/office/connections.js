@@ -1,5 +1,3 @@
-import { UserInstance } from "./userObj";
-
 class Connections{
     onlineUsers = [];
     handler;
