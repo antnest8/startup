@@ -45,8 +45,17 @@ apiRouter.post('/auth/login', async (req, res) => {
     return res.status(401).send({msg:"Unauthorized"});
 });
 
-apiRouter.delete('/auth/login', (req, res) => {
-    return res.status(200).send({'msg':'logout endpoint reached!'});
+//logout endpoint
+apiRouter.delete('/auth/login', async (req, res) => {
+    const user = await getUser("userName", req.body.user);
+    const token = req.cookies['authToken'];
+
+    if(user){
+        delete user.token;
+        res.clearCookie('authToken');
+    }
+
+    return res.status(200).send({'msg':'logout succesfull'});
 });
 
 apiRouter.delete('/auth/login', (req, res) => {
