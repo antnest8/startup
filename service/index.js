@@ -18,6 +18,11 @@ app.use(cookieParser())
 
 app.use(express.static('public'))
 
+app.use((req, res, next) => {
+    console.log(`Full request JSON: ${JSON.stringify(req.body)}`)
+    next();
+});
+
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
 
@@ -73,6 +78,7 @@ apiRouter.get('/user/data', checkAuth, async (req, res) => {
             "msg" : `Token Valid, user info below...`,
             "user" : user.userName,
             "displayName" : user.displayName,
+            "initials" : user.initials,
             "email" : user.email,
         });
     } else{
@@ -110,6 +116,7 @@ async function createUser(body){
         email: body.email,
         userName: body.user,
         displayName: body.displayName,
+        initials: body.initials,
         password: passwordHash,
     }
 

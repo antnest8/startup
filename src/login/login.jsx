@@ -10,7 +10,7 @@ export function Login(props){
     const setAuthState = props.setAuthState;
 
     React.useEffect(() => {
-        logoutUser();
+        logoutUser(setAuthState);
     },[])
 
     return (
@@ -19,7 +19,7 @@ export function Login(props){
             <h1 className="font-semibold border-b-2 text-teal-400 text-5xl">OfficeTalk</h1>
         </div >
             <div id="input-center-box" className="flex justify-center min-h-80">
-            <LoginForm userName={userName} changeUserName={setUserName} setAuthState={setAuthState}/>
+            <LoginForm changeUserName={setUserName} setAuthState={setAuthState}/>
         </div>
     </main>
     )
@@ -28,21 +28,30 @@ export function Login(props){
 
 function LoginForm(props){
 
-    const userName = props.userName;
     const nav = useNavigate();
     const setUserName = props.changeUserName;
     const setAuthState = props.setAuthState;
     const [signupErrorMessage, setSignupErrorMessage] = React.useState(null);
     const [loginErrorMessage, setLoginErrorMessage] = React.useState(null);
 
-    function attemptLogin(){
+    async function attemptLogin(){
         const password = document.getElementById("login-password").value;
         const user = document.getElementById("login-user").value;
 
         if(user && password){
-            if(localStorage.getItem(user + "_Data")){
+            const response = await fetch('api/auth/login', {
+                method: 'POST',
+                body: JSON.stringify({
+                    "user": user,
+                    "password": password,
+                }),
+                headers:{
+                    'Content-type': 'application/json; charset=UTF-8'
+                }
+            })
+
+            if(response.status == 200){
                 setUserName(user);
-                localStorage.setItem("currentUser",user);
                 setAuthState(AuthState.Authenticated);
                 nav('/app');
             }
@@ -55,29 +64,43 @@ function LoginForm(props){
         }
     }
 
-    function attemptSignUp(){
+    async function attemptSignUp(){
         const password = document.getElementById("signup-password").value;
         const user = document.getElementById("signup-user").value;
         const name = document.getElementById("signup-name").value;
         const email = document.getElementById("signup-email").value;
 
         if(user && password && name && email){
-            if(!localStorage.getItem(user + "_Data")){
-                const newData = new Object({
-                    password : password,
-                    displayName : name,
-                    email : email,
-                    initials : generateInitials(name)
-                });
-                localStorage.setItem(user + "_Data", JSON.stringify(newData))
-                localStorage.setItem("currentUser",user)
+            const newData = new Object({
+                "user" : user,
+                "password" : password,
+                "displayName" : name,
+                "email" : email,
+                "initials" : generateInitials(name)
+            });
+
+            const response = await fetch('api/auth/register', {
+                method: 'POST',
+                body: JSON.stringify(newData),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+            });
+
+            if(response.status == 201){
                 setUserName(user);
                 setAuthState(AuthState.Authenticated);
                 nav('/app');
-            }
-            else{
+
+            } else if (response.status == 409){
                 setSignupErrorMessage(user + ' is already taken')
             }
+            else{
+                setSignupErrorMessage("Internal Server Error")
+                console.log(`Server Error: ${JSON.stringify(response.type)}`)
+                console.log(`Server Error: ${JSON.stringify(await response.json())}`)
+            }
+
         }
         else{
             setSignupErrorMessage('A required field is missing.')
@@ -133,7 +156,7 @@ function logoutUser(setAuthState){
     fetch('/api/auth/login', {
         method: 'DELETE',
     }).then((response) => {
-        console.log(`logou DEBUG: ${response.status}`)
+        console.log(`logout DEBUG: ${response.status}`)
     })
     setAuthState(AuthState.Unauthenticated);
 }

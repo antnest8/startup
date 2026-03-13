@@ -8,17 +8,24 @@ import { Settings } from './settings/settings';
 
 
 export default function App(){
-    const currentAuthState = getAuthState();  //replace with Authentication Mock
-    const [userName, setUserName] = React.useState(getUserName(currentAuthState));
-    const [authState, setAuthState] = React.useState(currentAuthState);
+    
+    const [userName, setUserName] = React.useState('fetching...');
+    const [authState, setAuthState] = React.useState(AuthState.Pending);
+
+    React.useEffect(()=>{
+        const currentAuthState = getAuthState();  //replace with Authentication Mock
+        setUserName(getUserName(currentAuthState));
+        setAuthState(currentAuthState);
+    }, [])
 
     return (
         <BrowserRouter>
                 <Routes>
+                    {authState === AuthState.Pending && <Route path='*' element={<NotFound />} />}
                     <Route path='/' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} exact />
                     {authState === AuthState.Authenticated ? <Route path='/app' element={<Office userName={userName}/>} /> : <Route path='/app' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} />}
-                    {authState === AuthState.Authenticated ? <Route path='/settings' element={<Settings userName={userName}/>} /> : <Route path='/app' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} />}
-                    <Route path='*' element={<NotFound />} />
+                    {authState === AuthState.Authenticated ? <Route path='/settings' element={<Settings userName={userName}/>} /> : <Route path='/settings' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} />}
+                    <Route path='*' element={<Loading />} />
                 </Routes>
                 <footer className="flex justify-center mb-3 bg-stone-900">
                     <p className="italic content-center">Author: Broderick Johnson</p>
@@ -30,11 +37,11 @@ export default function App(){
 }
 
 function getAuthState(){
-    fetch('/api/auth/check', {
+    return fetch('/api/auth/check', {
         method: "GET",
     })
     .then((response) => {
-        console.log(`response status: ${response.status}`)
+        console.log(`Authcheck response status: ${response.status}`)
         if(response.status == 401){
             console.log("Not Authenticated");
             return AuthState.Authenticated
@@ -71,4 +78,8 @@ function getUserName(currentAuth){
 
 function NotFound() {
   return <main className="container-fluid bg-secondary text-center">404: Return to sender. Address unknown.</main>;
+}
+
+function Loading() {
+  return <main className="bg-secondary text-center">Loading Page</main>;
 }

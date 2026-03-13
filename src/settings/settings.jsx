@@ -6,12 +6,11 @@ import { NavBarButton } from '../nav/barButtons.jsx';
 export function Settings(props){
     // TODO: pass data into Settings and handle
     const userName = props.userName;
-    const userData = JSON.parse(localStorage.getItem(userName + "_Data"));
 
-    const [userPass, changeUserPass] = React.useState(userData.password);
-    const [userDisplay, changeUserDisplay] = React.useState(userData.displayName);
-    const [userEmail, changeUserEmail] = React.useState(userData.email);
-    const [userInitials, changeUserInitials] = React.useState(userData.initials);
+    const [userPass, changeUserPass] = React.useState('fake-password');
+    const [userDisplay, changeUserDisplay] = React.useState('');
+    const [userEmail, changeUserEmail] = React.useState('');
+    const [userInitials, changeUserInitials] = React.useState('');
 
     function saveData(){
         console.log("Data change detected. Saving data...")
@@ -25,13 +24,24 @@ export function Settings(props){
     }
 
     React.useEffect(() => {
-        saveData();
+        //saveData();
     }, [userPass, userEmail])
 
     React.useEffect(() => {
-        changeUserInitials(generateInitials(userDisplay));
-        saveData()
+        //changeUserInitials(generateInitials(userDisplay));
+        //saveData()
     }, [userDisplay]);
+
+    React.useEffect(() => {
+        fetch('api/user/data')
+        .then((res) => res.status == 200? res.json() : null)
+        .then((resBody)=>{
+            //console.log(`Settings response parseing: ${resBody}`)
+            changeUserEmail(resBody.email);
+            changeUserDisplay(resBody.displayName);
+            changeUserInitials(resBody.initials);
+        })
+    }, [])
 
     return (
         <div className="flex flex-col grow">
