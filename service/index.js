@@ -47,7 +47,7 @@ apiRouter.post('/auth/login', async (req, res) => {
 
 //logout endpoint
 apiRouter.delete('/auth/login', async (req, res) => {
-    const user = await getUser("userName", req.body.user);
+    const user = await getUser("token", req.cookies['authToken']);
     const token = req.cookies['authToken'];
 
     if(user){
@@ -58,16 +58,28 @@ apiRouter.delete('/auth/login', async (req, res) => {
     return res.status(200).send({'msg':'logout succesfull'});
 });
 
-apiRouter.delete('/auth/login', (req, res) => {
-    return res.status(200).send({'msg':'logout endpoint reached!'});
+//"checks if token is still valid"
+apiRouter.get('/auth/check', async (req, res) => {
+    if(getUser('token', req.cookies['authToken'])){
+        return res.status(200).send({'msg':'valid token'});
+    } else {
+        return res.status(401).send({msg:"invalid token"});
+    }
 });
 
-apiRouter.get('/auth/check', (req, res) => {
-    return res.status(200).send({'msg':'authentication check reached!'}); 
-});
-
+//the "GetMe" endpoint
 apiRouter.get('/user/data', checkAuth, (req, res) => {
-    return res.status(200).send({'msg':"user info endpoint reached"})
+    const user = getUser('token', req.cookies['authCookies']);
+    if(user){
+        return res.status(200).send({
+            "user" : user.userName,
+            "displayName" : user.displayName,
+            "email" : user.email,
+        });
+    } else{
+        return res.status(401).send({'msg':"Invalid token"});
+    }
+
 })
 
 app.use(function (err, req, res, next){
