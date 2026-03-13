@@ -21,8 +21,14 @@ app.use(express.static('public'))
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
 
-apiRouter.post('/auth/register', (req, res) => {
-    return res.status(201).send({'msg':'register endpoint reached!'});
+apiRouter.post('/auth/register', async (req, res) => {
+    if(await getUser('userName', req.body.user)){
+        return res.status(409).send({msg: "Existing User"});
+    } else{
+        const user = await createUser(req.body);
+        await setAuthCookie(res, user);
+        return res.status(201).send({msg:`${req.body}`});
+    }
 });
 
 apiRouter.post('/auth/login', (req, res) => {
@@ -54,8 +60,30 @@ async function checkAuth(req, res, next){
     //TODO: check
 }
 
-async function setAuthCookie(){
-    
+async function getUser(field, value){
+    if(value) {
+        return users.find((user) => user[field] === value);
+    }
+    return null;
+}
+
+async function createUser(body){
+    const passwordHash = await bcrypt.hash(body.password, 'salty');
+
+    const user = {
+        email: body.email,
+        userName: body.user,
+        displayName: body.displayName,
+        password: passwordHash,
+    }
+
+    users.push(user);
+
+    return user;
+}
+
+async function setAuthCookie(res, user){
+
 }
 
 //listening --------------
