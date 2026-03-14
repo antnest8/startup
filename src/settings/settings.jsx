@@ -1,6 +1,5 @@
 import React from 'react';
 import { DataField, PasswordField } from './dataField';
-import { generateInitials } from './settingsUtils.js'
 import { NavBarButton } from '../nav/barButtons.jsx';
 
 export function Settings(props){
@@ -8,29 +7,10 @@ export function Settings(props){
     const userName = props.userName;
 
     const [userPass, changeUserPass] = React.useState('fake-password');
-    const [userDisplay, changeUserDisplay] = React.useState('');
-    const [userEmail, changeUserEmail] = React.useState('');
-    const [userInitials, changeUserInitials] = React.useState('');
+    const [userDisplay, changeUserDisplay] = React.useState('loading...');
+    const [userEmail, changeUserEmail] = React.useState('loading...');
+    const [userInitials, changeUserInitials] = React.useState('loading...');
 
-    function saveData(){
-        console.log("Data change detected. Saving data...")
-        const newData = new Object({
-            password : userPass,
-            displayName : userDisplay,
-            email : userEmail,
-            initials : userInitials,
-        });
-        localStorage.setItem(userName + "_Data", JSON.stringify(newData));
-    }
-
-    React.useEffect(() => {
-        //saveData();
-    }, [userPass, userEmail])
-
-    React.useEffect(() => {
-        //changeUserInitials(generateInitials(userDisplay));
-        //saveData()
-    }, [userDisplay]);
 
     React.useEffect(() => {
         fetch('api/user/data')
@@ -59,9 +39,9 @@ export function Settings(props){
                 </div>
                 <div className="flex flex-row justify-center grow">
                     <div className="flex flex-col p-8 px-12 bg-stone-800 rounded-md grow max-w-[70dvw] max-h-[90dvw] mb-6 mt-2">
-                        <DataField purpose="display name" fieldData={userDisplay} changeFunction={changeUserDisplay}/>
-                        <DataField purpose="email" fieldData={userEmail} changeFunction={changeUserEmail}/>
-                        <PasswordField purpose="password" fieldData={userPass} changeFunction={changeUserPass}/>
+                        <DataField purpose="displayName" fieldData={userDisplay} changeFunction={changeUserDisplay} fieldDisplayName="Display Name"/>
+                        <DataField purpose="email" fieldData={userEmail} changeFunction={changeUserEmail} fieldDisplayName="Account Email"/>
+                        <PasswordField purpose="password" fieldData={userPass} changeFunction={changeUserPass} fieldDisplayName="Password"/>
                     </div>
                 </div>
             </main>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { AuthState } from './authState';
-import { Navigate, useNavigate } from 'react-router-dom';
 import { generateInitials } from '../settings/settingsUtils';
 
 export function Login(props){
@@ -28,7 +27,6 @@ export function Login(props){
 
 function LoginForm(props){
 
-    const nav = useNavigate();
     const setUserName = props.changeUserName;
     const setAuthState = props.setAuthState;
     const [signupErrorMessage, setSignupErrorMessage] = React.useState(null);
@@ -53,7 +51,6 @@ function LoginForm(props){
             if(response.status == 200){
                 setUserName(user);
                 setAuthState(AuthState.Authenticated);
-                nav('/app');
             }
             else{
                 setLoginErrorMessage('No account under ' + user + ' found.')
@@ -90,7 +87,6 @@ function LoginForm(props){
             if(response.status == 201){
                 setUserName(user);
                 setAuthState(AuthState.Authenticated);
-                nav('/app');
 
             } else if (response.status == 409){
                 setSignupErrorMessage(user + ' is already taken')

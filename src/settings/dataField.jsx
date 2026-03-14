@@ -1,13 +1,38 @@
 import React from 'react';
+import { generateInitials } from './settingsUtils.js'
 
 export function DataField(props){
     const purpose = props.purpose;
+    const fieldDisplayName = props.fieldDisplayName;
     const fieldData = props.fieldData;
     const changeFunction = props.changeFunction;
     const [isEditing, changeIsEditing] = React.useState(false);
 
+    function saveData(field, value){
+        fetch(`api/user/data/${field}`, {
+            method:"PUT",
+            body: JSON.stringify({
+                "value":value
+            }),
+            headers:{
+                "Content-type":"application/json; charset=UTF-8"
+            }
+        }).then((response)=>{
+            if(!response.ok){
+                throw new Error(response.status);
+            }
+        })
+        .catch((err)=>{
+            window.alert(err)
+        })
+        .finally(()=>{
+            console.log("Data saved correctly")
+        })
+    }
+
     function saveChanges(value){
         changeFunction(value);
+        saveData(purpose,value)
         changeIsEditing(false);
     }
 
@@ -20,7 +45,7 @@ export function DataField(props){
 
     const editField = () => {
         return (<div>
-            <h3>{purpose}: </h3>
+            <h3>{fieldDisplayName}: </h3>
             <input className="max-w-100 w-1/1 bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2" type="text" id={"user-" + purpose + "-input"}/>
         </div>);
     }
