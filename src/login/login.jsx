@@ -1,6 +1,7 @@
 import React from 'react';
 import { AuthState } from './authState';
 import { generateInitials } from '../settings/settingsUtils';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export function Login(props){
 
@@ -31,6 +32,8 @@ function LoginForm(props){
     const setAuthState = props.setAuthState;
     const [signupErrorMessage, setSignupErrorMessage] = React.useState(null);
     const [loginErrorMessage, setLoginErrorMessage] = React.useState(null);
+    const location = useLocation();
+    const nav = useNavigate();
 
     async function attemptLogin(){
         const password = document.getElementById("login-password").value;
@@ -49,8 +52,14 @@ function LoginForm(props){
             })
 
             if(response.status == 200){
+
+                //console.log(`DEBUG location: ${location.pathname}`);
+                if(location.pathname == "/"){
+                    nav("/app");
+                }
                 setUserName(user);
                 setAuthState(AuthState.Authenticated);
+                console.log("Login Succesfull!")
             }
             else{
                 setLoginErrorMessage('No account under ' + user + ' found.')
@@ -85,6 +94,9 @@ function LoginForm(props){
             });
 
             if(response.status == 201){
+                if(location.pathname == "/"){
+                    nav("/app");
+                }
                 setUserName(user);
                 setAuthState(AuthState.Authenticated);
 

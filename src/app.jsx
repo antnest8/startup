@@ -23,8 +23,8 @@ export default function App(){
                 <Routes>
                     {authState === AuthState.Pending && <Route path='*' element={<NotFound />} />}
                     <Route path='/' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} exact />
-                    {authState === AuthState.Authenticated ? <Route path='/app' element={<Office userName={userName}/>} /> : <Route path='/app' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} />}
-                    {authState === AuthState.Authenticated ? <Route path='/settings' element={<Settings userName={userName}/>} /> : <Route path='/settings' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} />}
+                    {authState === AuthState.Unauthenticated ? <Route path='/app' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} /> : <Route path='/app' element={<Office userName={userName}/>} />  }
+                    {authState === AuthState.Unauthenticated ? <Route path='/settings' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} /> : <Route path='/settings' element={<Settings userName={userName}/>} />  }
                     <Route path='*' element={<Loading />} />
                 </Routes>
                 <footer className="flex justify-center mb-3 bg-stone-900">
