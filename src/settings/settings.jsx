@@ -6,7 +6,7 @@ export function Settings(props){
     // TODO: pass data into Settings and handle
     const userName = props.userName;
 
-    const [userPass, changeUserPass] = React.useState('fake-password');
+    const userPass = '••••••••••••••';
     const [userDisplay, changeUserDisplay] = React.useState('loading...');
     const [userEmail, changeUserEmail] = React.useState('loading...');
     const [userInitials, changeUserInitials] = React.useState('loading...');
@@ -14,12 +14,13 @@ export function Settings(props){
 
     React.useEffect(() => {
         fetch('api/user/data')
-        .then((res) => res.status == 200? res.json() : null)
+        .then((res) => res.json())
         .then((resBody)=>{
-            //console.log(`Settings response parseing: ${resBody}`)
+            //console.log(`Settings response parseing: ${JSON.stringify(resBody)}`)
             changeUserEmail(resBody.email);
             changeUserDisplay(resBody.displayName);
             changeUserInitials(resBody.initials);
+            console.log("finished fetching user settings")
         })
     }, [])
 
@@ -39,9 +40,9 @@ export function Settings(props){
                 </div>
                 <div className="flex flex-row justify-center grow">
                     <div className="flex flex-col p-8 px-12 bg-stone-800 rounded-md grow max-w-[70dvw] max-h-[90dvw] mb-6 mt-2">
-                        <DataField purpose="displayName" fieldData={userDisplay} changeFunction={changeUserDisplay} fieldDisplayName="Display Name"/>
+                        <DataField purpose="displayName" fieldData={userDisplay} changeInitialsFunction={changeUserInitials} changeFunction={changeUserDisplay} fieldDisplayName="Display Name"/>
                         <DataField purpose="email" fieldData={userEmail} changeFunction={changeUserEmail} fieldDisplayName="Account Email"/>
-                        <DataField purpose="password" fieldData={userPass} changeFunction={changeUserPass} fieldDisplayName="Password"/>
+                        <DataField purpose="password" fieldData={userPass} changeFunction={()=>false} fieldDisplayName="Password"/>
                     </div>
                 </div>
             </main>

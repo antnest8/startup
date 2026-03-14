@@ -7,6 +7,7 @@ export function DataField(props){
     const fieldData = props.fieldData;
     const changeFunction = props.changeFunction;
     const [isEditing, changeIsEditing] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState(null);
 
     function saveData(field, value){
         fetch(`api/user/data/${field}`, {
@@ -31,21 +32,31 @@ export function DataField(props){
     }
 
     function saveChanges(value){
-        changeFunction(value);
-        saveData(purpose,value)
-        changeIsEditing(false);
+        if(value){
+            changeFunction(value);
+            saveData(purpose,value)
+            if(purpose == "displayName"){
+                const newInitials = generateInitials(value);
+                saveData("initials", newInitials);
+                props.changeInitialsFunction(newInitials);
+            }
+            changeIsEditing(false);
+        }
+        else{
+            setErrorMessage("A value must be entered!")
+        }
+
     }
 
     const normalField = () => {
         return (<div className="flex">
-            <input className="bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2 grow" type={purpose === "password" ? "password" : "text"} defaultValue={fieldData} disabled id="user-email-output"></input>
+            <p className="bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2 grow" id="user-email-output">{fieldData}</p>
         </div>);
     }
 
     const editField = () => {
-        return (<div>
-            <h3>{fieldDisplayName}: </h3>
-            <input className="max-w-100 w-1/1 bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2" type="text" id={"user-" + purpose + "-input"}/>
+        return (<div className="flex">
+            <input className="w-1/1 bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2" type="text" id={"user-" + purpose + "-input"}/>
         </div>);
     }
 
@@ -54,17 +65,18 @@ export function DataField(props){
     }
 
     const submitEditButton = () => {
-        return <button className="flex justify-end text-xs text-stone-400 hover:text-cyan-800" id="change-email-button" onClick={(e) => {saveChanges(document.getElementById("user-" + purpose + "-input").value)}} type="button">Save new {purpose}</button>
+        return <button className="flex justify-end text-xs text-stone-400 hover:text-cyan-800" id="change-email-button" onClick={(e) => {saveChanges(document.getElementById("user-" + purpose + "-input").value)}} type="button">Save new {fieldDisplayName}</button>
     }
 
     return (
         <div className="flex justify-center">
             <div className="flex flex-col mt-[1em] max-w-120 grow relative left-10">
-                <h3>{purpose}: </h3>
+                <h3>{fieldDisplayName}: </h3>
                 {isEditing ? editField() : normalField()}
                 <div className="flex justify-end">
                     {isEditing ? submitEditButton() : editButton()}
                 </div>
+                {errorMessage != null && <p className="text-red-500 text-xs">{errorMessage}</p>}
             </div>
         </div>
     );
