@@ -136,7 +136,7 @@ function LoginForm(props){
                 <div className="flex flex-col my-2">
                     <label className="text-xs" htmlFor="signup-password">Password:</label>
                     <div className="flex">
-                        <input className="h-8 border-1 focus-visible:outline-3 outline-stone-600 border-stone-700 border-solid bg-stone-900 rounded-lg grow" id="login-password" type={isHiddenReg ? "password" : "text"} />
+                        <input className="h-8 border-1 focus-visible:outline-3 outline-stone-600 border-stone-700 border-solid bg-stone-900 rounded-lg grow" id="signup-password" type={isHiddenReg ? "password" : "text"} />
                         <button className="bg-stone-500 border-stone-600 w-[3em] rounded-md border-solid border-2 min-h-[2em] text-sm ml-[10px] hover:bg-stone-700" onClick={() => setIsHiddenReg(!isHiddenReg)} id="password-visibility-toggle">{isHiddenReg ? "🙉" : "🙈"}</button>
                     </div>
                 </div>

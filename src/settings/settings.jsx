@@ -1,5 +1,5 @@
 import React from 'react';
-import { DataField, PasswordField } from './dataField';
+import { DataField} from './dataField';
 import { NavBarButton } from '../nav/barButtons.jsx';
 
 export function Settings(props){

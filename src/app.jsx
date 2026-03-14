@@ -13,19 +13,26 @@ export default function App(){
     const [authState, setAuthState] = React.useState(AuthState.Pending);
 
     React.useEffect(()=>{
-        const currentAuthState = getAuthState();  //replace with Authentication Mock
-        setUserName(getUserName(currentAuthState));
-        setAuthState(currentAuthState);
+        const fetchData = async ()=>{
+            const currentAuthState = await getAuthState();
+            //console.log(`DEBUG Auth: ${currentAuthState.name}`)
+            setUserName(await getUserName(currentAuthState));
+            setAuthState(currentAuthState);
+        }
+        fetchData();
     }, [])
+
+    if(authState === AuthState.Pending){
+        return <Loading />;
+    }
 
     return (
         <BrowserRouter>
                 <Routes>
-                    {authState === AuthState.Pending && <Route path='*' element={<NotFound />} />}
                     <Route path='/' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} exact />
-                    {authState === AuthState.Unauthenticated ? <Route path='/app' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} /> : <Route path='/app' element={<Office userName={userName}/>} />  }
-                    {authState === AuthState.Unauthenticated ? <Route path='/settings' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} /> : <Route path='/settings' element={<Settings userName={userName}/>} />  }
-                    <Route path='*' element={<Loading />} />
+                    <Route path='/app' element={authState === AuthState.Unauthenticated ? <Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/> : <Office userName={userName}/>} />
+                    <Route path='/settings' element={authState === AuthState.Unauthenticated ? <Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/> : <Settings userName={userName}/>} />
+                    <Route path='*' element={<NotFound/>} />
                 </Routes>
                 <footer className="flex justify-center mb-3 bg-stone-900">
                     <p className="italic content-center">Author: Broderick Johnson</p>
@@ -36,40 +43,42 @@ export default function App(){
     );
 }
 
-function getAuthState(){
-    return fetch('/api/auth/check', {
+async function getAuthState(){
+    const response = await fetch('/api/auth/check', {
         method: "GET",
     })
-    .then((response) => {
-        console.log(`Authcheck response status: ${response.status}`)
-        if(response.status == 401){
-            console.log("Not Authenticated");
-            return AuthState.Authenticated
-        } else {
-            console.log("Authenticated")
-            return AuthState.Unauthenticated
-        }
-    })
-    .catch((err) => console.log(err))
+
+    //console.log(`Authcheck response status: ${response.status}`)
+    if(response.status == 401){
+        console.log("Not Authenticated");
+        return AuthState.Unauthenticated
+    } else if (response.status == 200){
+        console.log("Authenticated")
+        return AuthState.Authenticated
+    } else {
+        console.log(`ERROR during authentication: ${response.body.msg}`);
+    }
+    
+
 }
 
-function getUserName(currentAuth){
+async function getUserName(currentAuth){
     if(currentAuth === AuthState.Authenticated){
-        return fetch('/api/user/data', {
+        const response = await fetch('/api/user/data', {
             method: "GET",
         })
-        .then((response) => {
+
+        try{
             if(response.status == 401){
                 throw Error("Previous Authentication succesful but data retrival failed");
             } else {
-                return response.json();
+                const resBody = response.json();
+                return resBody.user;
             }
-        })
-        .then((resBody) => {
-            console.log(`Name DEBUG: ${resBody.user}`);
-            return resBody.user;
-        })
-        .catch((err) => console.log(err))
+        }
+        catch(e){
+            console.log(e)
+        }
     }else {
         console.log('Returning blank username')
         return ''
@@ -77,9 +86,10 @@ function getUserName(currentAuth){
 }
 
 function NotFound() {
-  return <main className="container-fluid bg-secondary text-center">404: Return to sender. Address unknown.</main>;
+    return <main className="container-fluid bg-secondary text-center">404: Return to sender. Address unknown.</main>;
 }
 
 function Loading() {
-  return <main className="bg-secondary text-center">Loading Page</main>;
+    console.log("Loading Screen Rendered!")
+    return <main className="bg-secondary text-center">Loading Page</main>;
 }

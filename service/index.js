@@ -19,7 +19,12 @@ app.use(cookieParser())
 app.use(express.static('public'))
 
 app.use((req, res, next) => {
-    console.log(`Full request JSON: ${JSON.stringify(req.body)}`)
+    if(req.body){
+        console.log(`Full request JSON: ${JSON.stringify(req.body)}`);
+    }
+    else{
+        console.log(`${req.method} to ${req.path}`);
+    }
     next();
 });
 
@@ -108,7 +113,7 @@ apiRouter.get('/user/data', checkAuth, async (req, res) => {
 
 app.use(function (err, req, res, next){
     console.log(`ERROR: ${err.name} , ${err.message} \n${err.stack}`)
-    res.status(500).send({type : err.name, message : err.message});
+    res.status(500).send({type : err.name, message : err.msg});
 })
 
 //utility functions -------------
