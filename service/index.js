@@ -87,6 +87,24 @@ apiRouter.get('/user/data', checkAuth, async (req, res) => {
 
 })
 
+apiRouter.put('user/data/:field', checkAuth, async (req, res) => {
+    const user = await getUser('token', req.cookies['authToken']);
+    
+    if(req.params.field != 'password' && user[req.params.field]){
+        user[req.params.field] = req.body.value;
+        return res.status(200).send({msg:`${req.params.field}:${user[req.params.field]}`})
+    }else if(req.params.field == 'password'){
+        const newHash = bcrypt.hash(req.body.value, 10);
+        user["password"] = newHash;
+        return res.status(200).send({msg:"Password:[hidden]"});
+    }
+    else {
+        return res.status(404).send({msg:`${req.params.field} is not a field`});
+    }
+
+
+})
+
 app.use(function (err, req, res, next){
     res.status(500).send({type : err.name, message : err.message});
 })
