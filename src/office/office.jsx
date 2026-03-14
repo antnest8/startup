@@ -6,7 +6,7 @@ import { generateAudioList } from './audioMock';
 
 export function Office(props){
     const userName = props.userName;
-    const userData = JSON.parse(localStorage.getItem(userName + "_Data")); 
+    const userData = React.useRef("loading"); 
     const [clientCoords, setClientCoords] = React.useState([50, 50]);
     const [otherUsers, setOtherUsers] = React.useState([]);
     const [audioList, setAudioList] = React.useState([]);
@@ -14,8 +14,8 @@ export function Office(props){
     function makeUserObj(coords=clientCoords){
         return {
             userName: userName,
-            displayName: userData.displayName,
-            initials: userData.initials,
+            displayName: userData.current.displayName,
+            initials: userData.current.initials,
             x : clientCoords[0],
             y : clientCoords[1],
             isTalking: false, //fix later
@@ -41,9 +41,50 @@ export function Office(props){
     }
 
     React.useEffect(()=>{
-        OfficeConnections.connectSelf(makeUserObj(), handleData)
-        setAudioList(generateAudioList());
+        const mountComponent = async () => {
+            const response = await fetch('api/user/data');
+            if(response.status == 200){
+                const resBody = await response.json();
+                userData.current = resBody;
+                OfficeConnections.connectSelf(makeUserObj(), handleData)
+                setAudioList(generateAudioList());
+            }
+            console.log("Mounting Office completed")
+        }
+        mountComponent();
     },[])
+
+    if(userData.current == "loading"){
+        console.log("Office Loading Screen Rendered")
+        return (
+            <div className="flex flex-col grow">
+                <header className="bg-stone-900 flex flex-row justify-end min-h-10">
+                    <div className="flex grow">
+                        <h1 className="font-semibold font-[rubik] border-b-2 text-teal-400 m-1 text-5xl max-h-[0.9em]">OfficeTalk</h1>
+                    </div>
+                    <NavBarButton DisText="Logout" dest="/"/>
+                    <NavBarButton DisText="Settings" dest="/settings" />
+                    <figure className="size-[50px] mx-3" id="user-1">
+                            <svg className="profile-token" width="50" height="50">
+                                <circle stroke="#009200" strokeWidth="3" cx="25" cy="25" r="23" fill="#00BF00" />
+                                <text x="25" y="30" fontSize="20" textAnchor="middle" fill="white">{userData.current.initials}</text>
+                            </svg>
+                        </figure>
+                </header>
+                <main className="flex grow bg-stone-800">
+                    <aside className="bg-stone-900/70 p-2 px-4 flex flex-col justify-top min-w-[25dvw]">
+                        <ul className="rounded-md bg-stone-800 p-1 list-disc list-inside">
+                            <h3 className="text-stone-500">Active Users</h3>
+                            <p>Loading data...</p>
+                        </ul>
+                    </aside>
+                    <div>
+                        <p>Loading data...</p>
+                    </div>
+                </main>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col grow">
@@ -56,7 +97,7 @@ export function Office(props){
                 <figure className="size-[50px] mx-3" id="user-1">
                         <svg className="profile-token" width="50" height="50">
                             <circle stroke="#009200" strokeWidth="3" cx="25" cy="25" r="23" fill="#00BF00" />
-                            <text x="25" y="30" fontSize="20" textAnchor="middle" fill="white">{userData.initials}</text>
+                            <text x="25" y="30" fontSize="20" textAnchor="middle" fill="white">{userData.current.initials}</text>
                         </svg>
                     </figure>
             </header>
@@ -92,37 +133,3 @@ function ActiveUsers(props){
         </aside>
     );
 }
-
-
-
-
-//for safekeeping of my hard made styling
-
-/*
-
-<div className="application-window">
-    <figure className="absolute top-3/5 left-30/100 size-[75px]" id="user-1">
-        <svg width="75" height="75">
-            <circle stroke="#599259" strokeWidth="3" cx="37" cy="37" r="30" fill="#8FBF8F" />
-            <text x="37" y="45" fontSize="20" textAnchor="middle" fill="white">You</text>
-        </svg>
-        <img className="size-[20px] hidden absolute bottom-0 right-0" type="image/svg+xml" src="./microphone-svgrepo-com.svg" />
-    </figure>
-    <figure className="size-[75px] absolute top-1/3 left-3/5" id="user-2">
-        <svg width="75" height="75">
-            <circle stroke="#925959" strokeWidth="3" cx="37" cy="37" r="30" fill="#BF8F8F" />
-            <text x="37" y="45" fontSize="20" textAnchor="middle" fill="white">U2</text>
-        </svg>
-        <img className="size-[20px] absolute bottom-0 right-0" type="image/svg+xml" src="./microphone-svgrepo-com.svg" />
-    </figure>
-    
-    <figure className="absolute size-[75px] top-18/100 left-40/100" id="user-3">
-        <svg width="75" height="75">
-            <circle stroke="#595992" strokeWidth="3" cx="37" cy="37" r="30" fill="#6F6FDF" />
-            <text x="37" y="45" fontSize="20" textAnchor="middle" fill="white">U3</text>
-        </svg>
-        <img className="size-[20px] hidden absolute bottom-0 right-0" type="image/svg+xml" src="./microphone-svgrepo-com.svg" />
-    </figure>
-    
-</div>
-*/
