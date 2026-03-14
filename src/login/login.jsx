@@ -32,6 +32,8 @@ function LoginForm(props){
     const setAuthState = props.setAuthState;
     const [signupErrorMessage, setSignupErrorMessage] = React.useState(null);
     const [loginErrorMessage, setLoginErrorMessage] = React.useState(null);
+    const [isHiddenReg, setIsHiddenReg] = React.useState(true);
+    const [isHiddenLog, setIsHiddenLog] = React.useState(true);
     const location = useLocation();
     const nav = useNavigate();
 
@@ -133,7 +135,10 @@ function LoginForm(props){
                 </div>
                 <div className="flex flex-col my-2">
                     <label className="text-xs" htmlFor="signup-password">Password:</label>
-                    <input className="border-1 h-8 focus-visible:outline-3 outline-stone-600 border-stone-700 border-solid bg-stone-900 rounded-lg" id="signup-password" type="password" />
+                    <div className="flex">
+                        <input className="h-8 border-1 focus-visible:outline-3 outline-stone-600 border-stone-700 border-solid bg-stone-900 rounded-lg grow" id="login-password" type={isHiddenReg ? "password" : "text"} />
+                        <button className="bg-stone-500 border-stone-600 w-[3em] rounded-md border-solid border-2 min-h-[2em] text-sm ml-[10px] hover:bg-stone-700" onClick={() => setIsHiddenReg(!isHiddenReg)} id="password-visibility-toggle">{isHiddenReg ? "🙉" : "🙈"}</button>
+                    </div>
                 </div>
                 {signupErrorMessage != null && <p className="text-red-500 text-xs">{signupErrorMessage}</p>}
                 <div className="flex justify-center">
@@ -149,7 +154,10 @@ function LoginForm(props){
                 </div>
                 <div className="flex flex-col my-3">
                     <label className="text-xs" htmlFor="login-password">Password:</label>
-                    <input className="h-8 border-1 focus-visible:outline-3 outline-stone-600 border-stone-700 border-solid bg-stone-900 rounded-lg" id="login-password" type="password" />
+                    <div className="flex">
+                        <input className="h-8 border-1 focus-visible:outline-3 outline-stone-600 border-stone-700 border-solid bg-stone-900 rounded-lg grow" id="login-password" type={isHiddenLog ? "password" : "text"} />
+                        <button className="bg-stone-500 border-stone-600 w-[3em] rounded-md border-solid border-2 min-h-[2em] text-sm ml-[10px] hover:bg-stone-700" onClick={() => setIsHiddenLog(!isHiddenLog)} id="password-visibility-toggle">{isHiddenLog ? "🙉" : "🙈"}</button>
+                    </div>
                 </div>
                 {loginErrorMessage != null && <p className="text-red-500 text-xs">{loginErrorMessage}</p>}
                 <div className="flex justify-center">

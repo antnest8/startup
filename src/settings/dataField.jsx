@@ -37,9 +37,8 @@ export function DataField(props){
     }
 
     const normalField = () => {
-        return (<div>
-            <h3>{purpose}: </h3>
-            <p className="max-w-100 bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2" id="user-email-output">{fieldData}</p>
+        return (<div className="flex">
+            <input className="bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2 grow" type={purpose === "password" ? "password" : "text"} defaultValue={fieldData} disabled id="user-email-output"></input>
         </div>);
     }
 
@@ -60,7 +59,8 @@ export function DataField(props){
 
     return (
         <div className="flex justify-center">
-            <div className="flex flex-col mt-[1em] max-w-100 grow">
+            <div className="flex flex-col mt-[1em] max-w-120 grow relative left-10">
+                <h3>{purpose}: </h3>
                 {isEditing ? editField() : normalField()}
                 <div className="flex justify-end">
                     {isEditing ? submitEditButton() : editButton()}
