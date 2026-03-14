@@ -103,15 +103,21 @@ function UserToken(props){
 
     return (
         <figure style={dynamicStyle} className="size-[75px] translate-[-50%]"  id="user-1">
-            <svg width="75" height="75">
-                <circle stroke="#599259" strokeWidth="3" cx="37" cy="37" r="30" fill="#8FBF8F" />
-                <text x="37" y="45" fontSize="20" textAnchor="middle" fill="white">{initials}</text>
-            </svg>
+            <img width="65" height="65" src={"https://api.dicebear.com/9.x/initials/svg?seed=" + initials + "&radius=50"} />
             <img style={micStyle} className="size-[20px] absolute bottom-0 right-0" type="image/svg+xml" src="./microphone-svgrepo-com.svg" />
         </figure>
     );
 }
 
+/*
+<figure style={dynamicStyle} className="size-[75px] translate-[-50%]"  id="user-1">
+    <svg width="75" height="75">
+        <circle stroke="#599259" strokeWidth="3" cx="37" cy="37" r="30" fill="#8FBF8F" />
+        <text x="37" y="45" fontSize="20" textAnchor="middle" fill="white">{initials}</text>
+    </svg>
+    <img style={micStyle} className="size-[20px] absolute bottom-0 right-0" type="image/svg+xml" src="./microphone-svgrepo-com.svg" />
+</figure>
+*/
 
 
 function calcProximity(localUser, otherUser){
