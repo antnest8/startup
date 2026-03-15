@@ -18,6 +18,16 @@ app.use(cookieParser())
 
 app.use(express.static('public'))
 
+app.use((req, res, next) => {
+    if(req.body){
+        console.log(`Full request JSON: ${JSON.stringify(req.body)}`);
+    }
+    else{
+        console.log(`${req.method} to ${req.path}`);
+    }
+    next();
+});
+
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
 
@@ -42,7 +52,7 @@ apiRouter.post('/auth/login', async (req, res) => {
         return  res.status(200).send({'msg':'login endpoint reached!'});
     }
     
-    return res.status(401).send({msg:"Unauthorized"});
+    return res.status(401).send({msg:"Login failed"});
 });
 
 //logout endpoint
@@ -59,21 +69,38 @@ apiRouter.delete('/auth/login', async (req, res) => {
 });
 
 //"checks if token is still valid"
-apiRouter.get('/auth/check', async (req, res) => {
-    if(getUser('token', req.cookies['authToken'])){
-        return res.status(200).send({'msg':'valid token'});
-    } else {
-        return res.status(401).send({msg:"invalid token"});
-    }
+apiRouter.get('/auth/check', checkAuth, async (req, res) => {
+    return res.status(200).send({'msg':'valid token'});
 });
 
+
+apiRouter.put('/user/data/:field', checkAuth, async (req, res) => {
+    const user = await getUser('token', req.cookies['authToken']);
+    
+    if(req.params.field != 'password' && user[req.params.field]){
+        user[req.params.field] = req.body.value;
+        return res.status(200).send({msg:`${req.params.field}:${user[req.params.field]}`})
+    }else if(req.params.field == 'password'){
+        const newHash = bcrypt.hash(req.body.value, 10);
+        user["password"] = newHash;
+        return res.status(200).send({msg:"Password:[hidden]"});
+    }
+    else {
+        return res.status(404).send({msg:`${req.params.field} is not a field`});
+    }
+})
+
 //the "GetMe" endpoint
-apiRouter.get('/user/data', checkAuth, (req, res) => {
-    const user = getUser('token', req.cookies['authCookies']);
+apiRouter.get('/user/data', checkAuth, async (req, res) => {
+    const user = await getUser('token', req.cookies['authToken']);
+    //console.log(`user/data returned user ${JSON.stringify(user)}`)
     if(user){
+        //console.log(`GetMe user check ${Object.keys(user).length}`)
         return res.status(200).send({
+            "msg" : `Token Valid, user info below...`,
             "user" : user.userName,
             "displayName" : user.displayName,
+            "initials" : user.initials,
             "email" : user.email,
         });
     } else{
@@ -82,22 +109,27 @@ apiRouter.get('/user/data', checkAuth, (req, res) => {
 
 })
 
+
+
 app.use(function (err, req, res, next){
-    res.status(500).send({type : err.name, message : err.message});
+    console.log(`ERROR: ${err.name} , ${err.message} \n${err.stack}`)
+    res.status(500).send({type : err.name, message : err.msg});
 })
 
 //utility functions -------------
 async function checkAuth(req, res, next){
-    if(await getUser('token', req.cookie['authToken'])){
+    if(await getUser('token', req.cookies['authToken'])){
         next();
     } else{
-        return res.status(401).send({msg : "Unauthorized"});
+        return res.status(401).send({msg : "Invalid Authorization Token. Cannot Access endpoint."});
     }
 }
 
 async function getUser(field, value){
-    if(value) {
-        return users.find((user) => user[field] === value);
+    if(value) { 
+        const user = users.find((user) => user[field] === value);
+        //console.log(`users getUser debug: ${JSON.stringify(user)}`)
+        return user;
     }
     return null;
 }
@@ -109,8 +141,11 @@ async function createUser(body){
         email: body.email,
         userName: body.user,
         displayName: body.displayName,
+        initials: body.initials,
         password: passwordHash,
     }
+
+    //console.log(Object.keys(user).length);
 
     users.push(user);
 
@@ -119,7 +154,7 @@ async function createUser(body){
 
 function setAuthCookie(res, user){
     user.token = uuid.v4();
-
+    //console.log(`authCookie user check: ${Object.keys(user).length}`)
     res.cookie('authToken', user.token, {
         maxAge: 1000 * 60 * 60,
         secure: true,

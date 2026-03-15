@@ -1,27 +1,62 @@
 import React from 'react';
+import { generateInitials } from './settingsUtils.js'
 
 export function DataField(props){
     const purpose = props.purpose;
+    const fieldDisplayName = props.fieldDisplayName;
     const fieldData = props.fieldData;
     const changeFunction = props.changeFunction;
     const [isEditing, changeIsEditing] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState(null);
+
+    function saveData(field, value){
+        fetch(`api/user/data/${field}`, {
+            method:"PUT",
+            body: JSON.stringify({
+                "value":value
+            }),
+            headers:{
+                "Content-type":"application/json; charset=UTF-8"
+            }
+        }).then((response)=>{
+            if(!response.ok){
+                throw new Error(response.status);
+            }
+        })
+        .catch((err)=>{
+            window.alert(err)
+        })
+        .finally(()=>{
+            console.log("Data saved correctly")
+        })
+    }
 
     function saveChanges(value){
-        changeFunction(value);
-        changeIsEditing(false);
+        if(value){
+            changeFunction(value);
+            saveData(purpose,value)
+            if(purpose == "displayName"){
+                const newInitials = generateInitials(value);
+                saveData("initials", newInitials);
+                props.changeInitialsFunction(newInitials);
+            }
+            changeIsEditing(false);
+        }
+        else{
+            setErrorMessage("A value must be entered!")
+        }
+
     }
 
     const normalField = () => {
-        return (<div>
-            <h3>{purpose}: </h3>
-            <p className="max-w-100 bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2" id="user-email-output">{fieldData}</p>
+        return (<div className="flex">
+            <p className="bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2 grow" id="user-email-output">{fieldData}</p>
         </div>);
     }
 
     const editField = () => {
-        return (<div>
-            <h3>{purpose}: </h3>
-            <input className="max-w-100 w-1/1 bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2" type="text" id={"user-" + purpose + "-input"}/>
+        return (<div className="flex">
+            <input className="w-1/1 bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2" type="text" id={"user-" + purpose + "-input"}/>
         </div>);
     }
 
@@ -30,64 +65,18 @@ export function DataField(props){
     }
 
     const submitEditButton = () => {
-        return <button className="flex justify-end text-xs text-stone-400 hover:text-cyan-800" id="change-email-button" onClick={(e) => {saveChanges(document.getElementById("user-" + purpose + "-input").value)}} type="button">Save new {purpose}</button>
-    }
-
-    return (
-        <div className="flex justify-center">
-            <div className="flex flex-col mt-[1em] max-w-100 grow">
-                {isEditing ? editField() : normalField()}
-                <div className="flex justify-end">
-                    {isEditing ? submitEditButton() : editButton()}
-                </div>
-            </div>
-        </div>
-    );
-}
-
-export function PasswordField(props){
-    const purpose = props.purpose;
-    const fieldData = props.fieldData;
-    const [isHidden, changeHidden] = React.useState(true);
-    
-    const changeFunction = props.changeFunction;
-    const [isEditing, changeIsEditing] = React.useState(false);
-
-    function saveChanges(value){
-        changeFunction(value);
-        changeHidden(true);
-        changeIsEditing(false);
-    }
-
-    const normalField = () => {
-        return (<div className="flex">
-                    <input className=" bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2 grow" type={isHidden ? "password" : "text"} disabled id="user-password" defaultValue={fieldData}/> 
-                    <button className="bg-stone-500 border-stone-600 max-w-[8em] min-w-[5em] rounded-md border-solid border-2 min-h-[2em] text-sm ml-[10px] hover:bg-stone-700" onClick={() => changeHidden(!isHidden)} id="password-visibility-toggle">{isHidden ? "🙉" : "🙈"}</button>
-                </div>);
-    }
-
-    const editField = () => {
-        return (<div className="flex">
-                    <input className=" bg-stone-900 outline-2 outline-solid outline-stone-700 rounded-full text-stone-300 pl-2 grow" type="text" id="user-new-password" defaultValue={fieldData}/>
-                </div>);
-    }
-
-    const editButton = () => {
-        return <button className="flex justify-end text-xs text-stone-400 hover:text-cyan-800" id="change-email-button" onClick={() => changeIsEditing(true)} type="button">Change {purpose}</button>
-    }
-
-    const submitEditButton = () => {
-        return <button className="flex justify-end text-xs text-stone-400 hover:text-cyan-800" id="change-email-button" onClick={(e) => {saveChanges(document.getElementById("user-new-password").value)}} type="button">Save new {purpose}</button>
+        return <button className="flex justify-end text-xs text-stone-400 hover:text-cyan-800" id="change-email-button" onClick={(e) => {saveChanges(document.getElementById("user-" + purpose + "-input").value)}} type="button">Save new {fieldDisplayName}</button>
     }
 
     return (
         <div className="flex justify-center">
             <div className="flex flex-col mt-[1em] max-w-120 grow relative left-10">
-                <label htmlFor="user-password">{purpose}: </label>
+                <h3>{fieldDisplayName}: </h3>
                 {isEditing ? editField() : normalField()}
                 <div className="flex justify-end">
                     {isEditing ? submitEditButton() : editButton()}
                 </div>
+                {errorMessage != null && <p className="text-red-500 text-xs">{errorMessage}</p>}
             </div>
         </div>
     );

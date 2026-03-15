@@ -8,17 +8,31 @@ import { Settings } from './settings/settings';
 
 
 export default function App(){
-    const [userName, setUserName] = React.useState(localStorage.getItem("currentUser") || '');
-    const currentAuthState = userName ? AuthState.Authenticated : AuthState.Unauthenticated; //replace with Authentication Mock
-    const [authState, setAuthState] = React.useState(currentAuthState);
+    
+    const [userName, setUserName] = React.useState('fetching...');
+    const [authState, setAuthState] = React.useState(AuthState.Pending);
+
+    React.useEffect(()=>{
+        const fetchData = async ()=>{
+            const currentAuthState = await getAuthState();
+            //console.log(`DEBUG Auth: ${currentAuthState.name}`)
+            setUserName(await getUserName(currentAuthState));
+            setAuthState(currentAuthState);
+        }
+        fetchData();
+    }, [])
+
+    if(authState === AuthState.Pending){
+        return <Loading />;
+    }
 
     return (
         <BrowserRouter>
                 <Routes>
                     <Route path='/' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} exact />
-                    {authState === AuthState.Authenticated ? <Route path='/app' element={<Office userName={userName}/>} /> : <Route path='/app' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} />}
-                    {authState === AuthState.Authenticated ? <Route path='/settings' element={<Settings userName={userName}/>} /> : <Route path='/app' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} />}
-                    <Route path='*' element={<NotFound />} />
+                    <Route path='/app' element={authState === AuthState.Unauthenticated ? <Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/> : <Office userName={userName}/>} />
+                    <Route path='/settings' element={authState === AuthState.Unauthenticated ? <Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/> : <Settings userName={userName}/>} />
+                    <Route path='*' element={<NotFound/>} />
                 </Routes>
                 <footer className="flex justify-center mb-3 bg-stone-900">
                     <p className="italic content-center">Author: Broderick Johnson</p>
@@ -29,6 +43,53 @@ export default function App(){
     );
 }
 
+async function getAuthState(){
+    const response = await fetch('/api/auth/check', {
+        method: "GET",
+    })
+
+    //console.log(`Authcheck response status: ${response.status}`)
+    if(response.status == 401){
+        console.log("Not Authenticated");
+        return AuthState.Unauthenticated
+    } else if (response.status == 200){
+        console.log("Authenticated")
+        return AuthState.Authenticated
+    } else {
+        console.log(`ERROR during authentication: ${response.body.msg}`);
+    }
+    
+
+}
+
+async function getUserName(currentAuth){
+    if(currentAuth === AuthState.Authenticated){
+        const response = await fetch('/api/user/data', {
+            method: "GET",
+        })
+
+        try{
+            if(response.status == 401){
+                throw Error("Previous Authentication succesful but data retrival failed");
+            } else {
+                const resBody = response.json();
+                return resBody.user;
+            }
+        }
+        catch(e){
+            console.log(e)
+        }
+    }else {
+        console.log('Returning blank username')
+        return ''
+    }
+}
+
 function NotFound() {
-  return <main className="container-fluid bg-secondary text-center">404: Return to sender. Address unknown.</main>;
+    return <main className="container-fluid bg-secondary text-center">404: Return to sender. Address unknown.</main>;
+}
+
+function Loading() {
+    console.log("Loading Screen Rendered!")
+    return <main className="bg-secondary text-center">Loading Page</main>;
 }

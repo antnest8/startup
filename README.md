@@ -127,12 +127,12 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Node.js/Express HTTP service** - I did not complete this part of the deliverable.
-- [ ] **Static middleware for frontend** - I did not complete this part of the deliverable.
-- [ ] **Calls to third party endpoints** - I did not complete this part of the deliverable.
-- [ ] **Backend service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Frontend calls service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Supports registration, login, logout, and restricted endpoint** - I did not complete this part of the deliverable.
+- [x] **Node.js/Express HTTP service** - I set up authentication end points as well as a few endpoints for storing and editing data.
+- [x] **Static middleware for frontend** - This was super easy. Just a single line of code it seems.
+- [x] **Calls to third party endpoints** - I chose the DiceBear.com profile pictures API. The hardest part with integrating this was figuring out how to handle the SVG response. I couldn't just connect the url to the profile pictures because the rerending of the page would cause there to be too many requests (bad practice). So instead I used dangerouslySetHTML which could be argued to be even worse practice. Still, I think DiceBear is a trustworthy enough source to not inject malicous code in their SVGs. 
+- [x] **Backend service endpoints** - The endpoints work and  I even log requests coming in. I made sure to make them secure and to only allow users to access their own data.
+- [x] **Frontend calls service endpoints** - I call my service API often to check authentication on every mount. The Login page calls the API in the obvious ways. I also call the profile picture endpoint in the Office page.
+- [x] **Supports registration, login, logout, and restricted endpoint** Yes the backend has all of this. I restrict any endpoints dealing with data behind the authentication token.
 
 
 ## 🚀 DB deliverable

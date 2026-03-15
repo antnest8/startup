@@ -1,37 +1,28 @@
 import React from 'react';
-import { DataField, PasswordField } from './dataField';
-import { generateInitials } from './settingsUtils.js'
+import { DataField} from './dataField';
 import { NavBarButton } from '../nav/barButtons.jsx';
 
 export function Settings(props){
     // TODO: pass data into Settings and handle
     const userName = props.userName;
-    const userData = JSON.parse(localStorage.getItem(userName + "_Data"));
 
-    const [userPass, changeUserPass] = React.useState(userData.password);
-    const [userDisplay, changeUserDisplay] = React.useState(userData.displayName);
-    const [userEmail, changeUserEmail] = React.useState(userData.email);
-    const [userInitials, changeUserInitials] = React.useState(userData.initials);
+    const userPass = '••••••••••••••';
+    const [userDisplay, changeUserDisplay] = React.useState('loading...');
+    const [userEmail, changeUserEmail] = React.useState('loading...');
+    const [userInitials, changeUserInitials] = React.useState('loading...');
 
-    function saveData(){
-        console.log("Data change detected. Saving data...")
-        const newData = new Object({
-            password : userPass,
-            displayName : userDisplay,
-            email : userEmail,
-            initials : userInitials,
-        });
-        localStorage.setItem(userName + "_Data", JSON.stringify(newData));
-    }
 
     React.useEffect(() => {
-        saveData();
-    }, [userPass, userEmail])
-
-    React.useEffect(() => {
-        changeUserInitials(generateInitials(userDisplay));
-        saveData()
-    }, [userDisplay]);
+        fetch('api/user/data')
+        .then((res) => res.json())
+        .then((resBody)=>{
+            //console.log(`Settings response parseing: ${JSON.stringify(resBody)}`)
+            changeUserEmail(resBody.email);
+            changeUserDisplay(resBody.displayName);
+            changeUserInitials(resBody.initials);
+            console.log("finished fetching user settings")
+        })
+    }, [])
 
     return (
         <div className="flex flex-col grow">
@@ -49,9 +40,9 @@ export function Settings(props){
                 </div>
                 <div className="flex flex-row justify-center grow">
                     <div className="flex flex-col p-8 px-12 bg-stone-800 rounded-md grow max-w-[70dvw] max-h-[90dvw] mb-6 mt-2">
-                        <DataField purpose="display name" fieldData={userDisplay} changeFunction={changeUserDisplay}/>
-                        <DataField purpose="email" fieldData={userEmail} changeFunction={changeUserEmail}/>
-                        <PasswordField purpose="password" fieldData={userPass} changeFunction={changeUserPass}/>
+                        <DataField purpose="displayName" fieldData={userDisplay} changeInitialsFunction={changeUserInitials} changeFunction={changeUserDisplay} fieldDisplayName="Display Name"/>
+                        <DataField purpose="email" fieldData={userEmail} changeFunction={changeUserEmail} fieldDisplayName="Account Email"/>
+                        <DataField purpose="password" fieldData={userPass} changeFunction={()=>false} fieldDisplayName="Password"/>
                     </div>
                 </div>
             </main>

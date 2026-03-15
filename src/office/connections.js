@@ -1,5 +1,3 @@
-import { UserInstance } from "./userObj";
-
 class Connections{
     onlineUsers = [];
     handler;
@@ -13,14 +11,22 @@ class Connections{
             y : 50,
             isTalking: true, //fix later
         }
-        setInterval(()=>{
-            //updateMovement
-            if(this.handler){
-                testUser.x = Math.random() * 90 + 5;
-                testUser.y = Math.random() * 90 + 5;
-                this.handler([testUser])
-            }
-        },10000)
+
+        fetch("https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=OD&radius=50")
+            .then((res)=>res.text())
+            .then((res)=>testUser.userImage = { __html: res})
+            .finally(
+                setInterval(()=>{
+                    //updateMovement
+                    if(this.handler){
+                        testUser.x = Math.random() * 90 + 5;
+                        testUser.y = Math.random() * 90 + 5;
+                        this.handler([testUser])
+                    }
+                },10000)
+            );
+
+        
     }
 
     connectSelf(userData, handler){
@@ -34,7 +40,8 @@ class Connections{
             y : 25,
             isTalking: true, //fix later
         }
-        handler([testUser])
+        //handler([testUser])
+        return 
     }
 
     pushData(userData){
