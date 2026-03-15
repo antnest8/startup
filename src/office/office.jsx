@@ -18,6 +18,7 @@ export function Office(props){
             userName: userName,
             displayName: userData.current.displayName,
             initials: userData.current.initials,
+            userImage: userData.current.image,
             x : clientCoords[0],
             y : clientCoords[1],
             isTalking: false, //fix later
@@ -47,6 +48,10 @@ export function Office(props){
             const response = await fetch('api/user/data');
             if(response.status == 200){
                 const resBody = await response.json();
+                const tokenRes = await fetch("https://api.dicebear.com/9.x/initials/svg?seed=" + resBody.initials + "&radius=50");
+                const imageData = {__html: await tokenRes.text()};
+                //console.log(imageData)
+                resBody.image = imageData;
                 userData.current = resBody;
                 setDataLoaded(true);
             }

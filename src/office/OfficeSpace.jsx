@@ -7,7 +7,6 @@ export function OfficeSpace(props){
     const moveUser = props.moveUserFunc;
     const audioList = props.audioList;
     const [userGains, setUserGains] = React.useState({})
-    //console.log(`DEBUG-normal audioList.length: ${audioList.length}`)
 
 
 
@@ -33,7 +32,6 @@ export function OfficeSpace(props){
 
         boundBounce(relativeCoords);
         const normalizedCoords = [relativeCoords[0] / windowRect.width * 100, relativeCoords[1] / windowRect.height * 100]
-        console.log("Click Detected! coords: " + JSON.stringify(normalizedCoords));
         moveUser(normalizedCoords);
     }
 
@@ -42,16 +40,17 @@ export function OfficeSpace(props){
             const userObj = userList.find((userObj)=>userObj.userName == key);
             if(userObj){
                 obj.gain.value = calcProximity(userList[0], userObj);
+            } else {
+                obj.gain.value = 0;
             }
         }
     }
 
     function renderUsers(props){
-        
-        console.log(`rendererTokenListSize: ${userList.length}, #ofTalkingUsers: ${Object.keys(userGains).length}`)
+    
         adjustGains();
 
-        const userTokens = userList.map((userObj, index) => <UserToken key={`token-${index}`} isTalking={userObj.isTalking} initials={userObj.initials} xPos={userObj.x} yPos={userObj.y}/>);
+        const userTokens = userList.map((userObj, index) => <UserToken key={`token-${index}`} isTalking={userObj.isTalking} initials={userObj.initials} userImage={userObj.userImage} xPos={userObj.x} yPos={userObj.y}/>);
         return userTokens;
     }
 
@@ -87,6 +86,7 @@ export function OfficeSpace(props){
 
 function UserToken(props){
     const initials = props.initials;
+    const userImage = props.userImage;
     //const userName = props.userName;
     const dynamicStyle = {
         left: `${props.xPos}%`,
@@ -96,6 +96,8 @@ function UserToken(props){
         transitionDuration:"1s"
     };
 
+    //console.log(userImage);
+
     const displayVal = props.isTalking ? "block": "none"
     const micStyle = {
         display: displayVal,
@@ -103,13 +105,16 @@ function UserToken(props){
 
     return (
         <figure style={dynamicStyle} className="size-[75px] translate-[-50%]"  id="user-1">
-            <img width="65" height="65" src={"https://api.dicebear.com/9.x/initials/svg?seed=" + initials + "&radius=50"} />
+            <div className="size-[65px]" dangerouslySetInnerHTML={userImage} />
             <img style={micStyle} className="size-[20px] absolute bottom-0 right-0" type="image/svg+xml" src="./microphone-svgrepo-com.svg" />
         </figure>
     );
 }
 
 /*
+<img width="65" height="65" type="image/svg+xml" src={userImage} />
+
+
 <figure style={dynamicStyle} className="size-[75px] translate-[-50%]"  id="user-1">
     <svg width="75" height="75">
         <circle stroke="#599259" strokeWidth="3" cx="37" cy="37" r="30" fill="#8FBF8F" />
