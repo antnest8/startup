@@ -12,7 +12,7 @@ class Connections{
             isTalking: true, //fix later
         }
 
-        fetch("https://api.dicebear.com/9.x/initials/svg?seed=OD&radius=50")
+        fetch("https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=OD&radius=50")
             .then((res)=>res.text())
             .then((res)=>testUser.userImage = { __html: res})
             .finally(

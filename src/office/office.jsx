@@ -48,7 +48,7 @@ export function Office(props){
             const response = await fetch('api/user/data');
             if(response.status == 200){
                 const resBody = await response.json();
-                const tokenRes = await fetch("https://api.dicebear.com/9.x/initials/svg?seed=" + resBody.initials + "&radius=50");
+                const tokenRes = await fetch("https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=" + resBody.initials + "&radius=50");
                 const imageData = {__html: await tokenRes.text()};
                 //console.log(imageData)
                 resBody.image = imageData;
@@ -72,7 +72,7 @@ export function Office(props){
         console.log("Office Loading Screen Rendered")
         return (
             <div>
-                <LoadingData />
+                <LoadingData userImage={userData.current.image}/>
             </div>
         );
 
@@ -87,10 +87,7 @@ export function Office(props){
                 <NavBarButton DisText="Logout" dest="/"/>
                 <NavBarButton DisText="Settings" dest="/settings" />
                 <figure className="size-[50px] mx-3" id="user-1">
-                        <svg className="profile-token" width="50" height="50">
-                            <circle stroke="#009200" strokeWidth="3" cx="25" cy="25" r="23" fill="#00BF00" />
-                            <text x="25" y="30" fontSize="20" textAnchor="middle" fill="white">{userData.current.initials}</text>
-                        </svg>
+                        <div dangerouslySetInnerHTML={userData.current.image} />
                     </figure>
             </header>
             <main className="flex grow bg-stone-800">
@@ -101,7 +98,8 @@ export function Office(props){
     )
 }
 
-function LoadingData(){
+function LoadingData(props){
+    const userImage = props.userImage;
     return (
         <div className="flex flex-col grow">
             <header className="bg-stone-900 flex flex-row justify-end min-h-10">
@@ -111,10 +109,7 @@ function LoadingData(){
                 <NavBarButton DisText="Logout" dest="/"/>
                 <NavBarButton DisText="Settings" dest="/settings" />
                 <figure className="size-[50px] mx-3" id="user-1">
-                        <svg className="profile-token" width="50" height="50">
-                            <circle stroke="#009200" strokeWidth="3" cx="25" cy="25" r="23" fill="#00BF00" />
-                            <text x="25" y="30" fontSize="20" textAnchor="middle" fill="white">N/A</text>
-                        </svg>
+                        <div dangerouslySetInnerHTML={userImage} />
                     </figure>
             </header>
             <main className="flex grow bg-stone-800">
