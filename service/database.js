@@ -6,3 +6,29 @@ const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostna
 const client = new MongoClient(url);
 const db = client.db('officedb');
 const collection = db.collection('userInfo');
+
+(async function testConnection() {
+  try {
+    await db.command({ ping: 1 });
+    console.log("Database connection successful!");
+  } catch (ex) {
+    console.log(`Unable to connect to database with ${url} because ${ex.message}`);
+    process.exit(1);
+  }
+})();
+
+export function getUserByToken(token){
+    return collection.findOne({token : token});
+}
+
+export function getUser(field, value){
+    return collection.findOne({field : value});
+}
+
+export function updateUser(user){
+    return collection.updateOne({_id : user._id}, {$set : user});
+}
+
+export function createUser(){
+    return collection.insertOne(user);
+}
