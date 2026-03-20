@@ -3,3 +3,4 @@ devchanges.pem
 deployFiles.sh
 node_modules/
 dist/
+dbConfig.json
