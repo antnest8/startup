@@ -141,6 +141,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 - [x] **Stores data in MongoDB** - Yes I have everything connected to MongoDB atlas and stored in the `officedb`
 - [x] **Stores credentials in MongoDB** - Stores credentials securely using a one way hash.
+- [x] **Integrate the Database into backend** - I mostly duplicated the same functionality from before but I also added a delete endpoint to completly cover CRUD
 
 ## 🚀 WebSocket deliverable
 
