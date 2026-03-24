@@ -17,18 +17,30 @@ const collection = db.collection('userInfo');
   }
 })();
 
-export function getUserByToken(token){
+function getUserByToken(token){
     return collection.findOne({token : token});
 }
 
-export function getUser(field, value){
+function getUser(field, value){
     return collection.findOne({field : value});
 }
 
-export function updateUser(user){
+function updateUser(user){
     return collection.updateOne({_id : user._id}, {$set : user});
 }
 
-export function createUser(){
+function createUser(user){
     return collection.insertOne(user);
 }
+
+function deleteUserByToken(authToken){
+    return collection.deleteOne({token : authToken})
+}
+
+module.exports = {
+  createUser, 
+  updateUser, 
+  getUser, 
+  getUserByToken,
+  deleteUserByToken,
+};

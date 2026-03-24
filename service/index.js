@@ -3,12 +3,10 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const uuid = require('uuid');
 const app = express();
-
+const {getUserByToken, getUser, updateUser, createUser, deleteUserByToken} = require("./database.js");
 
 //setup -------------
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
-
-const users = [];
 
 
 //routing --------------
@@ -31,23 +29,25 @@ app.use((req, res, next) => {
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
 
-//register new user endpoint
+//register new user endpoint ---------------------!
 apiRouter.post('/auth/register', async (req, res) => {
     if(await getUser('userName', req.body.user)){
         return res.status(409).send({msg: "Existing User"});
     } else{
-        const user = await createUser(req.body);
+        const user = await makeUserObj(req.body);
         setAuthCookie(res, user);
+        createUser(user);
         return res.status(201).send({msg:`${req.body}`});
     }
 });
 
-//login endpoint
+//login endpoint ---------------------------------!
 apiRouter.post('/auth/login', async (req, res) => {
     const user = await getUser("userName", req.body.user)
 
     if(user && (await bcrypt.compare(req.body.password, user.password))){
         setAuthCookie(res, user);
+        updateUser(user);
 
         return  res.status(200).send({'msg':'login endpoint reached!'});
     }
@@ -55,7 +55,7 @@ apiRouter.post('/auth/login', async (req, res) => {
     return res.status(401).send({msg:"Login failed"});
 });
 
-//logout endpoint
+//logout endpoint ---------------------------------!
 apiRouter.delete('/auth/login', async (req, res) => {
     const user = await getUser("token", req.cookies['authToken']);
     const token = req.cookies['authToken'];
@@ -73,9 +73,9 @@ apiRouter.get('/auth/check', checkAuth, async (req, res) => {
     return res.status(200).send({'msg':'valid token'});
 });
 
-
+//update user enpoint -----------------------------!
 apiRouter.put('/user/data/:field', checkAuth, async (req, res) => {
-    const user = await getUser('token', req.cookies['authToken']);
+    const user = await getUserByToken( req.cookies['authToken']);
     
     if(req.params.field != 'password' && user[req.params.field]){
         user[req.params.field] = req.body.value;
@@ -90,9 +90,20 @@ apiRouter.put('/user/data/:field', checkAuth, async (req, res) => {
     }
 })
 
-//the "GetMe" endpoint
+apiRouter.delete('/user/data', checkAuth, async (req, res) => {
+    const response = await deleteUserByToken(req.cookies['authToken']);
+
+    if(response.deletedCount == 1){
+        res.clearCookie('authToken');
+        return res.status(200).send({msg:"account succesfully deleted"});
+    }
+
+    return res.status(401).send({msg:"profile to delete was not found"});
+})
+
+//the "GetMe" endpoint ---------------------------------!
 apiRouter.get('/user/data', checkAuth, async (req, res) => {
-    const user = await getUser('token', req.cookies['authToken']);
+    const user = await getUserByToken( req.cookies['authToken']);
     //console.log(`user/data returned user ${JSON.stringify(user)}`)
     if(user){
         //console.log(`GetMe user check ${Object.keys(user).length}`)
@@ -110,7 +121,7 @@ apiRouter.get('/user/data', checkAuth, async (req, res) => {
 })
 
 
-
+// Error checking --------------------!
 app.use(function (err, req, res, next){
     console.log(`ERROR: ${err.name} , ${err.message} \n${err.stack}`)
     res.status(500).send({type : err.name, message : err.msg});
@@ -118,23 +129,15 @@ app.use(function (err, req, res, next){
 
 //utility functions -------------
 async function checkAuth(req, res, next){
-    if(await getUser('token', req.cookies['authToken'])){
+    if(await getUserByToken( req.cookies['authToken'])){
         next();
     } else{
         return res.status(401).send({msg : "Invalid Authorization Token. Cannot Access endpoint."});
     }
 }
 
-async function getUser(field, value){
-    if(value) { 
-        const user = users.find((user) => user[field] === value);
-        //console.log(`users getUser debug: ${JSON.stringify(user)}`)
-        return user;
-    }
-    return null;
-}
 
-async function createUser(body){
+async function makeUserObj(body){
     const passwordHash = await bcrypt.hash(body.password, 10);
 
     const user = {
@@ -146,8 +149,6 @@ async function createUser(body){
     }
 
     //console.log(Object.keys(user).length);
-
-    users.push(user);
 
     return user;
 }

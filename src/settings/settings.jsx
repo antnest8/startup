@@ -10,6 +10,7 @@ export function Settings(props){
     const [userDisplay, changeUserDisplay] = React.useState('loading...');
     const [userEmail, changeUserEmail] = React.useState('loading...');
     const [userInitials, changeUserInitials] = React.useState('loading...');
+    const [deletingAccount, setDeletingAccount] = React.useState(false);
 
 
     React.useEffect(() => {
@@ -43,9 +44,22 @@ export function Settings(props){
                         <DataField purpose="displayName" fieldData={userDisplay} changeInitialsFunction={changeUserInitials} changeFunction={changeUserDisplay} fieldDisplayName="Display Name"/>
                         <DataField purpose="email" fieldData={userEmail} changeFunction={changeUserEmail} fieldDisplayName="Account Email"/>
                         <DataField purpose="password" fieldData={userPass} changeFunction={()=>false} fieldDisplayName="Password"/>
+                        <div className="flex">
+                            <button className="rounded-lg mt-2 outline-solid outline-stone-700 content-center text-center hover:outline-teal-700 hover:bg-teal-950 w-30 h-10 bg-stone-900 mx-3 cursor-pointer" onClick={()=>{setDeletingAccount(true)}}>Delete Account</button>
+                        </div>
                     </div>
                 </div>
+                {deletingAccount && <AccountDeletionConfirmation/>}
             </main>
         </div>
     )
+}
+
+function AccountDeletionConfirmation(){
+
+    return(
+        <aside className="flex flex-col p-8 px-12 bg-rose-900 rounded-md grow max-w-[70dvw] max-h-[90dvw] mb-6 mt-2">
+
+        </aside>
+    );
 }
