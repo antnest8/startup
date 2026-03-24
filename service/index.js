@@ -44,6 +44,7 @@ apiRouter.post('/auth/register', async (req, res) => {
 //login endpoint ---------------------------------!
 apiRouter.post('/auth/login', async (req, res) => {
     const user = await getUser("userName", req.body.user)
+    console.log(`Database response: ${user}`)
 
     if(user && (await bcrypt.compare(req.body.password, user.password))){
         setAuthCookie(res, user);
@@ -57,7 +58,7 @@ apiRouter.post('/auth/login', async (req, res) => {
 
 //logout endpoint ---------------------------------!
 apiRouter.delete('/auth/login', async (req, res) => {
-    const user = await getUser("token", req.cookies['authToken']);
+    const user = await getUserByToken(req.cookies['authToken']);
     const token = req.cookies['authToken'];
 
     if(user){

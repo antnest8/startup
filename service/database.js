@@ -22,7 +22,9 @@ function getUserByToken(token){
 }
 
 function getUser(field, value){
-    return collection.findOne({field : value});
+    const query = {}
+    query[field] = value;
+    return collection.findOne(query);
 }
 
 function updateUser(user){
