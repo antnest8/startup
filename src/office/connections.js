@@ -38,7 +38,7 @@ class Connections{
 
     sendUserData(newUserData){
         console.log(`User Data recieved from ${newUserData.userName}`);
-        //TODO: send data in websocket
+        this.socket.send(JSON.stringify(newUserData));
     }
 
     notifyHandlers(eventType, from, data){
