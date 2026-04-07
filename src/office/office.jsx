@@ -26,9 +26,9 @@ export function Office(props){
     }
     var userList = [makeUserObj(), ...otherUsers];
 
-    function handleData(newData){
+    function handleData(event, from, newData){
 
-        userList = [makeUserObj(), ...newData];
+        userList = [makeUserObj(), ...otherUsers];
         //console.log("DEBUG: userList" + JSON.stringify(userList));
         setOtherUsers(newData);
         //console.log("handleData recieved data!: " + JSON.stringify(newData));
@@ -39,7 +39,7 @@ export function Office(props){
         const localRenderData = makeUserObj(newCoords);
 
         userList = [localRenderData, ...otherUsers];
-        OfficeConnections.pushData(localRenderData);
+        OfficeConnections.sendUserData(localRenderData);
         setClientCoords(newCoords);
     }
 
@@ -62,7 +62,8 @@ export function Office(props){
 
     React.useEffect(()=>{
         if(acceptConnection){
-            OfficeConnections.connectSelf(makeUserObj(), handleData)
+            OfficeConnections.registerHandler(handleData);
+            OfficeConnections.sendUserData(makeUserObj());
             setAudioList(generateAudioList());
         }
     }, [acceptConnection])

@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const uuid = require('uuid');
 const app = express();
 const {getUserByToken, getUser, updateUser, createUser, deleteUserByToken} = require("./database.js");
+const { WebSocketServer }  = require('ws');
 
 //setup -------------
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
@@ -128,6 +129,8 @@ app.use(function (err, req, res, next){
     res.status(500).send({type : err.name, message : err.msg});
 })
 
+
+
 //utility functions -------------
 async function checkAuth(req, res, next){
     if(await getUserByToken( req.cookies['authToken'])){
@@ -167,7 +170,35 @@ function setAuthCookie(res, user){
 
 //listening --------------
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`listening on port ${port}`);
 });
 
+//WebSocket ----------------------
+
+const socketServer = new WebSocketServer({ server });
+
+socketServer.on('connection', (socket) => {
+    socket.isAlive = true;
+
+    socket.on('message', (data) => {
+        socketServer.clients.forEach((client) => {
+            if(client !== socket && client.readyState === WebSocket.OPEN){
+                client.send(data);
+            }
+        });
+    });
+
+    socket.on('pong', () => {
+        socket.isAlive = true;
+    });
+});
+
+setInterval(() => {
+    socketServer.clients.forEach((client) => {
+        if (client.isAlive === false) return client.terminate();
+
+        client.isAlive = false;
+        client.ping();
+    });
+}, 10000);
