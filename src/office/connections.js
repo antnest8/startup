@@ -28,7 +28,7 @@ class Connections{
             const data = JSON.parse(msg.data);
             //console.log(`DEBUG Data received: ${JSON.stringify(data)}`)
             if(data.type == 'movement'){
-                //console.log(`DEBUG movement data detected!`)
+                console.log(`DEBUG Other Users Coords: ${data.body.x}, ${data.body.y}`);
                 this.onlineUsers[data.userName] = data.body;
             } else if(data.type == 'disconnection'){
                 console.log(`${data.userName} disconnected.`)
@@ -51,7 +51,7 @@ class Connections{
     }
 
     sendUserData(newUserData){
-        console.log(`User Data recieved from ${newUserData.userName}`);
+        console.log(`DEBUG sending coords: ${newUserData.x}, ${newUserData.y}`)
         this.socket.send(JSON.stringify(newUserData));
     }
 

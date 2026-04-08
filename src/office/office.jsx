@@ -21,8 +21,8 @@ export function Office(props){
             displayName: userData.current.displayName,
             initials: userData.current.initials,
             userImage: userData.current.image,
-            x : clientCoords[0],
-            y : clientCoords[1],
+            x : coords[0],
+            y : coords[1],
             isTalking: false, //fix later
         };
     }
@@ -38,8 +38,9 @@ export function Office(props){
     }
 
     function moveUser(newCoords){
+        console.log(`DEBUG newCoords ${newCoords}`)
         const localRenderData = makeUserObj(newCoords);
-
+        console.log(`DEBUG localRenderData Coords: ${localRenderData.x}, ${localRenderData.y}`);
         userList = [localRenderData, ...otherUsers];
         officeConnections.sendUserData(localRenderData);
         setClientCoords(newCoords);

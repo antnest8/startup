@@ -27,8 +27,8 @@ export function OfficeSpace(props){
             }
             if(relativeCoords[1] + 37 > windowRect.height){
                 relativeCoords[1] = windowRect.height - 38;
-    }
-}
+            }
+        }
 
         boundBounce(relativeCoords);
         const normalizedCoords = [relativeCoords[0] / windowRect.width * 100, relativeCoords[1] / windowRect.height * 100]
