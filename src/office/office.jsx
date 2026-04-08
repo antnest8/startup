@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavBarButton } from '../nav/barButtons';
-import { OfficeConnections } from './connections';
+import { Connections } from './connections';
 import { OfficeSpace } from './OfficeSpace';
 import { generateAudioList } from './audioMock';
 
@@ -12,6 +12,7 @@ export function Office(props){
     const [clientCoords, setClientCoords] = React.useState([50, 50]);
     const [otherUsers, setOtherUsers] = React.useState([]);
     const [audioList, setAudioList] = React.useState([]);
+    const [officeConnections, setOfficeConnections] = React.useState(null)
 
     function makeUserObj(coords=clientCoords){
         return {
@@ -39,7 +40,7 @@ export function Office(props){
         const localRenderData = makeUserObj(newCoords);
 
         userList = [localRenderData, ...otherUsers];
-        OfficeConnections.sendUserData(localRenderData);
+        officeConnections.sendUserData(localRenderData);
         setClientCoords(newCoords);
     }
 
@@ -61,9 +62,12 @@ export function Office(props){
     },[])
 
     React.useEffect(()=>{
+
+        setOfficeConnections(new Connections());
+
         if(acceptConnection){
-            OfficeConnections.registerHandler(handleData);
-            OfficeConnections.sendUserData(makeUserObj());
+            officeConnections.registerHandler(handleData);
+            officeConnections.sendUserData(makeUserObj());
             setAudioList(generateAudioList());
         }
     }, [acceptConnection])

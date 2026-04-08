@@ -21,7 +21,7 @@ class Connections{
             console.log(`Event recieved!`);
             const data = JSON.parse(await event.data.text());
             this.onlineUsers[data.userName] = data;
-            this.notifyHandlers('temp', data.username, this.onlineUsers.values())
+            this.notifyHandlers('temp', data.username, Object.values(this.onlineUsers))
         }
 
         this.socket.onclose = (event) => {
@@ -47,5 +47,5 @@ class Connections{
     
 }
 
-const OfficeConnections = new Connections();
-export { OfficeConnections };
+
+export { Connections };
