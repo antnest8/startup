@@ -1,6 +1,6 @@
 import React from 'react';
 
-const TOKENSIZE = 37;
+const TOKENSIZE = 37; // I do need to manually input this value in the className since tailwind doesn't do styling in runtime.
 
 export function OfficeSpace(props){
     //const fakeUser = new Object({initials: "YA", xPos: "50", yPos:"50"});
@@ -104,10 +104,8 @@ function UserToken(props){
         display: displayVal,
     }
 
-    const figureClass = `size-[${TOKENSIZE}px] translate-[-50%]`
-
     return (
-        <figure style={dynamicStyle} className={figureClass} id="user-1">
+        <figure style={dynamicStyle} className="size-[37px] translate-[-50%]" id="user-1">
             <div className="size-[32px]" dangerouslySetInnerHTML={userImage} />
             <img style={micStyle} className="size-[20px] absolute bottom-0 right-0" type="image/svg+xml" src="./microphone-svgrepo-com.svg" />
         </figure>
