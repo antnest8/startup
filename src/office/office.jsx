@@ -18,6 +18,7 @@ export function Office(props){
     const [officeConnections, setOfficeConnections] = React.useState(null);
     const [connectionEstablished, setConnectionEstablished] = React.useState(false);
     const [CallController, setCallController] = React.useState();
+    const [callEstablished, setCallEstablished] = React.useState(false);
 
     function makeUserObj(coords=clientCoords){
         return {
@@ -75,16 +76,21 @@ export function Office(props){
         if(acceptConnection == "accepted"){
             const connection = new Connections(userName, makeUserObj(), setConnectionEstablished)
             setOfficeConnections(connection);
-            const audioCall = new AudioCall(connection);
+            const audioCall = new AudioCall(connection, setCallEstablished);
             setCallController(audioCall);
             connection.registerHandler(handleData);
-            setAudioList(generateAudioList());
 
 
             return () => {connection.closeConnection()};
         }
 
     }, [acceptConnection])
+
+    React.useEffect(() => {
+        if(callEstablished){
+            setAudioList(CallController.getAudioList());
+        }
+    }, [callEstablished])
 
     React.useEffect(()=>{
         if(connectionEstablished == "closed"){

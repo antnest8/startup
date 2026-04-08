@@ -4,10 +4,13 @@ class AudioCall{
     callStage;
     peerConnection;
     socketConnection;
+    audioList = [];
+    setConnectionEstablished;
 
-    constructor(socketConnection){
+    constructor(socketConnection, setConnectionEstablished){
         this.callStage = "init";
         this.socketConnection = socketConnection;
+        this.setConnectionEstablished = setConnectionEstablished;
         this.socketConnection.registerHandler((msg) => {this.audioHandler(msg)})
         this.requestCall();
 
@@ -20,7 +23,8 @@ class AudioCall{
     async makeCall(){
         const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]}
         this.peerConnection = new RTCPeerConnection(configuration);
-        this.getIce();
+        await this.setAudioChannels();
+        await this.getIce();
         const audioStream = await navigator.mediaDevices.getUserMedia({audio:true});
         audioStream.getTracks().forEach(track => { //TODO: figure out why I have to getTracks()
             this.peerConnection.addTrack(track, audioStream);
@@ -53,7 +57,8 @@ class AudioCall{
     async recieveOffer(offer){
         const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]}
         this.peerConnection = new RTCPeerConnection(configuration);
-        this.getIce();
+        await this.setAudioChannels();
+        await this.getIce();
         await this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
         const answer = await this.peerConnection.createAnswer();
         await this.peerConnection.setLocalDescription(answer);
@@ -65,6 +70,19 @@ class AudioCall{
         const remoteDesc = new RTCSessionDescription(answer);
         await this.peerConnection.setRemoteDescription(remoteDesc);
         this.callStage = "first-contact"
+    }
+
+    async setAudioChannels(){
+        const audioStream = await navigator.mediaDevices.getUserMedia({audio: true});
+        audioStream.getTracks().forEach(track => {
+            this.peerConnection.addTrack(track, audioStream);
+        });
+        this.peerConnection.addEventListener('track', event => {
+            console.log("Receiving external input audio!");
+            this.audioList.push(event.streams[0]);
+        });
+
+        console.log("AudioChannels set up!");
     }
 
     async getIce(){
@@ -79,8 +97,13 @@ class AudioCall{
             if (this.peerConnection.connectionState === 'connected') {
                 console.log("WebRTC connection complete!");
                 this.callStage = "connection-established"
+                this.setConnectionEstablished(true);
             }
         });
+    }
+
+    getAudioList(){
+        return this.audioList;
     }
 
     async recieveIce (iceCandidate){
