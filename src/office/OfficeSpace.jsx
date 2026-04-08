@@ -1,5 +1,6 @@
 import React from 'react';
 
+const TOKENSIZE = 37; // I do need to manually input this value in the className since tailwind doesn't do styling in runtime.
 
 export function OfficeSpace(props){
     //const fakeUser = new Object({initials: "YA", xPos: "50", yPos:"50"});
@@ -16,19 +17,19 @@ export function OfficeSpace(props){
         const relativeCoords = [screenCoords[0] - windowRect.x, screenCoords[1] - windowRect.y];
 
         function boundBounce(relativeCoords){
-            if(relativeCoords[0] < 37){
-                relativeCoords[0] = 37;
+            if(relativeCoords[0] < TOKENSIZE / 2){
+                relativeCoords[0] = TOKENSIZE / 2;
             }
-            if(relativeCoords[1] < 37){
-                relativeCoords[1] = 37;
+            if(relativeCoords[1] < TOKENSIZE / 2){
+                relativeCoords[1] = TOKENSIZE / 2;
             }
-            if(relativeCoords[0] + 37 > windowRect.width){
-                relativeCoords[0] = windowRect.width - 38;
+            if(relativeCoords[0] + TOKENSIZE / 2 > windowRect.width){
+                relativeCoords[0] = windowRect.width - TOKENSIZE / 2;
             }
-            if(relativeCoords[1] + 37 > windowRect.height){
-                relativeCoords[1] = windowRect.height - 38;
-    }
-}
+            if(relativeCoords[1] + TOKENSIZE / 2 > windowRect.height){
+                relativeCoords[1] = windowRect.height - TOKENSIZE / 2;
+            }
+        }
 
         boundBounce(relativeCoords);
         const normalizedCoords = [relativeCoords[0] / windowRect.width * 100, relativeCoords[1] / windowRect.height * 100]
@@ -104,8 +105,8 @@ function UserToken(props){
     }
 
     return (
-        <figure style={dynamicStyle} className="size-[75px] translate-[-50%]"  id="user-1">
-            <div className="size-[65px]" dangerouslySetInnerHTML={userImage} />
+        <figure style={dynamicStyle} className="size-[37px] translate-[-50%]" id="user-1">
+            <div className="size-[32px]" dangerouslySetInnerHTML={userImage} />
             <img style={micStyle} className="size-[20px] absolute bottom-0 right-0" type="image/svg+xml" src="./microphone-svgrepo-com.svg" />
         </figure>
     );
@@ -126,7 +127,7 @@ function UserToken(props){
 
 
 function calcProximity(localUser, otherUser){
-    const maxDistance = 80;
+    const maxDistance = 40;
     const distance = Math.sqrt((localUser.x - otherUser.x)**2 + (localUser.y - otherUser.y)**2);
     const volume = Math.max(0, 1 - (Math.log(0.1 + distance) / Math.log(0.1 + maxDistance)));
     return volume;

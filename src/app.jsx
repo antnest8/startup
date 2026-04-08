@@ -11,12 +11,15 @@ export default function App(){
     
     const [userName, setUserName] = React.useState('fetching...');
     const [authState, setAuthState] = React.useState(AuthState.Pending);
+    const [callKey, setCallKey] = React.useState(0);
 
     React.useEffect(()=>{
         const fetchData = async ()=>{
             const currentAuthState = await getAuthState();
             //console.log(`DEBUG Auth: ${currentAuthState.name}`)
-            setUserName(await getUserName(currentAuthState));
+            const name = await getUserName(currentAuthState);
+            console.log("Username Found! : " + name);
+            setUserName(name);
             setAuthState(currentAuthState);
         }
         fetchData();
@@ -30,7 +33,7 @@ export default function App(){
         <BrowserRouter>
                 <Routes>
                     <Route path='/' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} exact />
-                    <Route path='/app' element={authState === AuthState.Unauthenticated ? <Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/> : <Office userName={userName}/>} />
+                    <Route path='/app' element={authState === AuthState.Unauthenticated ? <Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/> : <Office userName={userName} key={callKey} keyVal={callKey} setKey={setCallKey}/>} />
                     <Route path='/settings' element={authState === AuthState.Unauthenticated ? <Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/> : <Settings userName={userName}/>} />
                     <Route path='*' element={<NotFound/>} />
                 </Routes>
@@ -72,7 +75,8 @@ async function getUserName(currentAuth){
             if(response.status == 401){
                 throw Error("Previous Authentication succesful but data retrival failed");
             } else {
-                const resBody = response.json();
+                const resBody = await response.json();
+                //console.log(`DEBUG Username GET request response: ${resBody}`);
                 return resBody.user;
             }
         }

@@ -1,54 +1,96 @@
+
+
 class Connections{
-    onlineUsers = [];
-    handler;
+    onlineUsers = {};
+    handlers = [];
+    socket;
+    connected;
+    pendingRequest;
 
-    constructor(){
-        const testUser = {
-            userName: "otherDude",
-            initials: "OD",
-            displayName: "Other Dude!",
-            x : 50,
-            y : 50,
-            isTalking: true, //fix later
+    constructor(userName, initialData, setConnectionEstablished){
+        this.connected = false;
+
+        const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
+        this.socket = new WebSocket(`${protocol}://${window.location.host}/ws`);
+
+        this.socket.onopen = (event) => {
+            console.log(`Connection Opened Succesfully with userName: ${userName}`);
+            this.connected = true;
+            const initialMessage = {
+                type: "init",
+                userName: userName,
+                data: initialData
+            }
+            this.socket.send(JSON.stringify(initialMessage));
+            setConnectionEstablished(true);
+            if(this.pendingRequest){
+                this.sendCallData(this.pendingRequest)
+                this.pendingRequest = null;
+            }
+
         }
 
-        fetch("https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=OD&radius=50")
-            .then((res)=>res.text())
-            .then((res)=>testUser.userImage = { __html: res})
-            .finally(
-                setInterval(()=>{
-                    //updateMovement
-                    if(this.handler){
-                        testUser.x = Math.random() * 90 + 5;
-                        testUser.y = Math.random() * 90 + 5;
-                        this.handler([testUser])
-                    }
-                },10000)
-            );
+        this.socket.onmessage = async (msg) => {
+            //console.log(`DEBUG Data received: ${msg.data}`)
+            const data = JSON.parse(msg.data);
 
-        
-    }
 
-    connectSelf(userData, handler){
-        console.log("OFFICE-CONNECTIONS: User Connected");
-        this.handler = handler;
-        const testUser = {
-            userName: "otherDude",
-            initials: "OD",
-            displayName: "Other Dude!",
-            x : 25,
-            y : 25,
-            isTalking: true, //fix later
+            if(data.type == 'movement'){
+                //console.log(`DEBUG Other Users Coords: ${data.body.x}, ${data.body.y}`);
+                this.onlineUsers[data.userName] = data.body;
+                this.notifyHandlers(Object.values(this.onlineUsers))
+
+            } else if(data.type == 'disconnection'){
+                console.log(`${data.userName} disconnected.`)
+                delete this.onlineUsers[data.userName];
+                this.notifyHandlers(Object.values(this.onlineUsers))
+            } else if(data.type == "audio"){
+                this.notifyHandlers(data);
+            } else{
+                console.log("Socket data recieved that was not typed!?!?!?!")
+            }
         }
-        //handler([testUser])
-        return 
+
+        this.socket.onclose = (event) => {
+            console.log("Connection Closed Succesfully!");
+            setConnectionEstablished("closed");
+            const msg = {
+                type:"audio",
+                stage:"close",
+            }
+            this.notifyHandlers(msg);
+            this.connected = false;
+        }
+
     }
 
-    pushData(userData){
-        console.log("OFFICE-CONNECTIONS: Data Recieved");
+    registerHandler(handler){
+        this.handlers.push(handler);
+        console.log("recieved new handler");
+    }
+
+    sendUserData(newUserData){
+        //console.log(`DEBUG sending coords: ${newUserData.x}, ${newUserData.y}`)
+        this.socket.send(JSON.stringify(newUserData));
+    }
+
+    sendCallData(callData){
+        if(!this.connected){
+            this.pendingRequest = callData;
+        } else{
+            this.socket.send(JSON.stringify(callData));
+        }
+    }
+
+    notifyHandlers(data){
+        this.handlers.forEach(handler => {handler(data)});
+    }
+
+    closeConnection(){
+        this.socket.close();
     }
     
 }
 
-const OfficeConnections = new Connections();
-export { OfficeConnections };
+
+export { Connections };

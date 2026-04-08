@@ -1,17 +1,24 @@
 import React from 'react';
 import { NavBarButton } from '../nav/barButtons';
-import { OfficeConnections } from './connections';
+import { Connections } from './connections';
 import { OfficeSpace } from './OfficeSpace';
 import { generateAudioList } from './audioMock';
+import { AudioCall } from './callcenter'
 
 export function Office(props){
     const userName = props.userName;
+    const setKey = props.setKey;
+    const key = props.keyVal;
     const userData = React.useRef("loading"); 
     const [dataLoaded, setDataLoaded] = React.useState(false)
-    const [acceptConnection, setAcceptConnection] = React.useState(false);
+    const [acceptConnection, setAcceptConnection] = React.useState(null);
     const [clientCoords, setClientCoords] = React.useState([50, 50]);
     const [otherUsers, setOtherUsers] = React.useState([]);
     const [audioList, setAudioList] = React.useState([]);
+    const [officeConnections, setOfficeConnections] = React.useState(null);
+    const [connectionEstablished, setConnectionEstablished] = React.useState(false);
+    const [CallController, setCallController] = React.useState();
+    const [callEstablished, setCallEstablished] = React.useState(false);
 
     function makeUserObj(coords=clientCoords){
         return {
@@ -19,8 +26,8 @@ export function Office(props){
             displayName: userData.current.displayName,
             initials: userData.current.initials,
             userImage: userData.current.image,
-            x : clientCoords[0],
-            y : clientCoords[1],
+            x : coords[0],
+            y : coords[1],
             isTalking: false, //fix later
         };
     }
@@ -28,18 +35,20 @@ export function Office(props){
 
     function handleData(newData){
 
-        userList = [makeUserObj(), ...newData];
-        //console.log("DEBUG: userList" + JSON.stringify(userList));
-        setOtherUsers(newData);
-        //console.log("handleData recieved data!: " + JSON.stringify(newData));
-
+        if(newData.type != "audio"){
+            userList = [makeUserObj(), ...otherUsers];
+            //console.log("DEBUG: userList" + JSON.stringify(userList));
+            setOtherUsers(newData);
+            //console.log("handleData recieved data!: " + JSON.stringify(newData));
+        }
     }
 
     function moveUser(newCoords){
+        //console.log(`DEBUG newCoords ${newCoords}`)
         const localRenderData = makeUserObj(newCoords);
-
+        //console.log(`DEBUG localRenderData Coords: ${localRenderData.x}, ${localRenderData.y}`);
         userList = [localRenderData, ...otherUsers];
-        OfficeConnections.pushData(localRenderData);
+        officeConnections.sendUserData(localRenderData);
         setClientCoords(newCoords);
     }
 
@@ -55,17 +64,40 @@ export function Office(props){
                 userData.current = resBody;
                 setDataLoaded(true);
             }
-            console.log("Mounting Office completed")
+            console.log("Mounting Office completed with username: " + userName)
         }
         mountComponent();
+
+
     },[])
 
     React.useEffect(()=>{
-        if(acceptConnection){
-            OfficeConnections.connectSelf(makeUserObj(), handleData)
-            setAudioList(generateAudioList());
+
+        if(acceptConnection == "accepted"){
+            const connection = new Connections(userName, makeUserObj(), setConnectionEstablished)
+            setOfficeConnections(connection);
+            const audioCall = new AudioCall(connection, setCallEstablished);
+            setCallController(audioCall);
+            connection.registerHandler(handleData);
+
+
+            return () => {connection.closeConnection()};
         }
+
     }, [acceptConnection])
+
+    React.useEffect(() => {
+        if(callEstablished){
+            setAudioList(CallController.getAudioList());
+        }
+    }, [callEstablished])
+
+    React.useEffect(()=>{
+        if(connectionEstablished == "closed"){
+            console.log("Connection closed. Resetting window")
+            setKey(key + 1);
+        }
+    },[connectionEstablished])
 
 
     if(userData.current == "loading"){
@@ -92,7 +124,7 @@ export function Office(props){
             </header>
             <main className="flex grow bg-stone-800">
                 <ActiveUsers userName={userName} userList={userList}/>
-                {acceptConnection ? <OfficeSpace userList={userList} moveUserFunc={moveUser} audioList={audioList}/> : <Unconnected setAcceptConnection={setAcceptConnection}/>}
+                {acceptConnection && connectionEstablished ? <OfficeSpace userList={userList} moveUserFunc={moveUser} audioList={audioList}/> : <Unconnected setAcceptConnection={setAcceptConnection} acceptConnection={acceptConnection}/>}
             </main>
         </div>
     )
@@ -129,10 +161,12 @@ function LoadingData(props){
 
 function Unconnected(props){
     const connectToOffice = props.setAcceptConnection;
+    const acceptStatus = props.acceptConnection;
+
 
     return(    
     <div id="app-window" className="relative grow flex justify-center align-center ">
-        <button className="rounded-lg my-40 outline-solid outline-stone-700 content-center text-center hover:outline-teal-700 hover:bg-teal-950 w-60 h-10 bg-stone-900 mx-3 cursor-pointer" onClick={()=>{connectToOffice(true)}}>Click to connect to the Office</button>
+        {acceptStatus || <button className="rounded-lg my-40 outline-solid outline-stone-700 content-center text-center hover:outline-teal-700 hover:bg-teal-950 w-60 h-10 bg-stone-900 mx-3 cursor-pointer" onClick={()=>{connectToOffice("accepted")}}>Click to connect to the Office</button>}
     </div>
     );
 }

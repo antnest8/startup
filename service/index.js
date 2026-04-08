@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const uuid = require('uuid');
 const app = express();
 const {getUserByToken, getUser, updateUser, createUser, deleteUserByToken} = require("./database.js");
+const { WebSocketServer }  = require('ws');
 
 //setup -------------
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
@@ -128,6 +129,8 @@ app.use(function (err, req, res, next){
     res.status(500).send({type : err.name, message : err.msg});
 })
 
+
+
 //utility functions -------------
 async function checkAuth(req, res, next){
     if(await getUserByToken( req.cookies['authToken'])){
@@ -167,7 +170,96 @@ function setAuthCookie(res, user){
 
 //listening --------------
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`listening on port ${port}`);
 });
 
+//WebSocket ----------------------
+
+const socketServer = new WebSocketServer({ server });
+var pendingCall = null;
+
+socketServer.on('connection', (socket) => {
+    socket.isAlive = true;
+
+    socket.on('message', (data) => {
+        //console.log(`Data recieved! : ${typeof data}`);
+        const dataObj = JSON.parse(data);
+
+        if(dataObj.type == "init"){
+            socket.userName = dataObj.userName;
+            const msg = JSON.stringify({
+                body: dataObj.data,
+                type: "movement",
+                userName: socket.userName,
+            })
+
+            socketServer.clients.forEach((client) => {
+                if(client !== socket && client.readyState === WebSocket.OPEN){
+                    client.send(msg);
+                }
+            });
+        
+        } else if(dataObj.type == "audio"){
+            console.log(`AudioData Received Staged: ${dataObj.stage}`);
+
+            if(pendingCall && dataObj.stage == "request-call"){
+                pendingCall.send(JSON.stringify({type:"audio",stage:"init-call",role:"caller"}));
+                pendingCall = null;
+                socket.send(JSON.stringify({type:"audio",stage:"init-call",role:"receiver"}));
+                console.log(`Call request received! Initiating call handshake.`);
+            } else if(dataObj.stage == "request-call"){
+                pendingCall = socket;
+                console.log(`first call request received! Pending...`);
+            } else{
+                dataObj["userName"] = socket.userName;
+                socketServer.clients.forEach((client) => {
+                    if(client !== socket && client.readyState === WebSocket.OPEN){
+                        client.send(JSON.stringify(dataObj));
+                    }
+                });
+            }
+
+        } else{
+            const msg = JSON.stringify({
+                body: dataObj,
+                type: "movement",
+                userName: socket.userName,
+            })
+
+            socketServer.clients.forEach((client) => {
+                if(client !== socket && client.readyState === WebSocket.OPEN){
+                    client.send(msg);
+                }
+            });
+        }
+
+    });
+
+    socket.on('pong', () => {
+        socket.isAlive = true;
+        //console.log(`Socket: ${socket.userName} responded to ping`)
+    });
+
+    socket.on('close', () => {
+        console.log(`Client ${socket.userName}, was closed`);
+        socketServer.clients.forEach((client) => {
+            if(client !== socket && client.readyState === WebSocket.OPEN){
+                client.send(JSON.stringify({type:'disconnection', userName:socket.userName}));
+            }
+        });
+    });
+});
+
+setInterval(() => {
+    //console.log(`Pinging clients...`)
+    socketServer.clients.forEach((client) => {
+        if (client.isAlive === false) {
+            console.log("A client was found unresponsive. Terminating...")
+            return client.terminate();
+        }
+
+        client.isAlive = false;
+        client.ping();
+    });
+}, 10000);
