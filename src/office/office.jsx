@@ -30,11 +30,12 @@ export function Office(props){
 
     function handleData(newData){
 
-        userList = [makeUserObj(), ...otherUsers];
-        //console.log("DEBUG: userList" + JSON.stringify(userList));
-        setOtherUsers(newData);
-        //console.log("handleData recieved data!: " + JSON.stringify(newData));
-
+        if(newData.type != "audio"){
+            userList = [makeUserObj(), ...otherUsers];
+            //console.log("DEBUG: userList" + JSON.stringify(userList));
+            setOtherUsers(newData);
+            //console.log("handleData recieved data!: " + JSON.stringify(newData));
+        }
     }
 
     function moveUser(newCoords){

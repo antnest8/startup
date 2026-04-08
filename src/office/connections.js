@@ -27,15 +27,23 @@ class Connections{
         this.socket.onmessage = async (msg) => {
             const data = JSON.parse(msg.data);
             //console.log(`DEBUG Data received: ${JSON.stringify(data)}`)
+
+
+
             if(data.type == 'movement'){
                 console.log(`DEBUG Other Users Coords: ${data.body.x}, ${data.body.y}`);
                 this.onlineUsers[data.userName] = data.body;
+                this.notifyHandlers(Object.values(this.onlineUsers))
+
             } else if(data.type == 'disconnection'){
                 console.log(`${data.userName} disconnected.`)
                 delete this.onlineUsers[data.userName];
+                this.notifyHandlers(Object.values(this.onlineUsers))
+            } else if(data.type == "audio"){
+                this.notifyHandlers(data);
+            } else{
+                console.log("Socket data recieved that was not typed!?!?!?!")
             }
-
-            this.notifyHandlers(Object.values(this.onlineUsers))
         }
 
         this.socket.onclose = (event) => {
@@ -53,6 +61,10 @@ class Connections{
     sendUserData(newUserData){
         console.log(`DEBUG sending coords: ${newUserData.x}, ${newUserData.y}`)
         this.socket.send(JSON.stringify(newUserData));
+    }
+
+    sendCallData(callData){
+        this.socket.send(JSON.stringify(callData));
     }
 
     notifyHandlers(data){
