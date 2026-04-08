@@ -59,6 +59,8 @@ export function Office(props){
             console.log("Mounting Office completed")
         }
         mountComponent();
+
+
     },[])
 
     React.useEffect(()=>{
@@ -70,6 +72,7 @@ export function Office(props){
             officeConnections.sendUserData(makeUserObj());
             setAudioList(generateAudioList());
         }
+        return () => {officeConnections.closeConnection()}
     }, [acceptConnection])
 
 

@@ -51,6 +51,10 @@ class Connections{
     notifyHandlers(data){
         this.handlers.forEach(handler => {handler(data)});
     }
+
+    closeConnection(){
+        this.socket.close();
+    }
     
 }
 

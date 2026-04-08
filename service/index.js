@@ -201,6 +201,7 @@ socketServer.on('connection', (socket) => {
     });
 
     socket.on('close', () => {
+        console.log(`Client ${socket.userName}, was closed`);
         socketServer.clients.forEach((client) => {
             if(client !== socket && client.readyState === WebSocket.OPEN){
                 client.send(JSON.stringify({type:'disconnection', userName:socket.userName}));
@@ -213,7 +214,7 @@ setInterval(() => {
     console.log(`Pinging clients...`)
     socketServer.clients.forEach((client) => {
         if (client.isAlive === false) {
-
+            console.log("A client was found unresponsive. Terminating...")
             return client.terminate();
         }
 
