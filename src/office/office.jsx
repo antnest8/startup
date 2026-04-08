@@ -8,11 +8,12 @@ export function Office(props){
     const userName = props.userName;
     const userData = React.useRef("loading"); 
     const [dataLoaded, setDataLoaded] = React.useState(false)
-    const [acceptConnection, setAcceptConnection] = React.useState(false);
+    const [acceptConnection, setAcceptConnection] = React.useState(null);
     const [clientCoords, setClientCoords] = React.useState([50, 50]);
     const [otherUsers, setOtherUsers] = React.useState([]);
     const [audioList, setAudioList] = React.useState([]);
-    const [officeConnections, setOfficeConnections] = React.useState(null)
+    const [officeConnections, setOfficeConnections] = React.useState(null);
+    const [connectionEstablished, setConnectionEstablished] = React.useState(false);
 
     function makeUserObj(coords=clientCoords){
         return {
@@ -65,8 +66,8 @@ export function Office(props){
 
     React.useEffect(()=>{
 
-        if(acceptConnection){
-            const connection = new Connections(userName, makeUserObj())
+        if(acceptConnection == "accepted"){
+            const connection = new Connections(userName, makeUserObj(), setConnectionEstablished)
             setOfficeConnections(connection);
 
             connection.registerHandler(handleData);
@@ -103,7 +104,7 @@ export function Office(props){
             </header>
             <main className="flex grow bg-stone-800">
                 <ActiveUsers userName={userName} userList={userList}/>
-                {acceptConnection ? <OfficeSpace userList={userList} moveUserFunc={moveUser} audioList={audioList}/> : <Unconnected setAcceptConnection={setAcceptConnection}/>}
+                {acceptConnection && connectionEstablished ? <OfficeSpace userList={userList} moveUserFunc={moveUser} audioList={audioList}/> : <Unconnected setAcceptConnection={setAcceptConnection} acceptConnection={acceptConnection}/>}
             </main>
         </div>
     )
@@ -140,10 +141,12 @@ function LoadingData(props){
 
 function Unconnected(props){
     const connectToOffice = props.setAcceptConnection;
+    const acceptStatus = props.acceptConnection;
+
 
     return(    
     <div id="app-window" className="relative grow flex justify-center align-center ">
-        <button className="rounded-lg my-40 outline-solid outline-stone-700 content-center text-center hover:outline-teal-700 hover:bg-teal-950 w-60 h-10 bg-stone-900 mx-3 cursor-pointer" onClick={()=>{connectToOffice(true)}}>Click to connect to the Office</button>
+        {acceptStatus || <button className="rounded-lg my-40 outline-solid outline-stone-700 content-center text-center hover:outline-teal-700 hover:bg-teal-950 w-60 h-10 bg-stone-900 mx-3 cursor-pointer" onClick={()=>{connectToOffice("accepted")}}>Click to connect to the Office</button>}
     </div>
     );
 }
