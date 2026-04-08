@@ -6,22 +6,29 @@ class Connections{
     socket;
     connected;
 
-    constructor(){
+    constructor(userName){
         this.connected = false;
 
         const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
         this.socket = new WebSocket(`${protocol}://${window.location.host}/ws`);
+
+        this.socket.userName = userName;
 
         this.socket.onopen = (event) => {
             console.log("Connection Opened Succesfully!");
             this.connected = true;
         }
 
-        this.socket.onmessage = async (event) => {
+        this.socket.onmessage = async (msg) => {
             console.log(`Event recieved!`);
-            const data = JSON.parse(await event.data.text());
-            this.onlineUsers[data.userName] = data;
-            this.notifyHandlers('temp', data.username, Object.values(this.onlineUsers))
+            const data = JSON.parse(await msg.data.text());
+            if(data.type == 'movement'){
+                this.onlineUsers[data.userName] = data.body;
+            } else if(data.type == 'disconnection'){
+                delete this.onlineUsers[data.userName];
+            }
+
+            this.notifyHandlers(Object.values(this.onlineUsers))
         }
 
         this.socket.onclose = (event) => {
@@ -41,8 +48,8 @@ class Connections{
         this.socket.send(JSON.stringify(newUserData));
     }
 
-    notifyHandlers(eventType, from, data){
-        this.handlers.forEach(handler => {handler(eventType, from, data)});
+    notifyHandlers(data){
+        this.handlers.forEach(handler => {handler(data)});
     }
     
 }

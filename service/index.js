@@ -182,21 +182,40 @@ socketServer.on('connection', (socket) => {
     socket.isAlive = true;
 
     socket.on('message', (data) => {
+        console.log(`Data recieved!`)
         socketServer.clients.forEach((client) => {
             if(client !== socket && client.readyState === WebSocket.OPEN){
-                client.send(data);
+                const msg = {
+                    type: "movement",
+                    body: data,
+                    userName: socket.userName
+                }
+                client.send(JSON.stringify(msg));
             }
         });
     });
 
     socket.on('pong', () => {
         socket.isAlive = true;
+        console.log(`Client responded!`)
+    });
+
+    socket.on('close', () => {
+        socketServer.clients.forEach((client) => {
+            if(client !== socket && client.readyState === WebSocket.OPEN){
+                client.send(JSON.stringify({type:'disconnection', userName:socket.userName}));
+            }
+        });
     });
 });
 
 setInterval(() => {
+    console.log(`Pinging clients...`)
     socketServer.clients.forEach((client) => {
-        if (client.isAlive === false) return client.terminate();
+        if (client.isAlive === false) {
+
+            return client.terminate();
+        }
 
         client.isAlive = false;
         client.ping();

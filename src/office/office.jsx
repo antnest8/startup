@@ -27,7 +27,7 @@ export function Office(props){
     }
     var userList = [makeUserObj(), ...otherUsers];
 
-    function handleData(event, from, newData){
+    function handleData(newData){
 
         userList = [makeUserObj(), ...otherUsers];
         //console.log("DEBUG: userList" + JSON.stringify(userList));
@@ -63,7 +63,7 @@ export function Office(props){
 
     React.useEffect(()=>{
 
-        setOfficeConnections(new Connections());
+        setOfficeConnections(new Connections(userName));
 
         if(acceptConnection){
             officeConnections.registerHandler(handleData);
