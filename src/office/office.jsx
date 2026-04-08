@@ -28,7 +28,7 @@ export function Office(props){
             userImage: userData.current.image,
             x : coords[0],
             y : coords[1],
-            isTalking: false, //fix later
+            isTalking: userList ? userList[0].isTalking : false,
         };
     }
     var userList = [makeUserObj(), ...otherUsers];
