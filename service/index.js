@@ -197,7 +197,7 @@ socketServer.on('connection', (socket) => {
 
     socket.on('pong', () => {
         socket.isAlive = true;
-        console.log(`Client responded!`)
+        console.log(`Client responded to ping`)
     });
 
     socket.on('close', () => {
@@ -211,7 +211,7 @@ socketServer.on('connection', (socket) => {
 });
 
 setInterval(() => {
-    console.log(`Pinging clients...`)
+    //console.log(`Pinging clients...`)
     socketServer.clients.forEach((client) => {
         if (client.isAlive === false) {
             console.log("A client was found unresponsive. Terminating...")

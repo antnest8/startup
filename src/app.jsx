@@ -16,7 +16,9 @@ export default function App(){
         const fetchData = async ()=>{
             const currentAuthState = await getAuthState();
             //console.log(`DEBUG Auth: ${currentAuthState.name}`)
-            setUserName(await getUserName(currentAuthState));
+            const name = await getUserName(currentAuthState);
+            console.log("Username Found! : " + name);
+            setUserName(name);
             setAuthState(currentAuthState);
         }
         fetchData();
@@ -72,7 +74,8 @@ async function getUserName(currentAuth){
             if(response.status == 401){
                 throw Error("Previous Authentication succesful but data retrival failed");
             } else {
-                const resBody = response.json();
+                const resBody = await response.json();
+                //console.log(`DEBUG Username GET request response: ${resBody}`);
                 return resBody.user;
             }
         }

@@ -6,7 +6,7 @@ class Connections{
     socket;
     connected;
 
-    constructor(userName){
+    constructor(userName, initialData){
         this.connected = false;
 
         const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
@@ -15,8 +15,9 @@ class Connections{
         this.socket.userName = userName;
 
         this.socket.onopen = (event) => {
-            console.log("Connection Opened Succesfully!");
+            console.log(`Connection Opened Succesfully with userName: ${this.socket.userName}`);
             this.connected = true;
+            this.socket.send(JSON.stringify(initialData));
         }
 
         this.socket.onmessage = async (msg) => {

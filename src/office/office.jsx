@@ -56,7 +56,7 @@ export function Office(props){
                 userData.current = resBody;
                 setDataLoaded(true);
             }
-            console.log("Mounting Office completed")
+            console.log("Mounting Office completed with username: " + userName)
         }
         mountComponent();
 
@@ -65,14 +65,14 @@ export function Office(props){
 
     React.useEffect(()=>{
 
-        setOfficeConnections(new Connections(userName));
-
         if(acceptConnection){
-            officeConnections.registerHandler(handleData);
-            officeConnections.sendUserData(makeUserObj());
+            const connection = new Connections(userName, makeUserObj())
+            setOfficeConnections(connection);
+
+            connection.registerHandler(handleData);
             setAudioList(generateAudioList());
         }
-        return () => {officeConnections.closeConnection()}
+        //return () => {officeConnections.closeConnection()};
     }, [acceptConnection])
 
 
