@@ -11,6 +11,7 @@ export default function App(){
     
     const [userName, setUserName] = React.useState('fetching...');
     const [authState, setAuthState] = React.useState(AuthState.Pending);
+    const [callKey, setCallKey] = React.useState(0);
 
     React.useEffect(()=>{
         const fetchData = async ()=>{
@@ -32,7 +33,7 @@ export default function App(){
         <BrowserRouter>
                 <Routes>
                     <Route path='/' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} exact />
-                    <Route path='/app' element={authState === AuthState.Unauthenticated ? <Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/> : <Office userName={userName}/>} />
+                    <Route path='/app' element={authState === AuthState.Unauthenticated ? <Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/> : <Office userName={userName} key={callKey} setKey={setCallKey}/>} />
                     <Route path='/settings' element={authState === AuthState.Unauthenticated ? <Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/> : <Settings userName={userName}/>} />
                     <Route path='*' element={<NotFound/>} />
                 </Routes>

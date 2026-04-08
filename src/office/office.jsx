@@ -7,6 +7,8 @@ import { AudioCall } from './callcenter'
 
 export function Office(props){
     const userName = props.userName;
+    const key = props.key;
+    const setKey = props.setKey;
     const userData = React.useRef("loading"); 
     const [dataLoaded, setDataLoaded] = React.useState(false)
     const [acceptConnection, setAcceptConnection] = React.useState(null);
@@ -83,6 +85,13 @@ export function Office(props){
         }
 
     }, [acceptConnection])
+
+    React.useEffect(()=>{
+        if(connectionEstablished == "closed"){
+            console.log("Connection closed. Resetting window")
+            setKey(key + 1);
+        }
+    },[connectionEstablished])
 
 
     if(userData.current == "loading"){
