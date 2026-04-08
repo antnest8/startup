@@ -12,19 +12,28 @@ class Connections{
         const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
         this.socket = new WebSocket(`${protocol}://${window.location.host}/ws`);
 
-        this.socket.userName = userName;
-
         this.socket.onopen = (event) => {
             console.log(`Connection Opened Succesfully with userName: ${this.socket.userName}`);
             this.connected = true;
-            this.socket.send(JSON.stringify(initialData));
+            const initialMessage = {
+                type: "init",
+                userName: userName,
+                data: initialData
+            }
+            this.socket.send(JSON.stringify(initialMessage));
         }
 
         this.socket.onmessage = async (msg) => {
-            console.log(`Event recieved!`);
-            const data = JSON.parse(await msg.data.text());
+            console.log(`MessageEvent info...\n
+                typeof event: ${typeof msg},\n
+                typeof data ${typeof msg.data},\n`)
+
+
+
+            const data = JSON.parse(msg.data);
+            console.log(`DEBUG Data received: ${JSON.stringify(data)}`)
             if(data.type == 'movement'){
-                this.onlineUsers[data.userName] = data.body;
+                this.onlineUsers[data.userName] = data;
             } else if(data.type == 'disconnection'){
                 delete this.onlineUsers[data.userName];
             }

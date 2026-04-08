@@ -182,22 +182,25 @@ socketServer.on('connection', (socket) => {
     socket.isAlive = true;
 
     socket.on('message', (data) => {
-        console.log(`Data recieved!`)
+        //console.log(`Data recieved! : ${typeof data}`);
+        dataObj = JSON.parse(data);
+        
+        const msg = JSON.stringify({
+            body: dataObj,
+            type: "movement",
+            userName: socket.userName,
+        })
+
         socketServer.clients.forEach((client) => {
             if(client !== socket && client.readyState === WebSocket.OPEN){
-                const msg = {
-                    type: "movement",
-                    body: data,
-                    userName: socket.userName
-                }
-                client.send(JSON.stringify(msg));
+                client.send(msg);
             }
         });
     });
 
     socket.on('pong', () => {
         socket.isAlive = true;
-        console.log(`Client responded to ping`)
+        console.log(`Socket: ${socket.userName} responded to ping`)
     });
 
     socket.on('close', () => {
