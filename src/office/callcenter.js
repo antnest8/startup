@@ -55,6 +55,11 @@ class AudioCall{
                 } else{
                     this.callStage = "listening";
                 }
+            }else if(msg.stage == "close"){
+                this.peerConnection.close();
+                console.log(`WebRTC closing status: ${this.peerConnection.connectionState}`)
+                delete this.peerConnection;
+                //Note: I don't think I need to reset anything else since a new AudioCall object will be created upon remounting.
             }
         }
     }
@@ -107,6 +112,11 @@ class AudioCall{
                 console.log("WebRTC connection complete!");
                 this.callStage = "connection-established"
                 this.setConnectionEstablished(true);
+            }
+            if(this.peerConnection.connectionState === "failed" || this.peerConnection.connectionState === "closed" || this.peerConnection.connectionState === "disconnected"){
+                console.log("WebRTC peer connection disconnected... cleaning up");
+                delete this.peerConnection;
+                this.socketConnection.closeConnection();
             }
         });
     }

@@ -54,6 +54,11 @@ class Connections{
         this.socket.onclose = (event) => {
             console.log("Connection Closed Succesfully!");
             setConnectionEstablished("closed");
+            const msg = {
+                type:"audio",
+                stage:"close",
+            }
+            this.notifyHandlers(msg);
             this.connected = false;
         }
 
