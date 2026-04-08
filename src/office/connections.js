@@ -13,7 +13,7 @@ class Connections{
         this.socket = new WebSocket(`${protocol}://${window.location.host}/ws`);
 
         this.socket.onopen = (event) => {
-            console.log(`Connection Opened Succesfully with userName: ${this.socket.userName}`);
+            console.log(`Connection Opened Succesfully with userName: ${userName}`);
             this.connected = true;
             const initialMessage = {
                 type: "init",
@@ -24,17 +24,13 @@ class Connections{
         }
 
         this.socket.onmessage = async (msg) => {
-            console.log(`MessageEvent info...\n
-                typeof event: ${typeof msg},\n
-                typeof data ${typeof msg.data},\n`)
-
-
-
             const data = JSON.parse(msg.data);
-            console.log(`DEBUG Data received: ${JSON.stringify(data)}`)
+            //console.log(`DEBUG Data received: ${JSON.stringify(data)}`)
             if(data.type == 'movement'){
-                this.onlineUsers[data.userName] = data;
+                //console.log(`DEBUG movement data detected!`)
+                this.onlineUsers[data.userName] = data.body;
             } else if(data.type == 'disconnection'){
+                console.log(`${data.userName} disconnected.`)
                 delete this.onlineUsers[data.userName];
             }
 

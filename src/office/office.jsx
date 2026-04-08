@@ -71,8 +71,11 @@ export function Office(props){
 
             connection.registerHandler(handleData);
             setAudioList(generateAudioList());
+
+
+            return () => {connection.closeConnection()};
         }
-        //return () => {officeConnections.closeConnection()};
+
     }, [acceptConnection])
 
 

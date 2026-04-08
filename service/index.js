@@ -183,19 +183,36 @@ socketServer.on('connection', (socket) => {
 
     socket.on('message', (data) => {
         //console.log(`Data recieved! : ${typeof data}`);
-        dataObj = JSON.parse(data);
-        
-        const msg = JSON.stringify({
-            body: dataObj,
-            type: "movement",
-            userName: socket.userName,
-        })
+        const dataObj = JSON.parse(data);
 
-        socketServer.clients.forEach((client) => {
-            if(client !== socket && client.readyState === WebSocket.OPEN){
-                client.send(msg);
-            }
-        });
+        if(dataObj.type == "init"){
+            socket.userName = dataObj.userName;
+            const msg = JSON.stringify({
+                body: dataObj.data,
+                type: "movement",
+                userName: socket.userName,
+            })
+
+            socketServer.clients.forEach((client) => {
+                if(client !== socket && client.readyState === WebSocket.OPEN){
+                    client.send(msg);
+                }
+            });
+
+        } else{
+            const msg = JSON.stringify({
+                body: dataObj,
+                type: "movement",
+                userName: socket.userName,
+            })
+
+            socketServer.clients.forEach((client) => {
+                if(client !== socket && client.readyState === WebSocket.OPEN){
+                    client.send(msg);
+                }
+            });
+        }
+
     });
 
     socket.on('pong', () => {
