@@ -7,8 +7,8 @@ import { AudioCall } from './callcenter'
 
 export function Office(props){
     const userName = props.userName;
-    const key = props.key;
     const setKey = props.setKey;
+    const key = props.keyVal;
     const userData = React.useRef("loading"); 
     const [dataLoaded, setDataLoaded] = React.useState(false)
     const [acceptConnection, setAcceptConnection] = React.useState(null);

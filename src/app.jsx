@@ -33,7 +33,7 @@ export default function App(){
         <BrowserRouter>
                 <Routes>
                     <Route path='/' element={<Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/>} exact />
-                    <Route path='/app' element={authState === AuthState.Unauthenticated ? <Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/> : <Office userName={userName} key={callKey} setKey={setCallKey}/>} />
+                    <Route path='/app' element={authState === AuthState.Unauthenticated ? <Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/> : <Office userName={userName} key={callKey} keyVal={callKey} setKey={setCallKey}/>} />
                     <Route path='/settings' element={authState === AuthState.Unauthenticated ? <Login userName={userName} setAuthState={setAuthState} changeUserName={setUserName}/> : <Settings userName={userName}/>} />
                     <Route path='*' element={<NotFound/>} />
                 </Routes>
