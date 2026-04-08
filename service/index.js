@@ -212,6 +212,7 @@ socketServer.on('connection', (socket) => {
                 pendingCall = socket;
                 console.log(`first call request received! Pending...`);
             } else{
+                dataObj["userName"] = socket.userName;
                 socketServer.clients.forEach((client) => {
                     if(client !== socket && client.readyState === WebSocket.OPEN){
                         client.send(JSON.stringify(dataObj));

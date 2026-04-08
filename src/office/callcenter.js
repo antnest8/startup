@@ -6,6 +6,7 @@ class AudioCall{
     socketConnection;
     audioList = [];
     setConnectionEstablished;
+    externalUser;
 
     constructor(socketConnection, setConnectionEstablished){
         this.callStage = "init";
@@ -39,8 +40,12 @@ class AudioCall{
         if(msg.type == "audio"){
             console.log("Recieved audio data");
             if(msg.stage == 'answer' && this.callStage == "listening"){
+                console.log("DEBUG: other caller's id: " + msg.userName);
+                this.externalUser = msg.userName;
                 this.recieveAnswer(msg.answer);
             } else if(msg.stage == 'offer' && this.callStage == "listening"){
+                console.log("DEBUG: other caller's id: " + msg.userName);
+                this.externalUser = msg.userName;
                 this.recieveOffer(msg.offer);
             }else if(msg.stage == 'send-ice' && this.callStage == "first-contact"){
                 this.recieveIce(msg.iceCandidate);
@@ -79,7 +84,11 @@ class AudioCall{
         });
         this.peerConnection.addEventListener('track', event => {
             console.log("Receiving external input audio!");
-            this.audioList.push(event.streams[0]);
+            const audioPackage = {
+                audio: event.streams[0],
+                id:this.externalUser,
+            };
+            this.audioList.push(audioPackage);
         });
 
         console.log("AudioChannels set up!");
