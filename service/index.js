@@ -177,6 +177,7 @@ const server = app.listen(port, () => {
 //WebSocket ----------------------
 
 const socketServer = new WebSocketServer({ server });
+var pendingCall = null;
 
 socketServer.on('connection', (socket) => {
     socket.isAlive = true;
@@ -198,6 +199,21 @@ socketServer.on('connection', (socket) => {
                     client.send(msg);
                 }
             });
+        
+        } else if(dataObj.type == "audio"){
+            if(pendingCall && dataObj.stage == "request-call"){
+                pendingCall.send(JSON.stringify({type:"audio",stage:"init-call",role:"caller"}));
+                pendingCall = null;
+                socket.send(JSON.stringify({type:"audio",stage:"init-call",role:"receiver"}));
+            } else if(dataObj.stage == "request-call"){
+                pendingCall = socket;
+            } else{
+                socketServer.clients.forEach((client) => {
+                    if(client !== socket && client.readyState === WebSocket.OPEN){
+                        client.send(msg);
+                    }
+                });
+            }
 
         } else{
             const msg = JSON.stringify({

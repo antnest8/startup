@@ -9,16 +9,21 @@ class Audiocall{
         this.callStage = "init";
         this.socketConnection = socketConnection;
         this.socketConnection.registerHandler((msg) => {this.audioHandler(msg)})
+        this.requestCall();
 
 
 
-        this.makeCall();
+
+    }
+
+    async requestCall(){
+        this.socketConnection.sendCallData({type:"audio",stage:"request-call"})
     }
 
     async makeCall(){
         const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]}
         this.peerConnection = new RTCPeerConnection(configuration);
-        
+        this.getIce();
         const offer = await this.peerConnection.createOffer();
         await this.peerConnection.setLocalDescription(offer);
         this.callStage = "listening";
@@ -34,12 +39,20 @@ class Audiocall{
                 this.recieveOffer(msg.offer);
             }else if(msg.stage == 'send-ice' && this.callStage == "first-contact"){
                 this.recieveIce(msg.iceCandidate);
+            }else if(this.callStage == "init" && msg.stage == "init-call"){
+                if(msg.role == "caller"){
+                    this.makeCall();
+                } else{
+                    this.callStage = "listening";
+                }
             }
         }
     }
 
     async recieveOffer(offer){
-
+        const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]}
+        this.peerConnection = new RTCPeerConnection(configuration);
+        this.getIce();
         this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
         const answer = await this.peerConnection.createAnswer();
         await this.peerConnection.setLocalDescription(answer);
@@ -51,7 +64,9 @@ class Audiocall{
         const remoteDesc = new RTCSessionDescription(answer);
         await this.peerConnection.setRemoteDescription(remoteDesc);
         this.callStage = "first-contact"
+    }
 
+    async getIce(){
         // Listen for local ICE candidates on the local RTCPeerConnection
         this.peerConnection.addEventListener('icecandidate', event => {
             if (event.candidate) {
