@@ -201,16 +201,20 @@ socketServer.on('connection', (socket) => {
             });
         
         } else if(dataObj.type == "audio"){
+            console.log(`AudioData Received Staged: ${dataObj.stage}`);
+
             if(pendingCall && dataObj.stage == "request-call"){
                 pendingCall.send(JSON.stringify({type:"audio",stage:"init-call",role:"caller"}));
                 pendingCall = null;
                 socket.send(JSON.stringify({type:"audio",stage:"init-call",role:"receiver"}));
+                console.log(`Call request received! Initiating call handshake.`);
             } else if(dataObj.stage == "request-call"){
                 pendingCall = socket;
+                console.log(`first call request received! Pending...`);
             } else{
                 socketServer.clients.forEach((client) => {
                     if(client !== socket && client.readyState === WebSocket.OPEN){
-                        client.send(msg);
+                        client.send(JSON.stringify(dataObj));
                     }
                 });
             }
@@ -233,7 +237,7 @@ socketServer.on('connection', (socket) => {
 
     socket.on('pong', () => {
         socket.isAlive = true;
-        console.log(`Socket: ${socket.userName} responded to ping`)
+        //console.log(`Socket: ${socket.userName} responded to ping`)
     });
 
     socket.on('close', () => {

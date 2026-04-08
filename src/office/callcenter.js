@@ -1,6 +1,6 @@
 
 
-class Audiocall{
+class AudioCall{
     callStage;
     peerConnection;
     socketConnection;
@@ -10,9 +10,6 @@ class Audiocall{
         this.socketConnection = socketConnection;
         this.socketConnection.registerHandler((msg) => {this.audioHandler(msg)})
         this.requestCall();
-
-
-
 
     }
 
@@ -24,6 +21,10 @@ class Audiocall{
         const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]}
         this.peerConnection = new RTCPeerConnection(configuration);
         this.getIce();
+        const audioStream = await navigator.mediaDevices.getUserMedia({audio:true});
+        audioStream.getTracks().forEach(track => { //TODO: figure out why I have to getTracks()
+            this.peerConnection.addTrack(track, audioStream);
+        });
         const offer = await this.peerConnection.createOffer();
         await this.peerConnection.setLocalDescription(offer);
         this.callStage = "listening";
@@ -53,10 +54,10 @@ class Audiocall{
         const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]}
         this.peerConnection = new RTCPeerConnection(configuration);
         this.getIce();
-        this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+        await this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
         const answer = await this.peerConnection.createAnswer();
         await this.peerConnection.setLocalDescription(answer);
-        this.socketConnection.sendCallData({'answer': answer, stage: 'first-contact', type:"audio"});
+        this.socketConnection.sendCallData({'answer': answer, stage: 'answer', type:"audio"});
 
     }
 
@@ -73,6 +74,13 @@ class Audiocall{
                 this.socketConnection.sendCallData({iceCandidate: event.candidate, type: "audio", stage: "send-ice"});
             }
         });
+        // Listen for connectionstatechange on the local RTCPeerConnection
+        this.peerConnection.addEventListener('connectionstatechange', event => {
+            if (this.peerConnection.connectionState === 'connected') {
+                console.log("WebRTC connection complete!");
+                this.callStage = "connection-established"
+            }
+        });
     }
 
     async recieveIce (iceCandidate){
@@ -83,15 +91,8 @@ class Audiocall{
             console.error('Error adding received ice candidate', e);
         }
 
-        // Listen for connectionstatechange on the local RTCPeerConnection
-        this.peerConnection.addEventListener('connectionstatechange', event => {
-            if (this.peerConnection.connectionState === 'connected') {
-                console.log("WebRTC connection complete!");
-                this.callStage = "connection-established"
-            }
-        });
-
     }
 
-
 }
+
+export { AudioCall}

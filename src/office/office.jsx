@@ -3,6 +3,7 @@ import { NavBarButton } from '../nav/barButtons';
 import { Connections } from './connections';
 import { OfficeSpace } from './OfficeSpace';
 import { generateAudioList } from './audioMock';
+import { AudioCall } from './callcenter'
 
 export function Office(props){
     const userName = props.userName;
@@ -14,6 +15,7 @@ export function Office(props){
     const [audioList, setAudioList] = React.useState([]);
     const [officeConnections, setOfficeConnections] = React.useState(null);
     const [connectionEstablished, setConnectionEstablished] = React.useState(false);
+    const [CallController, setCallController] = React.useState();
 
     function makeUserObj(coords=clientCoords){
         return {
@@ -39,9 +41,9 @@ export function Office(props){
     }
 
     function moveUser(newCoords){
-        console.log(`DEBUG newCoords ${newCoords}`)
+        //console.log(`DEBUG newCoords ${newCoords}`)
         const localRenderData = makeUserObj(newCoords);
-        console.log(`DEBUG localRenderData Coords: ${localRenderData.x}, ${localRenderData.y}`);
+        //console.log(`DEBUG localRenderData Coords: ${localRenderData.x}, ${localRenderData.y}`);
         userList = [localRenderData, ...otherUsers];
         officeConnections.sendUserData(localRenderData);
         setClientCoords(newCoords);
@@ -71,7 +73,8 @@ export function Office(props){
         if(acceptConnection == "accepted"){
             const connection = new Connections(userName, makeUserObj(), setConnectionEstablished)
             setOfficeConnections(connection);
-
+            const audioCall = new AudioCall(connection);
+            setCallController(audioCall);
             connection.registerHandler(handleData);
             setAudioList(generateAudioList());
 

@@ -5,6 +5,7 @@ class Connections{
     handlers = [];
     socket;
     connected;
+    pendingRequest;
 
     constructor(userName, initialData, setConnectionEstablished){
         this.connected = false;
@@ -22,16 +23,20 @@ class Connections{
             }
             this.socket.send(JSON.stringify(initialMessage));
             setConnectionEstablished(true);
+            if(this.pendingRequest){
+                this.sendCallData(this.pendingRequest)
+                this.pendingRequest = null;
+            }
+
         }
 
         this.socket.onmessage = async (msg) => {
+            //console.log(`DEBUG Data received: ${msg.data}`)
             const data = JSON.parse(msg.data);
-            //console.log(`DEBUG Data received: ${JSON.stringify(data)}`)
-
 
 
             if(data.type == 'movement'){
-                console.log(`DEBUG Other Users Coords: ${data.body.x}, ${data.body.y}`);
+                //console.log(`DEBUG Other Users Coords: ${data.body.x}, ${data.body.y}`);
                 this.onlineUsers[data.userName] = data.body;
                 this.notifyHandlers(Object.values(this.onlineUsers))
 
@@ -59,12 +64,16 @@ class Connections{
     }
 
     sendUserData(newUserData){
-        console.log(`DEBUG sending coords: ${newUserData.x}, ${newUserData.y}`)
+        //console.log(`DEBUG sending coords: ${newUserData.x}, ${newUserData.y}`)
         this.socket.send(JSON.stringify(newUserData));
     }
 
     sendCallData(callData){
-        this.socket.send(JSON.stringify(callData));
+        if(!this.connected){
+            this.pendingRequest = callData;
+        } else{
+            this.socket.send(JSON.stringify(callData));
+        }
     }
 
     notifyHandlers(data){
