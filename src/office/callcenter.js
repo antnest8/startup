@@ -8,17 +8,21 @@ class Audiocall{
     constructor(socketConnection){
         this.callStage = "init";
         this.socketConnection = socketConnection;
-        this.socketConnection.registerHandler(audioHandler)
+        this.socketConnection.registerHandler((msg) => {this.audioHandler(msg)})
 
-        const makeCall = async () => {
-            const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]}
-            this.peerConnection = new RTCPeerConnection(configuration);
-            
-            const offer = await this.peerConnection.createOffer();
-            await this.peerConnection.setLocalDescription(offer);
-            this.callStage = "listening";
-            this.socketConnection.sendCallData({'offer': offer, type: "audio", stage:'offer'});
-        }
+
+
+        this.makeCall();
+    }
+
+    async makeCall(){
+        const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]}
+        this.peerConnection = new RTCPeerConnection(configuration);
+        
+        const offer = await this.peerConnection.createOffer();
+        await this.peerConnection.setLocalDescription(offer);
+        this.callStage = "listening";
+        this.socketConnection.sendCallData({'offer': offer, type: "audio", stage:'offer'});
     }
 
     audioHandler(msg){
@@ -36,10 +40,10 @@ class Audiocall{
 
     async recieveOffer(offer){
 
-        this.peerConnection.setRemoteDescription(new RTCSessionDescription(message.offer));
+        this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
         const answer = await this.peerConnection.createAnswer();
         await this.peerConnection.setLocalDescription(answer);
-        this.socketConnection.send({'answer': answer, stage: 'first-contact', type:"audio"});
+        this.socketConnection.sendCallData({'answer': answer, stage: 'first-contact', type:"audio"});
 
     }
 
@@ -51,7 +55,7 @@ class Audiocall{
         // Listen for local ICE candidates on the local RTCPeerConnection
         this.peerConnection.addEventListener('icecandidate', event => {
             if (event.candidate) {
-                this.socketConnection.send({iceCandidate: event.candidate, type: "audio", stage: "send-ice"});
+                this.socketConnection.sendCallData({iceCandidate: event.candidate, type: "audio", stage: "send-ice"});
             }
         });
     }
