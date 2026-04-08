@@ -8,7 +8,7 @@ import { AudioCall } from './callcenter'
 export function Office(props){
     const userName = props.userName;
     const userData = React.useRef("loading"); 
-    const [dataLoaded, setDataLoaded] = React.useState(false)
+    const [dataLoaded, setDataLoaded] = React.useState(false);
     const [acceptConnection, setAcceptConnection] = React.useState(null);
     const [clientCoords, setClientCoords] = React.useState([50, 50]);
     const [otherUsers, setOtherUsers] = React.useState([]);
@@ -16,6 +16,8 @@ export function Office(props){
     const [officeConnections, setOfficeConnections] = React.useState(null);
     const [connectionEstablished, setConnectionEstablished] = React.useState(false);
     const [CallController, setCallController] = React.useState();
+    const [callEstablished, setCallEstablished] = React.useState(false);
+    const [key, setKey] = React.useState(0);
 
     function makeUserObj(coords=clientCoords){
         return {
@@ -73,17 +75,27 @@ export function Office(props){
         if(acceptConnection == "accepted"){
             const connection = new Connections(userName, makeUserObj(), setConnectionEstablished)
             setOfficeConnections(connection);
-            const audioCall = new AudioCall(connection);
+            const audioCall = new AudioCall(connection, setCallEstablished);
             setCallController(audioCall);
             connection.registerHandler(handleData);
-            setAudioList(generateAudioList());
-
 
             return () => {connection.closeConnection()};
         }
 
     }, [acceptConnection])
 
+    React.useEffect(()=>{
+        if(callEstablished){
+            setAudioList(CallController.getAudioList());
+        }
+    },[callEstablished])
+
+    React.useEffect(()=>{
+        if(connectionEstablished == "closed"){
+            console.log("Reseting window from closed connection")
+            setKey(key + 1)
+        }
+    },[connectionEstablished])
 
     if(userData.current == "loading"){
         console.log("Office Loading Screen Rendered")

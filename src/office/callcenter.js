@@ -4,12 +4,15 @@ class AudioCall{
     callStage;
     peerConnection;
     socketConnection;
+    audioList = [];
+    setCallEstablished;
 
-    constructor(socketConnection){
+    constructor(socketConnection, setCallEstablished){
         this.callStage = "init";
         this.socketConnection = socketConnection;
         this.socketConnection.registerHandler((msg) => {this.audioHandler(msg)})
         this.requestCall();
+        this.setCallEstablished = setCallEstablished;
 
     }
 
@@ -21,10 +24,7 @@ class AudioCall{
         const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]}
         this.peerConnection = new RTCPeerConnection(configuration);
         this.getIce();
-        const audioStream = await navigator.mediaDevices.getUserMedia({audio:true});
-        audioStream.getTracks().forEach(track => { //TODO: figure out why I have to getTracks()
-            this.peerConnection.addTrack(track, audioStream);
-        });
+        this.setAudioChannels();
         const offer = await this.peerConnection.createOffer();
         await this.peerConnection.setLocalDescription(offer);
         this.callStage = "listening";
@@ -54,6 +54,7 @@ class AudioCall{
         const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]}
         this.peerConnection = new RTCPeerConnection(configuration);
         this.getIce();
+        this.setAudioChannels();
         await this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
         const answer = await this.peerConnection.createAnswer();
         await this.peerConnection.setLocalDescription(answer);
@@ -79,6 +80,7 @@ class AudioCall{
             if (this.peerConnection.connectionState === 'connected') {
                 console.log("WebRTC connection complete!");
                 this.callStage = "connection-established"
+                this.setCallEstablished(true);
             }
         });
     }
@@ -91,6 +93,21 @@ class AudioCall{
             console.error('Error adding received ice candidate', e);
         }
 
+    }
+
+    async setAudioChannels(){
+        const audioStream = await navigator.mediaDevices.getUserMedia({audio:true});
+        audioStream.getTracks().forEach(track => { //TODO: figure out why I have to getTracks()
+            this.peerConnection.addTrack(track, audioStream);
+        });
+
+        this.peerConnection.addEventListener('track', event => {
+            this.audioList.push(event.streams[0]);
+        })
+    }
+
+    getAudioList(){
+        return this.audioList;
     }
 
 }

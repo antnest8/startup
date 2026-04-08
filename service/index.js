@@ -261,4 +261,8 @@ setInterval(() => {
         client.isAlive = false;
         client.ping();
     });
+    if(socketServer.clients.length == 0 && pendingCall){
+        console.log("Removing pending caller since no clients are connected")
+        pendingCall = null;
+    }
 }, 10000);

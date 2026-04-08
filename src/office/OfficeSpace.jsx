@@ -105,10 +105,11 @@ function UserToken(props){
     }
 
     const figureClass = `size-[${TOKENSIZE}px] translate-[-50%]`
+    const divClass = `size-[${TOKENSIZE * 0.85}px]`
 
     return (
         <figure style={dynamicStyle} className={figureClass} id="user-1">
-            <div className="size-[32px]" dangerouslySetInnerHTML={userImage} />
+            <div className={divClass} dangerouslySetInnerHTML={userImage} />
             <img style={micStyle} className="size-[20px] absolute bottom-0 right-0" type="image/svg+xml" src="./microphone-svgrepo-com.svg" />
         </figure>
     );

@@ -54,6 +54,7 @@ class Connections{
         this.socket.onclose = (event) => {
             console.log("Connection Closed Succesfully!");
             this.connected = false;
+            setConnectionEstablished("closed");
         }
 
     }
