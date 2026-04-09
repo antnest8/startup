@@ -77,7 +77,7 @@ class Connections{
     }
 
     sendUserData(newUserData){
-        console.log(`DEBUG sending coords: ${newUserData.x}, ${newUserData.y}`)
+        //console.log(`DEBUG sending coords: ${newUserData.x}, ${newUserData.y}`)
         this.socket.send(JSON.stringify(newUserData));
     }
 
