@@ -72,9 +72,11 @@ export function OfficeSpace(props){
             const userVAD = hark(soundPackage.audio, {audioContext: context});
             userVAD.on("speaking", ()=>{
                 userObj.isTalking = true;
+                console.log(`DEBUG: ${soundPackage.id} is talking`);
             });
             userVAD.on("stopped_speaking", ()=>{
                 userObj.isTalking = false;
+                console.log(`DEBUG: ${soundPackage.id} stopped talking`);
             })
             vadList.current.push(userVAD);
 

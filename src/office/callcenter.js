@@ -40,16 +40,13 @@ class AudioCall{
         if(msg.type == "audio"){
             console.log("Recieved audio data");
             if(msg.stage == 'answer' && this.callStage == "listening"){
-                console.log("DEBUG: other caller's id: " + msg.userName);
-                this.externalUser = msg.userName;
                 this.recieveAnswer(msg.answer);
             } else if(msg.stage == 'offer' && this.callStage == "listening"){
-                console.log("DEBUG: other caller's id: " + msg.userName);
-                this.externalUser = msg.userName;
                 this.recieveOffer(msg.offer);
             }else if(msg.stage == 'send-ice' && this.callStage == "first-contact"){
                 this.recieveIce(msg.iceCandidate);
             }else if(this.callStage == "init" && msg.stage == "init-call"){
+                this.externalUser = msg.userName;
                 if(msg.role == "caller"){
                     this.makeCall();
                 } else{
@@ -111,14 +108,15 @@ class AudioCall{
         });
         // Listen for connectionstatechange on the local RTCPeerConnection
         this.peerConnection.addEventListener('connectionstatechange', event => {
-            if (this.peerConnection.connectionState === 'connected') {
+            if (this.peerConnection && this.peerConnection.connectionState === 'connected') {
                 console.log("WebRTC connection complete!");
                 this.callStage = "connection-established"
                 this.setConnectionEstablished(true);
             }
-            if(this.peerConnection && this.peerConnection.connectionState === "failed" || this.peerConnection.connectionState === "closed" || this.peerConnection.connectionState === "disconnected"){
+            if(this.peerConnection && (this.peerConnection.connectionState === "failed" || 
+                this.peerConnection.connectionState === "closed" || 
+                this.peerConnection.connectionState === "disconnected")){
                 console.log("WebRTC peer connection disconnected... cleaning up");
-                delete this.peerConnection;
                 this.socketConnection.closeConnection();
             }
         });

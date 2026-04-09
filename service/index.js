@@ -204,15 +204,14 @@ socketServer.on('connection', (socket) => {
             console.log(`AudioData Received Staged: ${dataObj.stage}`);
 
             if(pendingCall && dataObj.stage == "request-call"){
-                pendingCall.send(JSON.stringify({type:"audio",stage:"init-call",role:"caller"}));
+                pendingCall.send(JSON.stringify({type:"audio", stage:"init-call", role:"caller", userName:socket.userName}));
+                socket.send(JSON.stringify({type:"audio", stage:"init-call", role:"receiver", userName:pendingCall.userName}));
                 pendingCall = null;
-                socket.send(JSON.stringify({type:"audio",stage:"init-call",role:"receiver"}));
                 console.log(`Call request received! Initiating call handshake.`);
             } else if(dataObj.stage == "request-call"){
                 pendingCall = socket;
                 console.log(`first call request received! Pending...`);
             } else{
-                dataObj["userName"] = socket.userName;
                 socketServer.clients.forEach((client) => {
                     if(client !== socket && client.readyState === WebSocket.OPEN){
                         client.send(JSON.stringify(dataObj));
