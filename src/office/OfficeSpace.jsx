@@ -1,4 +1,5 @@
 import React from 'react';
+import hark from 'hark';
 
 const TOKENSIZE = 37; // I do need to manually input this value in the className since tailwind doesn't do styling in runtime.
 
@@ -8,6 +9,9 @@ export function OfficeSpace(props){
     const moveUser = props.moveUserFunc;
     const audioList = props.audioList;
     const [userGains, setUserGains] = React.useState({})
+    const vadList = React.useRef([]);
+    const [talkingUsers, setTalkingUsers] = React.useState({});
+    const [suspendedAudios, setSuspendedAudios] = React.useState({});
 
 
 
@@ -51,29 +55,60 @@ export function OfficeSpace(props){
     
         adjustGains();
 
-        const userTokens = userList.map((userObj, index) => <UserToken key={`token-${index}`} isTalking={userObj.isTalking} initials={userObj.initials} userImage={userObj.userImage} xPos={userObj.x} yPos={userObj.y}/>);
+        const userTokens = userList.map((userObj, index) => <UserToken key={`token-${index}`} setSuspendedAudios={setSuspendedAudios} suspendedContext={suspendedAudios[userObj.userName] ? suspendedAudios[userObj.userName] : null} isTalking={talkingUsers[userObj.userName]} initials={userObj.initials} userImage={userObj.userImage} xPos={userObj.x} yPos={userObj.y}/>);
         return userTokens;
     }
 
     React.useEffect(()=>{
         const tempGains = {}
         const tempContexts = []
-        //console.log(`DEBUG-OfficeSpace is mounting with ${audioList.length} audio streams`)
+        const suspendedContexts = {}
         audioList.forEach(soundPackage=>{
+            let a = new Audio();
+            a.muted = true;
+            a.srcObject = soundPackage.audio;
+            a.addEventListener('canplaythrough', () => {
+                a = null;
+            });
+
+
             const context = new AudioContext();
+            if(context.state == "suspended"){
+                console.log(`${soundPackage.id}'s Audio needs to be turned on`);
+                //suspendedContexts[soundPackage.id] = context;
+            }
+
+
+
             tempContexts.push(context);
             const userGain = context.createGain();
-            //console.log(`DEBUG-soundPackageID: ${soundPackage.id}`)
+
             tempGains[soundPackage.id] = userGain;
-            //console.log(`DEBUG-userGains print: ${JSON.stringify(userGains)}`)
+
+            
+
+            const userVAD = hark(soundPackage.audio.clone(), {audioContext: context});
+            userVAD.on("speaking", ()=>{
+                setTalkingUsers(prev => ({...prev, [soundPackage.id] : true}));
+
+            });
+            userVAD.on("stopped_speaking", ()=>{
+                setTalkingUsers(prev => ({...prev, [soundPackage.id] : false}));
+
+            })
+            vadList.current.push(userVAD);
+
+
             context.createMediaStreamSource(soundPackage.audio)
                 .connect(userGain)
                 .connect(context.destination);
         })
         setUserGains(tempGains)
+        setSuspendedAudios(suspendedContexts);
 
         return () => {
             tempContexts.forEach(context=>context.close());
+            vadList.current.forEach(vad=>vad.stop());
         }
     },[audioList])
 
@@ -88,6 +123,8 @@ export function OfficeSpace(props){
 function UserToken(props){
     const initials = props.initials;
     const userImage = props.userImage;
+    const suspendedContext = props.suspendedContext;
+    const setSuspendedAudios = props.setSuspendedAudios;
     //const userName = props.userName;
     const dynamicStyle = {
         left: `${props.xPos}%`,
@@ -96,6 +133,12 @@ function UserToken(props){
         transitionProperty:"left top",
         transitionDuration:"1s"
     };
+
+    function playSound(){
+        console.log("Resuming the blocked audio")
+        suspendedContext.resume();
+        setSuspendedAudios({})
+    }
 
     //console.log(userImage);
 
@@ -107,7 +150,7 @@ function UserToken(props){
     return (
         <figure style={dynamicStyle} className="size-[37px] translate-[-50%]" id="user-1">
             <div className="size-[32px]" dangerouslySetInnerHTML={userImage} />
-            <img style={micStyle} className="size-[20px] absolute bottom-0 right-0" type="image/svg+xml" src="./microphone-svgrepo-com.svg" />
+            {suspendedContext ? <img onClick={playSound} className="size-[20px] absolute bottom-0 right-0" type="image/svg+xml" src="./mute-sound-music-audio-svgrepo-com.svg" /> : <img style={micStyle} className="size-[20px] absolute bottom-0 right-0" type="image/svg+xml" src="./microphone-svgrepo-com.svg" />}
         </figure>
     );
 }

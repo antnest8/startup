@@ -2,7 +2,6 @@ import React from 'react';
 import { NavBarButton } from '../nav/barButtons';
 import { Connections } from './connections';
 import { OfficeSpace } from './OfficeSpace';
-import { generateAudioList } from './audioMock';
 import { AudioCall } from './callcenter'
 
 export function Office(props){
@@ -28,18 +27,22 @@ export function Office(props){
             userImage: userData.current.image,
             x : coords[0],
             y : coords[1],
-            isTalking: false, //fix later
         };
     }
     var userList = [makeUserObj(), ...otherUsers];
 
-    function handleData(newData){
+    function handleData(newData, conn = officeConnections){
 
-        if(newData.type != "audio"){
-            userList = [makeUserObj(), ...otherUsers];
+        if(newData.type == "movement"){
+
+            userList = [makeUserObj(), ...newData.data];
             //console.log("DEBUG: userList" + JSON.stringify(userList));
-            setOtherUsers(newData);
+            setOtherUsers(newData.data);
             //console.log("handleData recieved data!: " + JSON.stringify(newData));
+        }else if(newData.type == "init"){
+            userList = [makeUserObj(), ...newData.data];
+            setOtherUsers(newData.data);
+            conn.sendUserData(userList[0]);
         }
     }
 
@@ -76,21 +79,15 @@ export function Office(props){
         if(acceptConnection == "accepted"){
             const connection = new Connections(userName, makeUserObj(), setConnectionEstablished)
             setOfficeConnections(connection);
-            const audioCall = new AudioCall(connection, setCallEstablished);
+            const audioCall = new AudioCall(connection, setCallEstablished, setAudioList);
             setCallController(audioCall);
-            connection.registerHandler(handleData);
+            connection.registerHandler((newData) => handleData(newData, connection));
 
 
             return () => {connection.closeConnection()};
         }
 
     }, [acceptConnection])
-
-    React.useEffect(() => {
-        if(callEstablished){
-            setAudioList(CallController.getAudioList());
-        }
-    }, [callEstablished])
 
     React.useEffect(()=>{
         if(connectionEstablished == "closed"){
@@ -109,6 +106,7 @@ export function Office(props){
         );
 
     }
+
 
     return (
         <div className="flex flex-col grow">

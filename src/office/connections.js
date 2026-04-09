@@ -36,14 +36,21 @@ class Connections{
 
 
             if(data.type == 'movement'){
-                //console.log(`DEBUG Other Users Coords: ${data.body.x}, ${data.body.y}`);
                 this.onlineUsers[data.userName] = data.body;
-                this.notifyHandlers(Object.values(this.onlineUsers))
-
+                const msg = {
+                    type:"movement",
+                    data:Object.values(this.onlineUsers)
+                }
+                this.notifyHandlers(msg);
+            }else if(data.type == "init"){
+                this.onlineUsers[data.userName] = data.body;
+                const msg = {
+                    type:"init",
+                    data:Object.values(this.onlineUsers)
+                }
+                this.notifyHandlers(msg);
             } else if(data.type == 'disconnection'){
-                console.log(`${data.userName} disconnected.`)
-                delete this.onlineUsers[data.userName];
-                this.notifyHandlers(Object.values(this.onlineUsers))
+                this.socket.close();
             } else if(data.type == "audio"){
                 this.notifyHandlers(data);
             } else{
