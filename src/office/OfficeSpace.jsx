@@ -63,7 +63,6 @@ export function OfficeSpace(props){
         const tempGains = {}
         const tempContexts = []
         const suspendedContexts = {}
-        //console.log(`DEBUG-OfficeSpace is mounting with ${audioList.length} audio streams`)
         audioList.forEach(soundPackage=>{
             let a = new Audio();
             a.muted = true;
@@ -72,21 +71,18 @@ export function OfficeSpace(props){
                 a = null;
             });
 
-            
+
             const context = new AudioContext();
-            console.log(`DEBUG: soundPackage Opening\n
-                context.state: ${context.state}
-                package.audio typeof ${typeof soundPackage.audio}`)
             if(context.state == "suspended"){
                 console.log(`${soundPackage.id}'s Audio needs to be turned on`);
-                suspendedContexts[soundPackage.id] = context;
+                //suspendedContexts[soundPackage.id] = context;
             }
 
 
 
             tempContexts.push(context);
             const userGain = context.createGain();
-            //console.log(`DEBUG-soundPackageID: ${soundPackage.id}`)
+
             tempGains[soundPackage.id] = userGain;
 
             
@@ -94,15 +90,15 @@ export function OfficeSpace(props){
             const userVAD = hark(soundPackage.audio.clone(), {audioContext: context});
             userVAD.on("speaking", ()=>{
                 setTalkingUsers(prev => ({...prev, [soundPackage.id] : true}));
-                console.log(`DEBUG: ${soundPackage.id} is talking`);
+
             });
             userVAD.on("stopped_speaking", ()=>{
                 setTalkingUsers(prev => ({...prev, [soundPackage.id] : false}));
-                console.log(`DEBUG: ${soundPackage.id} stopped talking`)
+
             })
             vadList.current.push(userVAD);
 
-            //console.log(`DEBUG-userGains print: ${JSON.stringify(userGains)}`)
+
             context.createMediaStreamSource(soundPackage.audio)
                 .connect(userGain)
                 .connect(context.destination);
@@ -140,10 +136,8 @@ function UserToken(props){
 
     function playSound(){
         console.log("Resuming the blocked audio")
-        console.log(`DEBUG: pre-resume state: ${suspendedContext.state}`)
         suspendedContext.resume();
         setSuspendedAudios({})
-        console.log(`DEBUG: post-resume context.state: ${suspendedContext.state}`);
     }
 
     //console.log(userImage);
