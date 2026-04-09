@@ -98,12 +98,14 @@ class AudioCall{
             this.peerConnection.addTrack(track, audioStream);
         });
         this.peerConnection.addEventListener('track', event => {
-            console.log("Receiving external input audio!");
+            console.log(`DEBUG: Track event recieved\n
+                event.streams.length ${event.streams.length}`);
             const audioPackage = {
                 audio: event.streams[0],
                 id:this.externalUser,
             };
             this.audioPackages.push(audioPackage);
+            console.log(`DEBUG: setting audio list with ${this.audioPackages.length} packages`)
             this.setAudioList(this.audioPackages)
         });
 

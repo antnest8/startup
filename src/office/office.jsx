@@ -2,7 +2,6 @@ import React from 'react';
 import { NavBarButton } from '../nav/barButtons';
 import { Connections } from './connections';
 import { OfficeSpace } from './OfficeSpace';
-import { generateAudioList } from './audioMock';
 import { AudioCall } from './callcenter'
 
 export function Office(props){

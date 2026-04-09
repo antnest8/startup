@@ -55,7 +55,7 @@ export function OfficeSpace(props){
     
         adjustGains();
 
-        const userTokens = userList.map((userObj, index) => <UserToken key={`token-${index}`} setSuspendedAudios={setSuspendedAudios} suspendedContext={suspendedAudios[userObj] ? suspendedAudios[userObj] : null} isTalking={talkingUsers[userObj.userName]} initials={userObj.initials} userImage={userObj.userImage} xPos={userObj.x} yPos={userObj.y}/>);
+        const userTokens = userList.map((userObj, index) => <UserToken key={`token-${index}`} setSuspendedAudios={setSuspendedAudios} suspendedContext={suspendedAudios[userObj.userName] ? suspendedAudios[userObj.userName] : null} isTalking={talkingUsers[userObj.userName]} initials={userObj.initials} userImage={userObj.userImage} xPos={userObj.x} yPos={userObj.y}/>);
         return userTokens;
     }
 
@@ -65,11 +65,24 @@ export function OfficeSpace(props){
         const suspendedContexts = {}
         //console.log(`DEBUG-OfficeSpace is mounting with ${audioList.length} audio streams`)
         audioList.forEach(soundPackage=>{
+            let a = new Audio();
+            a.muted = true;
+            a.srcObject = soundPackage.audio;
+            a.addEventListener('canplaythrough', () => {
+                a = null;
+            });
+
+            
             const context = new AudioContext();
+            console.log(`DEBUG: soundPackage Opening\n
+                context.state: ${context.state}
+                package.audio typeof ${typeof soundPackage.audio}`)
             if(context.state == "suspended"){
                 console.log(`${soundPackage.id}'s Audio needs to be turned on`);
                 suspendedContexts[soundPackage.id] = context;
             }
+
+
 
             tempContexts.push(context);
             const userGain = context.createGain();
@@ -126,8 +139,11 @@ function UserToken(props){
     };
 
     function playSound(){
+        console.log("Resuming the blocked audio")
+        console.log(`DEBUG: pre-resume state: ${suspendedContext.state}`)
         suspendedContext.resume();
         setSuspendedAudios({})
+        console.log(`DEBUG: post-resume context.state: ${suspendedContext.state}`);
     }
 
     //console.log(userImage);
