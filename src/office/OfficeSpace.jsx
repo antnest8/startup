@@ -1,4 +1,5 @@
 import React from 'react';
+import hark from 'hark';
 
 const TOKENSIZE = 37; // I do need to manually input this value in the className since tailwind doesn't do styling in runtime.
 
@@ -8,6 +9,7 @@ export function OfficeSpace(props){
     const moveUser = props.moveUserFunc;
     const audioList = props.audioList;
     const [userGains, setUserGains] = React.useState({})
+    const vadList = React.useRef([]);
 
 
 
@@ -37,13 +39,10 @@ export function OfficeSpace(props){
     }
 
     function adjustGains(){
-        console.log(`DEBUG Calling adjust gains: Num-Gains:${Object.entries(userGains).length}`)
         for(const [key, obj] of Object.entries(userGains)){
             const userObj = userList.find((userObj)=>userObj.userName == key);
             if(userObj){
-                const proxValue = calcProximity(userList[0], userObj);
-                console.log(`UserObj found! Volume ${proxValue}`);
-                obj.gain.value = proxValue;
+                obj.gain.value = calcProximity(userList[0], userObj);
             } else {
                 obj.gain.value = 0;
             }
@@ -69,6 +68,19 @@ export function OfficeSpace(props){
             //console.log(`DEBUG-soundPackageID: ${soundPackage.id}`)
             tempGains[soundPackage.id] = userGain;
 
+            
+            const userObj = userList.find((userObj)=>userObj.userName == soundPackage.id);
+            const userVAD = hark(soundPackage.audio.clone(), {audioContext: context});
+            userVAD.on("speaking", ()=>{
+                userObj.isTalking = true;
+                console.log(`DEBUG: ${soundPackage.id} is talking`);
+            });
+            userVAD.on("stopped_speaking", ()=>{
+                userObj.isTalking = false;
+                console.log(`DEBUG: ${soundPackage.id} is talking`)
+            })
+            vadList.current.push(userVAD);
+
             //console.log(`DEBUG-userGains print: ${JSON.stringify(userGains)}`)
             context.createMediaStreamSource(soundPackage.audio)
                 .connect(userGain)
@@ -78,6 +90,7 @@ export function OfficeSpace(props){
 
         return () => {
             tempContexts.forEach(context=>context.close());
+            vadList.current.forEach(vad=>vad.stop());
         }
     },[audioList])
 
