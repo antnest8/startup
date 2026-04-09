@@ -190,7 +190,7 @@ socketServer.on('connection', (socket) => {
             socket.userName = dataObj.userName;
             const msg = JSON.stringify({
                 body: dataObj.data,
-                type: "movement",
+                type: "init",
                 userName: socket.userName,
             })
 
@@ -212,7 +212,7 @@ socketServer.on('connection', (socket) => {
             } else if(dataObj.stage == "request-call"){
                 pendingCall = socket;
                 console.log(`first call request received! Pending...`);
-                
+
             } else{
                 socketServer.clients.forEach((client) => {
                     if(client !== socket && client.readyState === WebSocket.OPEN){

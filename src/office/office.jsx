@@ -33,13 +33,18 @@ export function Office(props){
     }
     var userList = [makeUserObj(), ...otherUsers];
 
-    function handleData(newData){
+    function handleData(newData, conn = officeConnections){
 
-        if(newData.type != "audio"){
-            userList = [makeUserObj(), ...otherUsers];
+        if(newData.type == "movement"){
+
+            userList = [makeUserObj(), ...newData.data];
             //console.log("DEBUG: userList" + JSON.stringify(userList));
-            setOtherUsers(newData);
+            setOtherUsers(newData.data);
             //console.log("handleData recieved data!: " + JSON.stringify(newData));
+        }else if(newData.type == "init"){
+            userList = [makeUserObj(), ...newData.data];
+            setOtherUsers(newData.data);
+            conn.sendUserData(userList[0]);
         }
     }
 
@@ -78,7 +83,7 @@ export function Office(props){
             setOfficeConnections(connection);
             const audioCall = new AudioCall(connection, setCallEstablished);
             setCallController(audioCall);
-            connection.registerHandler(handleData);
+            connection.registerHandler((newData) => handleData(newData, connection));
 
 
             return () => {connection.closeConnection()};

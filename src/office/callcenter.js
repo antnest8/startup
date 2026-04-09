@@ -7,6 +7,8 @@ class AudioCall{
     audioList = [];
     setConnectionEstablished;
     externalUser;
+    beginRecievingIce;
+    stopIceUntilReady;
 
     constructor(socketConnection, setConnectionEstablished){
         this.callStage = "init";
@@ -22,6 +24,10 @@ class AudioCall{
     }
 
     async makeCall(){
+        this.stopIceUntilReady = new Promise(resolve => {
+            this.beginRecievingIce = resolve;
+        })
+
         const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]}
         this.peerConnection = new RTCPeerConnection(configuration);
         await this.setAudioChannels();
@@ -65,11 +71,16 @@ class AudioCall{
     }
 
     async recieveOffer(offer){
+        this.stopIceUntilReady = new Promise(resolve => {
+            this.beginRecievingIce = resolve;
+        })
+
         const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]}
         this.peerConnection = new RTCPeerConnection(configuration);
         await this.setAudioChannels();
         await this.getIce();
         await this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+        this.beginRecievingIce();
         const answer = await this.peerConnection.createAnswer();
         await this.peerConnection.setLocalDescription(answer);
         this.socketConnection.sendCallData({'answer': answer, stage: 'answer', type:"audio"});
@@ -79,6 +90,7 @@ class AudioCall{
     async recieveAnswer (answer){
         const remoteDesc = new RTCSessionDescription(answer);
         await this.peerConnection.setRemoteDescription(remoteDesc);
+        this.beginRecievingIce();
         this.callStage = "first-contact"
     }
 
@@ -129,9 +141,10 @@ class AudioCall{
     async recieveIce (iceCandidate){
 
         try {
+            await this.stopIceUntilReady;
             await this.peerConnection.addIceCandidate(iceCandidate);
         } catch (e) {
-            console.error('Error adding received ice candidate', e);
+            console.log('Error adding received ice candidate', e);
         }
 
     }
