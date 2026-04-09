@@ -37,10 +37,13 @@ export function OfficeSpace(props){
     }
 
     function adjustGains(){
+        console.log(`DEBUG Calling adjust gains: Num-Gains:${Object.entries(userGains).length}`)
         for(const [key, obj] of Object.entries(userGains)){
             const userObj = userList.find((userObj)=>userObj.userName == key);
             if(userObj){
-                obj.gain.value = calcProximity(userList[0], userObj);
+                const proxValue = calcProximity(userList[0], userObj);
+                console.log(`UserObj found! Volume ${proxValue}`);
+                obj.gain.value = proxValue;
             } else {
                 obj.gain.value = 0;
             }

@@ -32,10 +32,6 @@ class AudioCall{
         this.peerConnection = new RTCPeerConnection(configuration);
         await this.setAudioChannels();
         await this.getIce();
-        const audioStream = await navigator.mediaDevices.getUserMedia({audio:true});
-        audioStream.getTracks().forEach(track => { //TODO: figure out why I have to getTracks()
-            this.peerConnection.addTrack(track, audioStream);
-        });
         const offer = await this.peerConnection.createOffer();
         await this.peerConnection.setLocalDescription(offer);
         this.callStage = "listening";
