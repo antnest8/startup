@@ -11,6 +11,7 @@ export function OfficeSpace(props){
     const [userGains, setUserGains] = React.useState({})
     const vadList = React.useRef([]);
     const [talkingUsers, setTalkingUsers] = React.useState({});
+    const [suspendedAudios, setSuspendedAudios] = React.useState({});
 
 
 
@@ -54,16 +55,22 @@ export function OfficeSpace(props){
     
         adjustGains();
 
-        const userTokens = userList.map((userObj, index) => <UserToken key={`token-${index}`} isTalking={talkingUsers[userObj.userName]} initials={userObj.initials} userImage={userObj.userImage} xPos={userObj.x} yPos={userObj.y}/>);
+        const userTokens = userList.map((userObj, index) => <UserToken key={`token-${index}`} setSuspendedAudios={setSuspendedAudios} suspendedContext={suspendedAudios[userObj] ? suspendedAudios[userObj] : null} isTalking={talkingUsers[userObj.userName]} initials={userObj.initials} userImage={userObj.userImage} xPos={userObj.x} yPos={userObj.y}/>);
         return userTokens;
     }
 
     React.useEffect(()=>{
         const tempGains = {}
         const tempContexts = []
+        const suspendedContexts = {}
         //console.log(`DEBUG-OfficeSpace is mounting with ${audioList.length} audio streams`)
         audioList.forEach(soundPackage=>{
             const context = new AudioContext();
+            if(context.state == "suspended"){
+                console.log(`${soundPackage.id}'s Audio needs to be turned on`);
+                suspendedContexts[soundPackage.id] = context;
+            }
+
             tempContexts.push(context);
             const userGain = context.createGain();
             //console.log(`DEBUG-soundPackageID: ${soundPackage.id}`)
@@ -88,6 +95,7 @@ export function OfficeSpace(props){
                 .connect(context.destination);
         })
         setUserGains(tempGains)
+        setSuspendedAudios(suspendedContexts);
 
         return () => {
             tempContexts.forEach(context=>context.close());
@@ -106,6 +114,8 @@ export function OfficeSpace(props){
 function UserToken(props){
     const initials = props.initials;
     const userImage = props.userImage;
+    const suspendedContext = props.suspendedContext;
+    const setSuspendedAudios = props.setSuspendedAudios;
     //const userName = props.userName;
     const dynamicStyle = {
         left: `${props.xPos}%`,
@@ -114,6 +124,11 @@ function UserToken(props){
         transitionProperty:"left top",
         transitionDuration:"1s"
     };
+
+    function playSound(){
+        suspendedContext.resume();
+        setSuspendedAudios({})
+    }
 
     //console.log(userImage);
 
@@ -125,7 +140,7 @@ function UserToken(props){
     return (
         <figure style={dynamicStyle} className="size-[37px] translate-[-50%]" id="user-1">
             <div className="size-[32px]" dangerouslySetInnerHTML={userImage} />
-            <img style={micStyle} className="size-[20px] absolute bottom-0 right-0" type="image/svg+xml" src="./microphone-svgrepo-com.svg" />
+            {suspendedContext ? <img onClick={playSound} className="size-[20px] absolute bottom-0 right-0" type="image/svg+xml" src="./mute-sound-music-audio-svgrepo-com.svg" /> : <img style={micStyle} className="size-[20px] absolute bottom-0 right-0" type="image/svg+xml" src="./microphone-svgrepo-com.svg" />}
         </figure>
     );
 }

@@ -108,6 +108,7 @@ export function Office(props){
 
     }
 
+
     return (
         <div className="flex flex-col grow">
             <header className="bg-stone-900 flex flex-row justify-end min-h-10">
