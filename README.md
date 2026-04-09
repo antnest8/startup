@@ -147,8 +147,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Backend listens for WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **Frontend makes WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **Data sent over WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **WebSocket data displayed** - I did not complete this part of the deliverable.
-- [ ] **Application is fully functional** - I did not complete this part of the deliverable.
+- [x] **Backend listens for WebSocket connection** - I added a backend listener for the Websocket. It does more than just relay info too! It adds information regarding the origin occasionally and also sends events to clients.
+- [x] **Frontend makes WebSocket connection** - This is taken care of in the connections.js file. It is a little messy but I use a `.type` attribute to ensure the messages are relayed to the correct handlers.
+- [x] **Data sent over WebSocket connection** - The data sent over the connection is basic user data (username, initials, etc.) and location data (for rendering the tokens in the 2D screen). Additionally, WebRTC signaling data is sent over the websocket
+- [x] **WebSocket data displayed** - This data is "displayed" by the presence of another user's token and it's position. The Audio is sent through WebRTC
+- [x] **Application is fully functional** - This was really hard to get right. WebRTC was finicky (Websocket wasn't that bad though). Note: it might be a little unstable even if functional. I can't promise that the WebRTC connection will be established between two separate networks due to the occasional restrictive firewall (I can't afford a TURN server sorry).
