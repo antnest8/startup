@@ -28,7 +28,7 @@ export function Office(props){
             userImage: userData.current.image,
             x : coords[0],
             y : coords[1],
-            isTalking: false, //eventually...
+            isTalking: userList ? userList[0].isTalking : false,
         };
     }
     var userList = [makeUserObj(), ...otherUsers];
@@ -81,7 +81,7 @@ export function Office(props){
         if(acceptConnection == "accepted"){
             const connection = new Connections(userName, makeUserObj(), setConnectionEstablished)
             setOfficeConnections(connection);
-            const audioCall = new AudioCall(connection, setCallEstablished);
+            const audioCall = new AudioCall(connection, setCallEstablished, setAudioList);
             setCallController(audioCall);
             connection.registerHandler((newData) => handleData(newData, connection));
 
@@ -90,12 +90,6 @@ export function Office(props){
         }
 
     }, [acceptConnection])
-
-    React.useEffect(() => {
-        if(callEstablished){
-            setAudioList(CallController.getAudioList());
-        }
-    }, [callEstablished])
 
     React.useEffect(()=>{
         if(connectionEstablished == "closed"){

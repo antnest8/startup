@@ -77,7 +77,7 @@ export function OfficeSpace(props){
             });
             userVAD.on("stopped_speaking", ()=>{
                 userObj.isTalking = false;
-                console.log(`DEBUG: ${soundPackage.id} is talking`)
+                console.log(`DEBUG: ${soundPackage.id} stopped talking`)
             })
             vadList.current.push(userVAD);
 

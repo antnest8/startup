@@ -4,39 +4,22 @@ class AudioCall{
     callStage;
     peerConnection;
     socketConnection;
-    audioList = [];
-    setConnectionEstablished;
+    audioPackages = [];
+    setCallEstablished;
     externalUser;
     beginRecievingIce;
     stopIceUntilReady;
 
-    constructor(socketConnection, setConnectionEstablished){
+    constructor(socketConnection, setCallEstablished, setAudioList){
         this.callStage = "init";
         this.socketConnection = socketConnection;
-        this.setConnectionEstablished = setConnectionEstablished;
+        this.setCallEstablished = setCallEstablished;
+        this.setAudioList = setAudioList;
         this.socketConnection.registerHandler((msg) => {this.audioHandler(msg)})
         this.requestCall();
 
     }
 
-    async requestCall(){
-        this.socketConnection.sendCallData({type:"audio",stage:"request-call"})
-    }
-
-    async makeCall(){
-        this.stopIceUntilReady = new Promise(resolve => {
-            this.beginRecievingIce = resolve;
-        })
-
-        const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]}
-        this.peerConnection = new RTCPeerConnection(configuration);
-        await this.setAudioChannels();
-        await this.getIce();
-        const offer = await this.peerConnection.createOffer();
-        await this.peerConnection.setLocalDescription(offer);
-        this.callStage = "listening";
-        this.socketConnection.sendCallData({'offer': offer, type: "audio", stage:'offer'});
-    }
 
     audioHandler(msg){
         if(msg.type == "audio"){
@@ -64,6 +47,25 @@ class AudioCall{
 
             }
         }
+    }
+
+    async requestCall(){
+        this.socketConnection.sendCallData({type:"audio",stage:"request-call"})
+    }
+
+    async makeCall(){
+        this.stopIceUntilReady = new Promise(resolve => {
+            this.beginRecievingIce = resolve;
+        })
+
+        const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]}
+        this.peerConnection = new RTCPeerConnection(configuration);
+        await this.setAudioChannels();
+        await this.getIce();
+        const offer = await this.peerConnection.createOffer();
+        await this.peerConnection.setLocalDescription(offer);
+        this.callStage = "listening";
+        this.socketConnection.sendCallData({'offer': offer, type: "audio", stage:'offer'});
     }
 
     async recieveOffer(offer){
@@ -101,7 +103,8 @@ class AudioCall{
                 audio: event.streams[0],
                 id:this.externalUser,
             };
-            this.audioList.push(audioPackage);
+            this.audioPackages.push(audioPackage);
+            this.setAudioList(this.audioPackages)
         });
 
         console.log("AudioChannels set up!");
@@ -119,7 +122,7 @@ class AudioCall{
             if (this.peerConnection && this.peerConnection.connectionState === 'connected') {
                 console.log("WebRTC connection complete!");
                 this.callStage = "connection-established"
-                this.setConnectionEstablished(true);
+                this.setCallEstablished(true);
             }
             if(this.peerConnection && (this.peerConnection.connectionState === "failed" || 
                 this.peerConnection.connectionState === "closed" || 
@@ -128,10 +131,6 @@ class AudioCall{
                 this.socketConnection.closeConnection();
             }
         });
-    }
-
-    getAudioList(){
-        return this.audioList;
     }
 
     async recieveIce (iceCandidate){
