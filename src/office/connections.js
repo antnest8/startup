@@ -41,9 +41,7 @@ class Connections{
                 this.notifyHandlers(Object.values(this.onlineUsers))
 
             } else if(data.type == 'disconnection'){
-                console.log(`${data.userName} disconnected.`)
-                delete this.onlineUsers[data.userName];
-                this.notifyHandlers(Object.values(this.onlineUsers))
+                this.socket.close();
             } else if(data.type == "audio"){
                 this.notifyHandlers(data);
             } else{

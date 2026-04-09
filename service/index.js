@@ -208,9 +208,11 @@ socketServer.on('connection', (socket) => {
                 socket.send(JSON.stringify({type:"audio", stage:"init-call", role:"receiver", userName:pendingCall.userName}));
                 pendingCall = null;
                 console.log(`Call request received! Initiating call handshake.`);
+
             } else if(dataObj.stage == "request-call"){
                 pendingCall = socket;
                 console.log(`first call request received! Pending...`);
+                
             } else{
                 socketServer.clients.forEach((client) => {
                     if(client !== socket && client.readyState === WebSocket.OPEN){
