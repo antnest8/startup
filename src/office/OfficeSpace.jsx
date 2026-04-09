@@ -10,6 +10,7 @@ export function OfficeSpace(props){
     const audioList = props.audioList;
     const [userGains, setUserGains] = React.useState({})
     const vadList = React.useRef([]);
+    const [talkingUsers, setTalkingUsers] = React.useState({});
 
 
 
@@ -53,7 +54,7 @@ export function OfficeSpace(props){
     
         adjustGains();
 
-        const userTokens = userList.map((userObj, index) => <UserToken key={`token-${index}`} isTalking={userObj.isTalking} initials={userObj.initials} userImage={userObj.userImage} xPos={userObj.x} yPos={userObj.y}/>);
+        const userTokens = userList.map((userObj, index) => <UserToken key={`token-${index}`} isTalking={talkingUsers[userObj.userName]} initials={userObj.initials} userImage={userObj.userImage} xPos={userObj.x} yPos={userObj.y}/>);
         return userTokens;
     }
 
@@ -69,14 +70,14 @@ export function OfficeSpace(props){
             tempGains[soundPackage.id] = userGain;
 
             
-            const userObj = userList.find((userObj)=>userObj.userName == soundPackage.id);
+
             const userVAD = hark(soundPackage.audio.clone(), {audioContext: context});
             userVAD.on("speaking", ()=>{
-                userObj.isTalking = true;
+                setTalkingUsers(prev => ({...prev, [soundPackage.id] : true}));
                 console.log(`DEBUG: ${soundPackage.id} is talking`);
             });
             userVAD.on("stopped_speaking", ()=>{
-                userObj.isTalking = false;
+                setTalkingUsers(prev => ({...prev, [soundPackage.id] : false}));
                 console.log(`DEBUG: ${soundPackage.id} stopped talking`)
             })
             vadList.current.push(userVAD);
