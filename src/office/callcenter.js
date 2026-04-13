@@ -39,7 +39,7 @@ class AudioCall{
                 }
             }else if(msg.stage == "close"){
                 if(this.peerConnection){
-                    this.peerConnection.getSenders().forEach(track => track.stop())
+                    this.peerConnection.getSenders().forEach(sender => sender.track.stop())
                     this.peerConnection.close();
                     console.log(`WebRTC closing status: ${this.peerConnection.connectionState}`)
                     delete this.peerConnection;
