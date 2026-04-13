@@ -8,6 +8,8 @@ export function Office(props){
     const userName = props.userName;
     const setKey = props.setKey;
     const key = props.keyVal;
+    const setErrorMessage = props.setErrorMessage;
+    const errorMessage = props.errorMessage;
     const userData = React.useRef("loading"); 
     const [dataLoaded, setDataLoaded] = React.useState(false)
     const [acceptConnection, setAcceptConnection] = React.useState(null);
@@ -92,6 +94,7 @@ export function Office(props){
     React.useEffect(()=>{
         if(connectionEstablished == "closed"){
             console.log("Connection closed. Resetting window")
+            setErrorMessage("Other user and/or server disconnected");
             setKey(key + 1);
         }
     },[connectionEstablished])
@@ -127,18 +130,31 @@ export function Office(props){
         }
     }
 
+    function displayError(){
+
+        return (
+            <div className="h-10 p-2 flex justify-center bg-red-700">
+                <p className="mx-5">{errorMessage}</p>
+                <button className="flex justify-end text-xs hover:text-cyan-800" id="hide-error" onClick={() => setErrorMessage("")} type="button">close error</button>
+            </div>
+        )
+    }
+
 
     return (
         <div className="flex flex-col grow">
-            <header className="bg-stone-900 flex flex-row justify-end min-h-10">
-                <div className="flex grow">
-                    <h1 className="font-semibold font-[rubik] border-b-2 text-teal-400 m-1 text-5xl max-h-[0.9em]">OfficeTalk</h1>
-                </div>
-                <NavBarButton DisText="Logout" dest="/"/>
-                <NavBarButton DisText="Settings" dest="/settings" />
-                <figure className="size-[50px] mx-3" id="user-1">
-                        <div dangerouslySetInnerHTML={userData.current.image} />
+            <header>
+                {errorMessage && displayError()}
+                <div className="bg-stone-900 flex flex-row justify-end min-h-10">
+                    <div className="flex grow">
+                        <h1 className="font-semibold font-[rubik] border-b-2 text-teal-400 m-1 text-5xl max-h-[0.9em]">OfficeTalk</h1>
+                    </div>
+                    <NavBarButton DisText="Logout" dest="/"/>
+                    <NavBarButton DisText="Settings" dest="/settings" />
+                    <figure className="size-[50px] mx-3" id="user-1">
+                            <div dangerouslySetInnerHTML={userData.current.image} />
                     </figure>
+                </div>
             </header>
             <main className="flex grow bg-stone-800">
                 <ActiveUsers userName={userName} userList={userList}/>
