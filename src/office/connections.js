@@ -31,7 +31,6 @@ class Connections{
         }
 
         this.socket.onmessage = async (msg) => {
-            //console.log(`DEBUG Data received: ${msg.data}`)
             const data = JSON.parse(msg.data);
 
 
@@ -73,11 +72,10 @@ class Connections{
 
     registerHandler(handler){
         this.handlers.push(handler);
-        console.log("recieved new handler");
+        console.debug("recieved new handler");
     }
 
     sendUserData(newUserData){
-        //console.log(`DEBUG sending coords: ${newUserData.x}, ${newUserData.y}`)
         this.socket.send(JSON.stringify(newUserData));
     }
 

@@ -23,7 +23,7 @@ class AudioCall{
 
     audioHandler(msg){
         if(msg.type == "audio"){
-            console.log("Recieved audio data");
+            console.debug("Recieved audio data");
             if(msg.stage == 'answer' && this.callStage == "listening"){
                 this.recieveAnswer(msg.answer);
             } else if(msg.stage == 'offer' && this.callStage == "listening"){
@@ -64,6 +64,7 @@ class AudioCall{
         await (async() => {
         const response = await fetch("https://officetalk.metered.live/api/v1/turn/credentials?apiKey=611dd0d45cbb6744cbc57e381cd2d06ca161");
         const iceServers = await response.json();
+        console.debug(`Ice Server List: ${JSON.stringify(iceServers)}`)
         configuration['iceServers'] = iceServers;
         })();
 
@@ -85,6 +86,7 @@ class AudioCall{
         await (async() => {
         const response = await fetch("https://officetalk.metered.live/api/v1/turn/credentials?apiKey=611dd0d45cbb6744cbc57e381cd2d06ca161");
         const iceServers = await response.json();
+        console.debug(`Ice Server List: ${JSON.stringify(iceServers)}`)
         configuration['iceServers'] = iceServers;
         })();
 
@@ -121,7 +123,7 @@ class AudioCall{
             this.setAudioList(this.audioPackages)
         });
 
-        console.log("AudioChannels set up!");
+        console.debug("AudioChannels set up!");
     }
 
     async getIce(){
@@ -145,13 +147,30 @@ class AudioCall{
                 this.socketConnection.closeConnection();
             }
         });
+
+        this.peerConnection.addEventListener('icecandidateerror', event => {
+            console.debug("ICE candidate error:", event.errorCode, event.errorText, "url:", event.url);
+        });
+
+        this.peerConnection.addEventListener('iceconnectionstatechange', () => {
+            console.debug("ICE connection state:", this.peerConnection.iceConnectionState);
+        });
+
+        this.peerConnection.addEventListener('icegatheringstatechange', () => {
+            console.debug("ICE gathering state:", this.peerConnection.iceGatheringState);
+        });
+
+        this.peerConnection.addEventListener('signalingstatechange', () => {
+            console.debug("Signaling state:", this.peerConnection.signalingState);
+        });
     }
 
     async recieveIce (iceCandidate){
-
+        console.debug(`Received ICE candidate. receivingStatus: ${this.stopIceUntilReady} candidate: ${iceCandidate?.candidate}`)
         try {
             await this.stopIceUntilReady;
             await this.peerConnection.addIceCandidate(iceCandidate);
+            console.debug(`Ice Candidate received succesfully`);
         } catch (e) {
             console.log('Error adding received ice candidate', e);
         }
