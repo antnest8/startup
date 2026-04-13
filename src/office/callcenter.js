@@ -32,6 +32,7 @@ class AudioCall{
                 this.recieveIce(msg.iceCandidate);
             }else if(this.callStage == "init" && msg.stage == "init-call"){
                 this.externalUser = msg.userName;
+                this.setCallEstablished("connecting");
                 if(msg.role == "caller"){
                     this.makeCall();
                 } else{
@@ -39,6 +40,7 @@ class AudioCall{
                 }
             }else if(msg.stage == "close"){
                 if(this.peerConnection){
+                    this.peerConnection.getSenders().forEach(sender => sender.track.stop())
                     this.peerConnection.close();
                     console.log(`WebRTC closing status: ${this.peerConnection.connectionState}`)
                     delete this.peerConnection;
@@ -58,7 +60,13 @@ class AudioCall{
             this.beginRecievingIce = resolve;
         })
 
-        const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]}
+        const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]};
+        await (async() => {
+        const response = await fetch("https://officetalk.metered.live/api/v1/turn/credentials?apiKey=611dd0d45cbb6744cbc57e381cd2d06ca161");
+        const iceServers = await response.json();
+        configuration['iceServers'] = iceServers;
+        })();
+
         this.peerConnection = new RTCPeerConnection(configuration);
         await this.setAudioChannels();
         await this.getIce();
@@ -73,7 +81,13 @@ class AudioCall{
             this.beginRecievingIce = resolve;
         })
 
-        const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]}
+        const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]};
+        await (async() => {
+        const response = await fetch("https://officetalk.metered.live/api/v1/turn/credentials?apiKey=611dd0d45cbb6744cbc57e381cd2d06ca161");
+        const iceServers = await response.json();
+        configuration['iceServers'] = iceServers;
+        })();
+
         this.peerConnection = new RTCPeerConnection(configuration);
         await this.setAudioChannels();
         await this.getIce();
@@ -122,7 +136,7 @@ class AudioCall{
             if (this.peerConnection && this.peerConnection.connectionState === 'connected') {
                 console.log("WebRTC connection complete!");
                 this.callStage = "connection-established"
-                this.setCallEstablished(true);
+                this.setCallEstablished("established");
             }
             if(this.peerConnection && (this.peerConnection.connectionState === "failed" || 
                 this.peerConnection.connectionState === "closed" || 

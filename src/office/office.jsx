@@ -8,6 +8,8 @@ export function Office(props){
     const userName = props.userName;
     const setKey = props.setKey;
     const key = props.keyVal;
+    const setErrorMessage = props.setErrorMessage;
+    const errorMessage = props.errorMessage;
     const userData = React.useRef("loading"); 
     const [dataLoaded, setDataLoaded] = React.useState(false)
     const [acceptConnection, setAcceptConnection] = React.useState(null);
@@ -92,6 +94,7 @@ export function Office(props){
     React.useEffect(()=>{
         if(connectionEstablished == "closed"){
             console.log("Connection closed. Resetting window")
+            setErrorMessage("Other user and/or server disconnected");
             setKey(key + 1);
         }
     },[connectionEstablished])
@@ -107,22 +110,55 @@ export function Office(props){
 
     }
 
+    function renderSpace(){
+        if(!acceptConnection){
+            return (<div className="grow flex">
+                <Unconnected setAcceptConnection={setAcceptConnection} acceptConnection={acceptConnection}/>
+            </div>)
+        } else if(acceptConnection && !callEstablished){
+            return(<div className="grow flex">
+                <LoadingCall message="Searching for other users..."/>
+            </div>)
+        } else if(callEstablished == "connecting"){
+            return(<div className="grow flex">
+                <LoadingCall message="User found! connecting..."/>
+            </div>)
+        } else if(callEstablished == "established"){
+            return (<div className="grow flex">
+                <OfficeSpace userList={userList} moveUserFunc={moveUser} audioList={audioList}/>
+            </div>)
+        }
+    }
+
+    function displayError(){
+
+        return (
+            <div className="h-10 p-2 flex justify-center bg-red-700">
+                <p className="mx-5">{errorMessage}</p>
+                <button className="flex justify-end text-xs hover:text-cyan-800" id="hide-error" onClick={() => setErrorMessage("")} type="button">close error</button>
+            </div>
+        )
+    }
+
 
     return (
         <div className="flex flex-col grow">
-            <header className="bg-stone-900 flex flex-row justify-end min-h-10">
-                <div className="flex grow">
-                    <h1 className="font-semibold font-[rubik] border-b-2 text-teal-400 m-1 text-5xl max-h-[0.9em]">OfficeTalk</h1>
-                </div>
-                <NavBarButton DisText="Logout" dest="/"/>
-                <NavBarButton DisText="Settings" dest="/settings" />
-                <figure className="size-[50px] mx-3" id="user-1">
-                        <div dangerouslySetInnerHTML={userData.current.image} />
+            <header>
+                {errorMessage && displayError()}
+                <div className="bg-stone-900 flex flex-row justify-end min-h-10">
+                    <div className="flex grow">
+                        <h1 className="font-semibold font-[rubik] border-b-2 text-teal-400 m-1 text-5xl max-h-[0.9em]">OfficeTalk</h1>
+                    </div>
+                    <NavBarButton DisText="Logout" dest="/"/>
+                    <NavBarButton DisText="Settings" dest="/settings" />
+                    <figure className="size-[50px] mx-3" id="user-1">
+                            <div dangerouslySetInnerHTML={userData.current.image} />
                     </figure>
+                </div>
             </header>
             <main className="flex grow bg-stone-800">
                 <ActiveUsers userName={userName} userList={userList}/>
-                {acceptConnection && connectionEstablished ? <OfficeSpace userList={userList} moveUserFunc={moveUser} audioList={audioList}/> : <Unconnected setAcceptConnection={setAcceptConnection} acceptConnection={acceptConnection}/>}
+                {renderSpace()}
             </main>
         </div>
     )
@@ -157,14 +193,42 @@ function LoadingData(props){
     );
 }
 
-function Unconnected(props){
-    const connectToOffice = props.setAcceptConnection;
-    const acceptStatus = props.acceptConnection;
-
+function LoadingCall(props){
+    const message = props.message;
 
     return(    
     <div id="app-window" className="relative grow flex justify-center align-center ">
-        {acceptStatus || <button className="rounded-lg my-40 outline-solid outline-stone-700 content-center text-center hover:outline-teal-700 hover:bg-teal-950 w-60 h-10 bg-stone-900 mx-3 cursor-pointer" onClick={()=>{connectToOffice("accepted")}}>Click to connect to the Office</button>}
+        <div className="mt-40 flex">
+            <p className="mx-5">{message}</p>
+            <div className="size-10 text-center translate-[-25%]" title="please wait...">
+                <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                width="40px" height="40px" viewBox="0 0 40 40" enableBackground="new 0 0 40 40" xmlSpace="preserve">
+                <path opacity="0.2" fill="#0092b8" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
+                    s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
+                    c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z"/>
+                <path fill="#0092b8" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
+                    C22.32,8.481,24.301,9.057,26.013,10.047z">
+                    <animateTransform attributeType="xml"
+                    attributeName="transform"
+                    type="rotate"
+                    from="0 20 20"
+                    to="360 20 20"
+                    dur="0.5s"
+                    repeatCount="indefinite"/>
+                    </path>
+                </svg>
+            </div>
+        </div>
+    </div>
+    );
+}
+
+function Unconnected(props){
+    const connectToOffice = props.setAcceptConnection;
+
+    return(    
+    <div id="app-window" className="relative grow flex justify-center align-center ">
+        <button className="rounded-lg my-40 outline-solid outline-stone-700 content-center text-center hover:outline-teal-700 hover:bg-teal-950 w-60 h-10 bg-stone-900 mx-3 cursor-pointer" onClick={()=>{connectToOffice("accepted")}}>Click to connect to the Office</button>
     </div>
     );
 }
