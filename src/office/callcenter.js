@@ -32,6 +32,7 @@ class AudioCall{
                 this.recieveIce(msg.iceCandidate);
             }else if(this.callStage == "init" && msg.stage == "init-call"){
                 this.externalUser = msg.userName;
+                this.setCallEstablished("connecting");
                 if(msg.role == "caller"){
                     this.makeCall();
                 } else{
@@ -135,7 +136,7 @@ class AudioCall{
             if (this.peerConnection && this.peerConnection.connectionState === 'connected') {
                 console.log("WebRTC connection complete!");
                 this.callStage = "connection-established"
-                this.setCallEstablished(true);
+                this.setCallEstablished("established");
             }
             if(this.peerConnection && (this.peerConnection.connectionState === "failed" || 
                 this.peerConnection.connectionState === "closed" || 
