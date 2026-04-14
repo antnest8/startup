@@ -64,6 +64,7 @@ class AudioCall{
         await (async() => {
         const response = await fetch("https://officetalk.metered.live/api/v1/turn/credentials?apiKey=611dd0d45cbb6744cbc57e381cd2d06ca161");
         const iceServers = await response.json();
+        iceServers.push({'urls': 'stun:stun.l.google.com:19302'})
         console.debug(`Ice Server List: ${JSON.stringify(iceServers)}`)
         configuration['iceServers'] = iceServers;
         })();
@@ -86,8 +87,10 @@ class AudioCall{
         await (async() => {
         const response = await fetch("https://officetalk.metered.live/api/v1/turn/credentials?apiKey=611dd0d45cbb6744cbc57e381cd2d06ca161");
         const iceServers = await response.json();
+        iceServers.push({'urls': 'stun:stun.l.google.com:19302'})
         console.debug(`Ice Server List: ${JSON.stringify(iceServers)}`)
         configuration['iceServers'] = iceServers;
+
         })();
 
         this.peerConnection = new RTCPeerConnection(configuration);
