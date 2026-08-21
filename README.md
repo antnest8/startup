@@ -1,8 +1,14 @@
-# Your startup name here
+# Office Talk
+
+> Setup instructions
+> 1. Run `npm install` inside `/service` and the root
+> 2. Add connection info to a file called dbConfig to a mongodb (or just edit the database.js file to call a connection string)
+> 3. `node index.js` in `/service` and in a separate console run `npm run dev` so you can browse the app on localhost
+
 
 [My Notes](notes.md)
 
-A simple, virtual chat enviroment supporting voice proximity chat meant to create nuance when collaborating with a remote team. This is the startup project for BYU's CS 260 class. _Author: Broderick Johnson_
+A simple, virtual chat environment supporting voice proximity chat meant to create nuance when collaborating with a remote team. This is the startup project for BYU's CS 260 class. _Author: Broderick Johnson_
 
 
 ## 🚀 Specification Deliverable
